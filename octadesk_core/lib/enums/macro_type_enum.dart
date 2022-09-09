@@ -1,0 +1,4 @@
+enum MacroTypeEnum {
+  macro,
+  template,
+}
