@@ -3,8 +3,8 @@ import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_select.dart';
 import 'package:octadesk_app/providers/theme_provider.dart';
 import 'package:octadesk_app/resources/app_colors.dart';
-import 'package:octadesk_app/resources/app_images.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
+import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:provider/provider.dart';
 
 class ThemeView extends StatefulWidget {
@@ -70,10 +70,10 @@ class _ThemeViewState extends State<ThemeView> {
               textColor: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
             const SizedBox(height: AppSizes.s10),
-            const SizedBox(
+            SizedBox(
               width: 500,
               child: OctaText(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
+                l10n(context).helloWorld,
                 textAlign: TextAlign.center,
               ),
             ),

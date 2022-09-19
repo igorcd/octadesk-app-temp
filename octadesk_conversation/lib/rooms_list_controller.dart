@@ -93,8 +93,7 @@ class RoomsListController {
 
     // Adicionar evento ao socket
     OctadeskConversation.instance.socketReference!.on(SocketEvents.roomsUpdate, (data) {
-      print("▶️ SALAS ATUALIZADAS");
-      // Status atual da lista
+      // Estado atual da paginação
       RoomPaginationModel currentPaginator = _roomsListStreamController.value!.clone();
 
       // Salas alteradas
@@ -126,7 +125,7 @@ class RoomsListController {
         }
 
         // Caso a sala tenha saído dos critérios, remover
-        if (room != null && _inboxFilter.validator(changedRoom)) {
+        if (room != null && !inboxFilter.validator(changedRoom)) {
           currentPaginator.rooms.remove(room);
         }
 
@@ -149,7 +148,6 @@ class RoomsListController {
           room.user = changedRoom.user;
         }
       });
-
       currentPaginator.rooms = currentPaginator.rooms
           .where((element) {
             return _inboxFilter.descriptor == RoomFilterEnum.bot ? element.status == RoomStatusEnum.started : element.status != RoomStatusEnum.started;

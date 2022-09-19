@@ -162,7 +162,7 @@ class _OctaInputState extends State<OctaInput> {
           _error.isNotEmpty
               ? Text(
                   _error,
-                  style: TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: AppColors.warning, fontFamily: "NotoSans"),
+                  style: const TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: AppColors.warning, fontFamily: "NotoSans"),
                 )
               : const SizedBox.shrink()
         ],

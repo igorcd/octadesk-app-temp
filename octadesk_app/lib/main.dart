@@ -4,20 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:octadesk_app/providers/authentication_provider.dart';
 import 'package:octadesk_app/providers/theme_provider.dart';
-import 'package:octadesk_app/resources/index.dart';
-import 'package:octadesk_app/router/public_router.dart';
-import 'package:octadesk_app/themes/app_text_theme.dart';
-import 'package:octadesk_app/themes/app_theme.dart';
 import 'package:octadesk_app/toolbar/app_toolbar.dart';
 import 'package:octadesk_app/views/theme_view.dart';
 import 'package:octadesk_core/enums/octa_environment_enum.dart';
 import 'package:octadesk_services/octadesk_services.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setEnvironment(environment: OctaEnvironmentEnum.qa);
-  initializeDateFormatting('pt_BR', null);
+  // initializeDateFormatting('pt_BR', null);
 
   if (Platform.isWindows) {
     doWhenWindowReady(() {
@@ -46,6 +43,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
 
           // Dark Theme
           darkTheme: value.darkTheme,

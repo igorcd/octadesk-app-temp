@@ -11,4 +11,5 @@ class SocketEvents {
   static const String agentConnectionStatusChange = "agentConnectionStatus";
   static const String startTyping = "userTypingStart";
   static const String disconnect = "disconnect";
+  static const String reconnect = "reconnect";
 }

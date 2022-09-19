@@ -61,17 +61,6 @@ class OctadeskConversation {
 
   // ========== MÉTODOS PRIVADOS ================
 
-  /// Tratar reconexão
-  void _handleReconnection() async {
-    print(_socket);
-    if (_socket != null) {
-      await Future.delayed(Duration(seconds: 10));
-      print("▶️ TENTANDO RECONECTAR");
-
-      _socket!.connect();
-    }
-  }
-
   // Conectar ao socket;
   void _connectSocket() async {
     print("▶️ TENTANDO CONECTAR");
@@ -87,14 +76,22 @@ class OctadeskConversation {
     // Caso não consiga conectar
     _socket!.on(SocketEvents.connectError, (data) {
       print("❌ FALHA AO CONECTAR");
-      _handleReconnection();
     });
 
     // Adicionar evento de perda de conexão
     _socket!.on(SocketEvents.lostConnection, (data) {
       print("⚠️ CONEXÃO PERDIDA - $data");
-      _handleReconnection();
     });
+
+    // // Adicionar evento de perda de conexão
+    // _socket!.on(SocketEvents.reconnect, (data) {
+    //   print("🔁 RECONECTADO - $data");
+    //   refreshRooms();
+
+    //   if (_currentRoom != null) {
+    //     _currentRoom!.reconnect();
+    //   }
+    // });
 
     // Conectar
     _socket!.connect();

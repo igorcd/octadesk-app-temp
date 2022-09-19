@@ -6,6 +6,7 @@ import 'package:octadesk_app/resources/app_constants.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Mostrar um alert
 void displayAlertHelper(BuildContext context, {String? title, required String subtitle, List<OctaAlertDialogAction>? actions}) {
@@ -19,6 +20,10 @@ void displayAlertHelper(BuildContext context, {String? title, required String su
       );
     },
   );
+}
+
+AppLocalizations l10n(BuildContext context) {
+  return AppLocalizations.of(context)!;
 }
 
 Future<T?> showOctaBottomSheet<T>(

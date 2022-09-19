@@ -26,7 +26,9 @@ class InboxFilters {
           return room.status != RoomStatusEnum.started;
         }
 
-        return [RoomStatusEnum.waiting, RoomStatusEnum.talking, RoomStatusEnum.missed, RoomStatusEnum.started].contains(room.status);
+        return [RoomStatusEnum.waiting, RoomStatusEnum.talking, RoomStatusEnum.missed, RoomStatusEnum.started].contains(
+          room.status,
+        );
       },
       rule: {
         "status": [0, 1, 3],

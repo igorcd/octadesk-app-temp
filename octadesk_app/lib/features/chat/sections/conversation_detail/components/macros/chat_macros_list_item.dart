@@ -31,7 +31,7 @@ class ChatMacrosListItem extends StatelessWidget {
                 if (content != null && content!.isNotEmpty)
                   Text(
                     content!,
-                    style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info),
+                    style: const TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
