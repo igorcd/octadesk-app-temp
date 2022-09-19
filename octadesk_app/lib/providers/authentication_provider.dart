@@ -120,15 +120,11 @@ class AuthenticationProvider with ChangeNotifier {
       throw "Parece que você possui algumas pendências, por favor, entre em contato com nosso suporte";
     }
 
-    // Verificar se tem um inbox salvo
-    var currentInbox = await getPersistedInboxFilter(_user!.agentId);
-
     // Inicializar chat
     await OctadeskConversation.instance.initialize(
       agentId: user!.agentId,
       socketUrl: OctaClient.getSocketUrl(),
       subDomain: tenant!.subdomain,
-      inboxFilter: currentInbox,
     );
   }
 

@@ -24,7 +24,7 @@ class ChatInputTab extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: selected ? AppColors.blue600 : Colors.transparent,
+                  color: selected ? AppColors.blue.shade600 : Colors.transparent,
                   width: 2,
                 ),
               ),

@@ -143,7 +143,7 @@ class _ChatBodyState extends State<ChatBody> {
 
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              color: highlightIndex == i ? AppColors.gray100 : Colors.white,
+              color: highlightIndex == i ? AppColors.info.shade100 : Colors.white,
               child: Column(
                 children: [
                   Slidable(

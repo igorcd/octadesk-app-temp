@@ -110,7 +110,7 @@ class LoginInclude extends StatelessWidget {
                 // Botão de submeter
                 OctaButton(
                   text: "Entrar",
-                  onPressed: () => value.authenticate(),
+                  onTap: () => value.authenticate(),
                   loading: value.loading,
                 ),
               ],

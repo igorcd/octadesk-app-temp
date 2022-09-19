@@ -45,7 +45,7 @@ class _NewConversationState extends State<NewConversation> with TickerProviderSt
               ],
             ),
           ),
-          const Divider(thickness: 2, height: 2, color: AppColors.gray100),
+          Divider(thickness: 2, height: 2, color: AppColors.info.shade100),
 
           // Conteúdo
           Expanded(

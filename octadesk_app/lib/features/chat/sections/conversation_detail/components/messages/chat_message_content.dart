@@ -37,12 +37,12 @@ class ChatMessageContent extends StatelessWidget {
               openExternalLink(context, text);
             }
           },
-          style: const TextStyle(color: AppColors.blue500),
+          style: TextStyle(color: AppColors.blue),
         ),
         'quoted': StyledTextTag(
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: AppColors.yellow800,
+            color: AppColors.warning.shade800,
           ),
         ),
         'b': StyledTextTag(style: const TextStyle(fontWeight: FontWeight.bold)),

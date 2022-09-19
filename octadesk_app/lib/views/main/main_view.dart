@@ -25,9 +25,9 @@ class MainView extends StatelessWidget {
 
         // Loading
         if (snapshot.connectionState != ConnectionState.done) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(color: AppColors.blue500),
+              child: CircularProgressIndicator(color: AppColors.blue),
             ),
           );
         }

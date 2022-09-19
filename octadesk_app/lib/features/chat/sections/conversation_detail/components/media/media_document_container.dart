@@ -33,7 +33,7 @@ class MediaDocumentContainer extends StatelessWidget {
                 // Tipo
                 Text(
                   attachment.extension.toUpperCase(),
-                  style: const TextStyle(fontFamily: "Noto Sans", fontWeight: FontWeight.bold, color: AppColors.gray800, fontSize: AppSizes.s04_5),
+                  style: TextStyle(fontFamily: "Noto Sans", fontWeight: FontWeight.bold, color: AppColors.info.shade800, fontSize: AppSizes.s04_5),
                 ),
 
                 SizedBox(height: isVertical ? AppSizes.s01_5 : 0),
@@ -43,10 +43,10 @@ class MediaDocumentContainer extends StatelessWidget {
                   maxLines: isVertical ? 2 : 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: isVertical ? TextAlign.center : TextAlign.left,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: AppSizes.s03,
                     fontFamily: "Noto Sans",
-                    color: AppColors.gray800,
+                    color: AppColors.info.shade800,
                   ),
                 ),
               ],

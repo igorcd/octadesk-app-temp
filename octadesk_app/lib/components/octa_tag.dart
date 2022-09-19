@@ -18,8 +18,8 @@ class OctaTag extends StatelessWidget {
         height: AppSizes.s07,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s04)),
-          border: Border.all(color: active ? AppColors.blue400 : AppColors.gray200, width: 1.5),
-          color: active ? AppColors.blue400.withOpacity(.05) : AppColors.gray200,
+          border: Border.all(color: active ? AppColors.blue.shade400 : AppColors.info.shade200, width: 1.5),
+          color: active ? AppColors.blue.shade400.withOpacity(.05) : AppColors.info.shade200,
         ),
         child: Material(
           color: Colors.transparent,
@@ -32,7 +32,7 @@ class OctaTag extends StatelessWidget {
                   Text(
                     placeholder,
                     style: TextStyle(
-                      color: active ? AppColors.blue400 : AppColors.gray500,
+                      color: active ? AppColors.blue.shade400 : AppColors.info,
                       fontSize: AppSizes.s03_5,
                       height: 1,
                     ),
@@ -40,7 +40,7 @@ class OctaTag extends StatelessWidget {
                   Image.asset(
                     icon,
                     width: AppSizes.s04,
-                    color: active ? AppColors.blue400 : AppColors.gray500,
+                    color: active ? AppColors.blue.shade400 : AppColors.info,
                   )
                 ],
               ),

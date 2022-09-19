@@ -26,7 +26,7 @@ class _OnboardingIndicatorState extends State<OnboardingIndicator> {
             child: Container(
               width: 6,
               height: 6,
-              decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(3)), color: AppColors.gray800),
+              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(3)), color: AppColors.info.shade800),
             ),
           ),
         ),

@@ -33,8 +33,8 @@ class OctaRadioListTile<T> extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: const [AppShadows.s100],
                   borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s03_5)),
-                  color: selected ? AppColors.blue400 : Colors.white,
-                  border: Border.all(color: selected ? AppColors.blue400 : AppColors.gray200, width: 2),
+                  color: selected ? AppColors.blue.shade400 : Colors.white,
+                  border: Border.all(color: selected ? AppColors.blue.shade400 : AppColors.info.shade200, width: 2),
                 ),
                 child: Center(
                   child: AnimatedScale(

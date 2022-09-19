@@ -70,7 +70,7 @@ class ChatMentionsContainer extends StatelessWidget {
 
                           // Estilização
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.gray100),
+                            border: Border.all(color: AppColors.info.shade100),
                             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s03)),
                             color: const Color.fromRGBO(255, 255, 255, .9),
                           ),

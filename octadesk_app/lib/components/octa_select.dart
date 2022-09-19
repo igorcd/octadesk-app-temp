@@ -60,20 +60,21 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
           contentPadding: EdgeInsets.only(top: AppSizes.s01, bottom: 7, right: AppSizes.s04, left: AppSizes.s04),
           border: InputBorder.none,
         ),
-        style: const TextStyle(
-          color: AppColors.gray800,
+        style: TextStyle(
+          color: AppColors.info.shade800,
           fontSize: AppSizes.s04,
           fontFamily: "NotoSans",
         ),
         isExpanded: true,
         hint: Text(
           widget.hint,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w400,
-            color: AppColors.gray300,
+            color: AppColors.info.shade300,
             fontSize: AppSizes.s04,
           ),
         ),
+        dropdownColor: Colors.white,
         onChanged: widget.onChanged,
         items: widget.values.isNotEmpty
             ? widget.values.map<DropdownMenuItem<T>>((e) {
@@ -87,7 +88,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
                   enabled: false,
                   child: Text(
                     widget.emptyPlaceholder,
-                    style: const TextStyle(color: AppColors.gray300),
+                    style: TextStyle(color: AppColors.info.shade300),
                   ),
                 )
               ],
@@ -102,7 +103,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
             padding: const EdgeInsets.only(bottom: AppSizes.s01),
             child: Text(
               widget.label!,
-              style: const TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.gray800),
+              style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
             ),
           ),
         AnimatedContainer(
@@ -114,7 +115,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
             color: Colors.white,
             border: Border.all(
               width: 2,
-              color: AppColors.gray200,
+              color: AppColors.info.shade200,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
           ),

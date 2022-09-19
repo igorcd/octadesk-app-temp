@@ -12,7 +12,7 @@ class ChatMentionsEmpty extends StatelessWidget {
       height: AppSizes.s15,
       child: Text(
         message,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.gray800),
+        style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
       ),
     );
   }

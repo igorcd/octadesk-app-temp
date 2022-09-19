@@ -12,9 +12,9 @@ class ChatTime extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: AppSizes.s02),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Divider(
-              color: AppColors.gray200,
+              color: AppColors.info.shade200,
               indent: AppSizes.s04,
             ),
           ),
@@ -22,9 +22,9 @@ class ChatTime extends StatelessWidget {
             dateFormatterHelper(time).toUpperCase(),
             style: const TextStyle(fontFamily: "Poppins", fontWeight: FontWeight.w600, fontSize: AppSizes.s03),
           ),
-          const Expanded(
+          Expanded(
               child: Divider(
-            color: AppColors.gray200,
+            color: AppColors.info.shade200,
             endIndent: AppSizes.s04,
           )),
         ],

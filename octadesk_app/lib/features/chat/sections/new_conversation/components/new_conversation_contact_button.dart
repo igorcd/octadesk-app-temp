@@ -26,16 +26,16 @@ class NewConversationContactButton extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(AppSizes.s02_5),
-                          color: AppColors.blue400,
+                          color: AppColors.blue.shade400,
                         ),
                         child: Image.asset(AppIcons.addUser, width: AppSizes.s06),
                       ),
                       const SizedBox(width: AppSizes.s04),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           "Adicionar novo contato",
                           style: TextStyle(
-                            color: AppColors.blue400,
+                            color: AppColors.blue.shade400,
                             fontSize: AppSizes.s04,
                             fontWeight: FontWeight.w500,
                             fontFamily: "Poppins",

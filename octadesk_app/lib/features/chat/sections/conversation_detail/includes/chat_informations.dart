@@ -33,9 +33,9 @@ class _ChatInformationsState extends State<ChatInformations> with TickerProvider
 
     return Container(
         // Estilização
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
-          border: Border(bottom: BorderSide(color: AppColors.gray100, width: 2)),
+          border: Border(bottom: BorderSide(color: AppColors.info.shade100, width: 2)),
         ),
 
         // Conteúdo
@@ -60,11 +60,11 @@ class _ChatInformationsState extends State<ChatInformations> with TickerProvider
                           // Data que a conversa foi iniciada
                           Text(
                             snapshot.data != null ? "Chat iniciado em ${formatter.format(snapshot.data!.createdAt.toLocal())}" : "Carregando...",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: AppColors.gray800,
+                              color: AppColors.info.shade800,
                             ),
                           ),
                           const SizedBox(height: AppSizes.s02),

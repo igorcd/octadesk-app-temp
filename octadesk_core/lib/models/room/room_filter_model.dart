@@ -10,6 +10,11 @@ class RoomFilterModel {
   RoomFilterModel({required this.title, required this.descriptor, required this.rule, required this.validator});
 
   RoomFilterModel clone() {
-    return RoomFilterModel(title: title, descriptor: descriptor, rule: {...rule}, validator: validator);
+    return RoomFilterModel(
+      title: title,
+      descriptor: descriptor,
+      rule: {...rule},
+      validator: validator,
+    );
   }
 }

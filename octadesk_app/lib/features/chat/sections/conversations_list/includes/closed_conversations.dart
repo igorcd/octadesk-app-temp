@@ -6,7 +6,6 @@ import 'package:octadesk_app/features/chat/providers/conversations_provider.dart
 import 'package:octadesk_app/features/chat/sections/conversations_list/components/conversation_list_item.dart';
 import 'package:octadesk_app/features/chat/sections/conversations_list/components/conversation_list_skeleton.dart';
 import 'package:octadesk_app/resources/index.dart';
-import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:provider/provider.dart';
 
@@ -80,7 +79,7 @@ class _ClosedConversationsState extends State<ClosedConversations> {
                     child: ListView.separated(
                       controller: _scrollController,
                       itemCount: snapshot.data!.length,
-                      separatorBuilder: (c, i) => const Divider(height: 1, thickness: 1, color: AppColors.gray200),
+                      separatorBuilder: (c, i) => Divider(height: 1, thickness: 1, color: AppColors.info.shade200),
                       itemBuilder: (context, index) {
                         var room = snapshot.data![index];
                         return ConversationListItem(

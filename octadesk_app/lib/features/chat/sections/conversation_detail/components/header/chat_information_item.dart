@@ -11,11 +11,11 @@ class ChatInformationItem extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: title,
-        style: const TextStyle(fontFamily: "NotoSans", color: AppColors.gray800, fontSize: AppSizes.s03),
+        style: TextStyle(fontFamily: "NotoSans", color: AppColors.info.shade800, fontSize: AppSizes.s03),
         children: [
           TextSpan(
             text: value,
-            style: const TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: AppColors.gray800, fontSize: AppSizes.s03),
+            style: TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: AppColors.info.shade800, fontSize: AppSizes.s03),
           )
         ],
       ),

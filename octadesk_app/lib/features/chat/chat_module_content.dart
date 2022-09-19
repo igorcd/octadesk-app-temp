@@ -118,7 +118,7 @@ class _ChatModuleContentState extends State<ChatModuleContent> {
 
                     // Conteúdo
                     if (!isMobile) ...[
-                      const VerticalDivider(width: 1, color: AppColors.gray200),
+                      VerticalDivider(width: 1, color: AppColors.info.shade200),
                       Expanded(
                         child: AnimatedSwitcher(
                           // Transição

@@ -8,15 +8,15 @@ class OctaDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return vertical
-        ? const VerticalDivider(
+        ? VerticalDivider(
             width: 2,
             thickness: 2,
-            color: AppColors.gray100,
+            color: AppColors.info.shade100,
           )
-        : const Divider(
+        : Divider(
             height: 2,
             thickness: 2,
-            color: AppColors.gray100,
+            color: AppColors.info.shade100,
           );
   }
 }

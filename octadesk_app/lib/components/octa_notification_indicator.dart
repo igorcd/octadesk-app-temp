@@ -37,14 +37,14 @@ class _OctaNotificationIndicatorState extends State<OctaNotificationIndicator> w
             child: Container(
               height: AppSizes.s01_5,
               width: AppSizes.s01_5,
-              decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: AppColors.gray800),
+              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: AppColors.info.shade800),
             ),
           ),
         ),
         Container(
           height: AppSizes.s01_5,
           width: AppSizes.s01_5,
-          decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: AppColors.gray800),
+          decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: AppColors.info.shade800),
         ),
       ],
     );

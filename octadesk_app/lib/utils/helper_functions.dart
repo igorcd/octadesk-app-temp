@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/resources/app_constants.dart';
-import 'package:octadesk_conversation/inbox_filters/inbox_filters.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -89,7 +88,7 @@ String dateFormatterHelper(DateTime date) {
   }
 }
 
-Future<RoomFilterModel> getPersistedInboxFilter(String agentId) async {
+Future<RoomFilterEnum> getPersistedInboxFilter(String agentId) async {
   // Verificar se tem um inbox salvo
   final storage = await SharedPreferences.getInstance();
   var currentInboxString = storage.getString(AppConstants.currentInboxFilter);
@@ -97,7 +96,7 @@ Future<RoomFilterModel> getPersistedInboxFilter(String agentId) async {
       ? RoomFilterEnum.values.firstWhereOrNull((element) => element.name == currentInboxString) ?? RoomFilterEnum.open //
       : RoomFilterEnum.open;
 
-  return InboxFilters.getFilterByType(currentInboxType, page: 1, agentId: agentId);
+  return currentInboxType;
 }
 
 String getInboxFilterEnumName(RoomFilterEnum filter) {

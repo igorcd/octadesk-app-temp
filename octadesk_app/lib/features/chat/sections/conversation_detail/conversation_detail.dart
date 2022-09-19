@@ -82,7 +82,7 @@ class ConversationDetail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const ChatHeader(),
-              const Divider(height: 2, thickness: 2, color: AppColors.gray100),
+              Divider(height: 2, thickness: 2, color: AppColors.info.shade100),
               const ChatInformations(),
               Expanded(
                 child: AnimatedSwitcher(

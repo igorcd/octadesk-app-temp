@@ -29,7 +29,7 @@ class MediaContainer extends StatelessWidget {
     // Renderizar botão do menu
     Widget renderMenu() {
       return PopupMenuButton<int>(
-        icon: const Icon(Icons.more_vert, color: AppColors.gray200),
+        icon: Icon(Icons.more_vert, color: AppColors.info.shade200),
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(AppSizes.s03))),
         onSelected: (value) {},
         itemBuilder: (context) {
@@ -62,7 +62,7 @@ class MediaContainer extends StatelessWidget {
 
             // Estilização
             decoration: BoxDecoration(
-              color: AppColors.gray100,
+              color: AppColors.info.shade100,
               borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02)),
               boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8)],
               border: Border.all(color: const Color.fromRGBO(0, 123, 255, .2), width: 1),

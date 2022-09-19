@@ -99,9 +99,9 @@ class _FilterOperationDialogState extends State<FilterOperationDialog> {
       child: Container(
         padding: const EdgeInsets.all(AppSizes.s10),
         alignment: Alignment.center,
-        child: const Text(
+        child: Text(
           "Não foi encontrado nenhum resultado",
-          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.gray800),
+          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
         ),
       ),
     );
@@ -217,7 +217,7 @@ class _FilterOperationDialogState extends State<FilterOperationDialog> {
         // Submeter
         Padding(
           padding: const EdgeInsets.all(AppSizes.s04),
-          child: OctaButton(text: "Filtrar", onPressed: () {}),
+          child: OctaButton(text: "Filtrar", onTap: () {}),
         )
       ],
     );

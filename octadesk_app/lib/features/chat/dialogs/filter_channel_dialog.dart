@@ -92,7 +92,7 @@ class _FilterChannelDialogState extends State<FilterChannelDialog> {
         const Divider(height: 1, thickness: 1),
         Padding(
           padding: const EdgeInsets.all(AppSizes.s04),
-          child: OctaButton(text: "Filtrar", onPressed: () => Navigator.of(context).pop(_selectedChannelTemp)),
+          child: OctaButton(text: "Filtrar", onTap: () => Navigator.of(context).pop(_selectedChannelTemp)),
         )
       ],
     );

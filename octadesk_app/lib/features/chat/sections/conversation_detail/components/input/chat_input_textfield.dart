@@ -33,19 +33,19 @@ class ChatInputTextField extends StatelessWidget {
             textInputAction: TextInputAction.none,
             minLines: isMobile ? 1 : 2,
             maxLines: 4,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: AppSizes.s04,
               fontFamily: "NotoSans",
               fontWeight: FontWeight.normal,
-              color: AppColors.gray800,
+              color: AppColors.info.shade800,
             ),
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s04, vertical: AppSizes.s04),
               border: InputBorder.none,
               hintText: isMobile ? "Digite a sua mensagem" : "Digite / para adicionar uma mensagem pronta",
-              hintStyle: const TextStyle(
+              hintStyle: TextStyle(
                 fontFamily: "NotoSans",
-                color: AppColors.gray400,
+                color: AppColors.info.shade400,
                 fontWeight: FontWeight.normal,
               ),
             ),

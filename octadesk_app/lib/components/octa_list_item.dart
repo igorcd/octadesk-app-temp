@@ -27,7 +27,7 @@ class OctaListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: selected ? AppColors.gray100 : null,
+      color: selected ? AppColors.info.shade100 : null,
       height: AppSizes.s18,
       child: Column(
         children: [

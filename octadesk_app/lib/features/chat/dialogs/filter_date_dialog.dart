@@ -38,8 +38,8 @@ class _FilterDateDialogState extends State<FilterDateDialog> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.blue400,
+            colorScheme: ColorScheme.light(
+              primary: AppColors.blue.shade400,
               onPrimary: Colors.white,
               onSurface: Colors.black45,
             ),
@@ -145,7 +145,7 @@ class _FilterDateDialogState extends State<FilterDateDialog> {
         const Divider(height: 1, thickness: 1),
         Padding(
           padding: const EdgeInsets.all(AppSizes.s04),
-          child: OctaButton(text: "Filtrar", onPressed: _filter),
+          child: OctaButton(text: "Filtrar", onTap: _filter),
         )
       ],
     );

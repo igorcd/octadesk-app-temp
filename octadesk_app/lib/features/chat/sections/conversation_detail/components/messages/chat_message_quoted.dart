@@ -32,11 +32,11 @@ class ChatMessageQuoted extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(AppIcons.reply, width: AppSizes.s05, color: AppColors.blue500),
+                  Image.asset(AppIcons.reply, width: AppSizes.s05, color: AppColors.blue),
                   const SizedBox(width: AppSizes.s01),
                   Text(
                     message.user.name.length > 20 ? "${message.user.name.substring(0, 20)}..." : message.user.name,
-                    style: const TextStyle(color: AppColors.blue400, fontWeight: FontWeight.bold, fontFamily: "Poppins"),
+                    style: TextStyle(color: AppColors.blue.shade400, fontWeight: FontWeight.bold, fontFamily: "Poppins"),
                   ),
                 ],
               ),
@@ -45,7 +45,7 @@ class ChatMessageQuoted extends StatelessWidget {
               // Conteúdo da mensagem
               Text(
                 message.comment.isNotEmpty ? message.comment : "📎 ${message.attachments.length} anexo${message.attachments.length > 1 ? 's' : ''}",
-                style: const TextStyle(fontFamily: "NotoSans", color: AppColors.gray800),
+                style: TextStyle(fontFamily: "NotoSans", color: AppColors.info.shade800),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),

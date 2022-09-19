@@ -11,9 +11,9 @@ class OctaTabBar extends StatelessWidget {
       color: Colors.transparent,
       child: TabBar(
         indicatorWeight: 3,
-        indicatorColor: AppColors.gray800,
-        labelColor: AppColors.gray800,
-        unselectedLabelColor: AppColors.gray800.withOpacity(.4),
+        indicatorColor: AppColors.info.shade800,
+        labelColor: AppColors.info.shade800,
+        unselectedLabelColor: AppColors.info.shade800.withOpacity(.4),
         labelStyle: const TextStyle(fontSize: AppSizes.s04, fontWeight: FontWeight.bold, fontFamily: "WorkSans"),
         tabs: tabs
             .map(

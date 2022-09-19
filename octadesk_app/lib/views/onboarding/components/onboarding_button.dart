@@ -17,7 +17,7 @@ class OnboardingButton extends StatelessWidget {
         opacity: secondary ? .5 : 1,
         child: TextButton(
           style: TextButton.styleFrom(
-            foregroundColor: AppColors.gray800,
+            foregroundColor: AppColors.info.shade800,
             padding: EdgeInsets.all(is2xsScreenHelper ? AppSizes.s02 : AppSizes.s05),
           ),
           onPressed: onPressed,

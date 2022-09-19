@@ -74,9 +74,9 @@ class AppUserButton extends StatelessWidget {
                 children: [
                   Text(
                     user.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: "Poppins",
-                      color: AppColors.gray800,
+                      color: AppColors.info.shade800,
                       fontSize: AppSizes.s03_5,
                       fontWeight: FontWeight.w500,
                     ),
@@ -149,13 +149,13 @@ class AppUserButton extends StatelessWidget {
               statusChangeButton(ConnectionStatusEnum.offline),
 
               // Divisória
-              const PopupMenuItem(
+              PopupMenuItem(
                 padding: EdgeInsets.zero,
                 enabled: false,
                 height: AppSizes.s03,
                 child: Divider(
                   height: 1,
-                  color: AppColors.gray200,
+                  color: AppColors.info.shade200,
                 ),
               ),
               popupMenuOption(text: "Desconectar", onTap: () => authenticationProvider.logout(context)),

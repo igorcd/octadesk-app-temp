@@ -40,14 +40,14 @@ class _OctaInputState extends State<OctaInput> {
 
   Color _renderBorderColor() {
     if (_inFocus) {
-      return AppColors.blue500;
+      return AppColors.blue;
     }
 
     if (_error.isNotEmpty) {
-      return AppColors.red500;
+      return AppColors.warning;
     }
 
-    return AppColors.gray200;
+    return AppColors.info.shade200;
   }
 
   @override
@@ -59,10 +59,10 @@ class _OctaInputState extends State<OctaInput> {
       return TextFormField(
         decoration: InputDecoration(
           // Estilo do placeholder
-          hintStyle: const TextStyle(
+          hintStyle: TextStyle(
             fontWeight: FontWeight.w300,
             fontFamily: 'NotoSans',
-            color: AppColors.gray300,
+            color: AppColors.info.shade300,
           ),
           errorStyle: const TextStyle(height: 0),
           border: InputBorder.none,
@@ -82,7 +82,7 @@ class _OctaInputState extends State<OctaInput> {
           fontFamily: "NotoSans",
           fontWeight: FontWeight.normal,
           fontSize: is2xsScreenHelper ? AppSizes.s04 * 0.875 : AppSizes.s04,
-          color: AppColors.gray800,
+          color: AppColors.info.shade800,
         ),
         onFieldSubmitted: (_) {
           if (widget.nextNode != null) {
@@ -128,7 +128,7 @@ class _OctaInputState extends State<OctaInput> {
           // Label
           Text(
             widget.label,
-            style: const TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.gray800),
+            style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
           ),
           const SizedBox(
             height: AppSizes.s01,
@@ -149,7 +149,7 @@ class _OctaInputState extends State<OctaInput> {
               borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
               boxShadow: [
                 BoxShadow(
-                  color: _inFocus ? AppColors.blue400 : Colors.transparent,
+                  color: _inFocus ? AppColors.blue.shade400 : Colors.transparent,
                   blurRadius: 3,
                   offset: const Offset(0, 0),
                 ),
@@ -162,7 +162,7 @@ class _OctaInputState extends State<OctaInput> {
           _error.isNotEmpty
               ? Text(
                   _error,
-                  style: const TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: AppColors.red500, fontFamily: "NotoSans"),
+                  style: TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: AppColors.warning, fontFamily: "NotoSans"),
                 )
               : const SizedBox.shrink()
         ],

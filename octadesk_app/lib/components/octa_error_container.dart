@@ -36,7 +36,7 @@ class OctaErrorContainer extends StatelessWidget {
               padding: const EdgeInsets.only(top: AppSizes.s04),
               child: Text(
                 error!,
-                style: const TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.bold, color: AppColors.gray300),
+                style: TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.bold, color: AppColors.info.shade300),
                 textAlign: TextAlign.center,
                 maxLines: 3,
               ),
@@ -46,7 +46,7 @@ class OctaErrorContainer extends StatelessWidget {
               margin: const EdgeInsets.only(top: AppSizes.s04),
               height: AppSizes.s09,
               child: OctaButton(
-                onPressed: onTryAgain!,
+                onTap: onTryAgain!,
                 text: tryAgainText,
               ),
             )

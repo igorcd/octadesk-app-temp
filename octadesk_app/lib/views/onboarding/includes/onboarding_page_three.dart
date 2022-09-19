@@ -21,7 +21,7 @@ class OnboardingPageThree extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Acessar
-            OctaButton(text: "Acessar", onPressed: login),
+            OctaButton(text: "Acessar", onTap: login),
 
             // Criar conta
             Row(

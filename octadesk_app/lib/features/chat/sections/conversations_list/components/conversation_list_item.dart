@@ -34,7 +34,7 @@ class ConversationListItem extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(AppSizes.s02),
-      color: selected ? AppColors.gray100 : Colors.transparent,
+      color: selected ? AppColors.info.shade100 : Colors.transparent,
       height: AppSizes.s20,
       child: Material(
         borderRadius: BorderRadius.circular(AppSizes.s03_5),
@@ -90,15 +90,15 @@ class ConversationListItem extends StatelessWidget {
                               constraints: const BoxConstraints(maxWidth: 80),
                               height: AppSizes.s03_5,
                               padding: const EdgeInsets.symmetric(horizontal: AppSizes.s01),
-                              decoration: BoxDecoration(color: AppColors.gray200, borderRadius: BorderRadius.circular(AppSizes.s10)),
+                              decoration: BoxDecoration(color: AppColors.info.shade200, borderRadius: BorderRadius.circular(AppSizes.s10)),
 
                               // Nome do agente
                               child: Text(
                                 formatAgentName(room.agent?.name),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: AppColors.gray600,
+                                style: TextStyle(
+                                  color: AppColors.info.shade600,
                                   fontSize: AppSizes.s02_5,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -114,7 +114,7 @@ class ConversationListItem extends StatelessWidget {
                       // Tempo da última mensagem
                       Text(
                         formattedTime(),
-                        style: const TextStyle(color: AppColors.gray600, fontSize: AppSizes.s02_5),
+                        style: TextStyle(color: AppColors.info.shade600, fontSize: AppSizes.s02_5),
                       )
                     ],
                   ),

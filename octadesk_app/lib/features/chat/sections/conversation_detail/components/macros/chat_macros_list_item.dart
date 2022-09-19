@@ -24,14 +24,14 @@ class ChatMacrosListItem extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.gray800),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
                 if (content != null && content!.isNotEmpty)
                   Text(
                     content!,
-                    style: const TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.gray500),
+                    style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),

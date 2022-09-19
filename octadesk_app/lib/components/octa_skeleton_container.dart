@@ -19,7 +19,7 @@ class OctaSkeletonContainer extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.gray200,
+        color: AppColors.info.shade200,
         borderRadius: BorderRadius.all(
           Radius.circular(borderRadius),
         ),

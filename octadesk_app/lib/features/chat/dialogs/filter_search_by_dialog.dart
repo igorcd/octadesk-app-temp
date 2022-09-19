@@ -88,7 +88,7 @@ class _SearchByDialogState extends State<SearchByDialog> {
             bottom: AppSizes.s04 + MediaQuery.of(context).padding.bottom,
           ),
           child: OctaButton(
-            onPressed: () => Navigator.of(context).pop(_searchByTemp),
+            onTap: () => Navigator.of(context).pop(_searchByTemp),
             text: "Filtrar",
           ),
         )

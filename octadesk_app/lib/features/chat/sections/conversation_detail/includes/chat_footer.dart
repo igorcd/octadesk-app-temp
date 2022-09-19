@@ -16,7 +16,7 @@ class ChatFooter extends StatelessWidget {
     return Consumer<ConversationDetailProvider>(
       builder: (context, value, child) {
         // Cor de foco
-        Color focusColor = value.annotationActive ? AppColors.yellow500 : AppColors.blue500;
+        Color focusColor = value.annotationActive ? AppColors.warning.shade500 : AppColors.blue;
 
         return Padding(
           padding: isMobile
@@ -27,12 +27,12 @@ class ChatFooter extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             decoration: BoxDecoration(
-              border: Border.all(color: value.inputInFocus ? focusColor : AppColors.gray300),
+              border: Border.all(color: value.inputInFocus ? focusColor : AppColors.info.shade300),
               borderRadius: BorderRadius.circular(AppSizes.s04),
-              color: value.annotationActive ? AppColors.yellow100 : Colors.white,
+              color: value.annotationActive ? AppColors.warning.shade100 : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.blue200,
+                  color: AppColors.blue.shade200,
                   blurRadius: value.inputInFocus ? 10 : 0,
                 )
               ],
@@ -62,7 +62,7 @@ class ChatFooter extends StatelessWidget {
                   controller: value.inputController,
                   onSubmit: () => value.sendMessage(),
                 ),
-                const Divider(height: 1, color: AppColors.gray300, thickness: 1),
+                Divider(height: 1, color: AppColors.info.shade300, thickness: 1),
 
                 // Ações
                 Container(

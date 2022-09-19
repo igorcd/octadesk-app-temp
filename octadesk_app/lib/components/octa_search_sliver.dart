@@ -68,9 +68,9 @@ class _OctaSearchSliverState extends State<OctaSearchSliver> {
             height: 2,
             child: LinearProgressIndicator(
               value: widget.loading ? null : 0,
-              backgroundColor: AppColors.gray100,
+              backgroundColor: AppColors.info.shade100,
               minHeight: 2,
-              color: AppColors.blue400,
+              color: AppColors.blue.shade400,
             ),
           )
         ],

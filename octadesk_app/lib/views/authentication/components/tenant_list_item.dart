@@ -20,7 +20,7 @@ class TenantListItem extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppSizes.s02),
-              border: Border.all(color: AppColors.gray300),
+              border: Border.all(color: AppColors.info.shade300),
             ),
             child: OctaText(
               label,

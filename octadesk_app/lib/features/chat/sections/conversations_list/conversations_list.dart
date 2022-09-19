@@ -58,13 +58,13 @@ class _ConversationsListState extends State<ConversationsList> with TickerProvid
                 ],
               ),
             ),
-            const Divider(thickness: 2, height: 2, color: AppColors.gray100),
+            Divider(thickness: 2, height: 2, color: AppColors.info.shade100),
 
             // TabBar
             const OctaTabBar(
               tabs: ["Abertas", "Fechadas"],
             ),
-            const Divider(thickness: 2, height: 2, color: AppColors.gray100),
+            Divider(thickness: 2, height: 2, color: AppColors.info.shade100),
 
             // Conteúdo
             Expanded(

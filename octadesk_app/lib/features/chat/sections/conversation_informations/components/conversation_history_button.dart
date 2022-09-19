@@ -13,7 +13,7 @@ class ConversationHistoryButton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSizes.s02),
-        border: Border.all(color: AppColors.gray200),
+        border: Border.all(color: AppColors.info.shade200),
       ),
       child: Material(
         borderRadius: BorderRadius.circular(AppSizes.s02),
@@ -24,10 +24,10 @@ class ConversationHistoryButton extends StatelessWidget {
             padding: const EdgeInsets.all(AppSizes.s03),
             child: Text(
               dateTimeFormatterHelper().format(date),
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
-                color: AppColors.gray500,
+                color: AppColors.info,
               ),
             ),
           ),

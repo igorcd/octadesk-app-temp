@@ -16,7 +16,7 @@ class ChatStory extends StatelessWidget {
       width: 150,
       height: 268,
       decoration: BoxDecoration(
-        color: AppColors.gray100,
+        color: AppColors.info.shade100,
         borderRadius: BorderRadius.circular(AppSizes.s03),
       ),
       child: GestureDetector(
@@ -29,7 +29,7 @@ class ChatStory extends StatelessWidget {
                 image: story.thumbnailUrl,
                 imageErrorBuilder: (context, _, __) {
                   return Container(
-                    color: AppColors.gray100,
+                    color: AppColors.info.shade100,
                     constraints: const BoxConstraints.expand(),
                     alignment: Alignment.center,
                     child: const Text(

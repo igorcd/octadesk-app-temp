@@ -35,8 +35,8 @@ class OctaPaginationIndication extends StatelessWidget {
                   borderRadius: BorderRadius.circular(54),
                   boxShadow: const [AppShadows.s100],
                 ),
-                child: const CircularProgressIndicator(
-                  color: AppColors.blue500,
+                child: CircularProgressIndicator(
+                  color: AppColors.blue,
                 ),
               )
             : null,

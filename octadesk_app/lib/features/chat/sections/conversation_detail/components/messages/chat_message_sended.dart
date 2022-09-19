@@ -35,15 +35,15 @@ class ChatMessageSended extends StatelessWidget {
       // Borda
       BoxBorder? border;
       if (message.type == MessageTypeEnum.internal) {
-        border = Border.all(color: AppColors.yellow300);
+        border = Border.all(color: AppColors.warning.shade300);
       } else if (message.status == MessageStatusEnum.error) {
         border = Border.all(color: Colors.red);
       } else {
-        border = Border.all(color: AppColors.blue200);
+        border = Border.all(color: AppColors.blue.shade200);
       }
 
       return BoxDecoration(
-        color: message.type == MessageTypeEnum.internal ? AppColors.yellow100 : AppColors.blue100,
+        color: message.type == MessageTypeEnum.internal ? AppColors.warning.shade100 : AppColors.blue.shade100,
         border: border,
         boxShadow: const [AppShadows.s200],
         borderRadius: BorderRadius.only(
@@ -63,7 +63,7 @@ class ChatMessageSended extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: AppSizes.s02, left: AppSizes.s00_5),
             child: Text(
               message.user.name,
-              style: const TextStyle(color: AppColors.gray800, fontWeight: FontWeight.bold, fontSize: AppSizes.s03),
+              style: TextStyle(color: AppColors.info.shade800, fontWeight: FontWeight.bold, fontSize: AppSizes.s03),
             ),
           ),
 
@@ -134,7 +134,7 @@ class ChatMessageSended extends StatelessWidget {
               constraints: BoxConstraints(maxWidth: maxContainerWidth),
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(240, 246, 253, 1),
-                border: Border.all(color: AppColors.blue500),
+                border: Border.all(color: AppColors.blue),
                 borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s03)),
               ),
               child: ChatMessageContent("<b>${message.buttons.indexOf(e) + 1}</b> - $e"),

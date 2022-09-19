@@ -16,11 +16,11 @@ class ChatEvent extends StatelessWidget {
         child: RichText(
           text: TextSpan(
             text: message,
-            style: const TextStyle(fontFamily: "NotoSans", color: AppColors.gray600, fontSize: AppSizes.s03),
+            style: TextStyle(fontFamily: "NotoSans", color: AppColors.info.shade600, fontSize: AppSizes.s03),
             children: [
               TextSpan(
                 text: boldMessage,
-                style: const TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: AppColors.gray600, fontSize: AppSizes.s03),
+                style: TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: AppColors.info.shade600, fontSize: AppSizes.s03),
               )
             ],
           ),

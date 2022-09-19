@@ -5,7 +5,7 @@ import '../resources/index.dart';
 class OctaTextButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
-  final Color color;
+  final Color? color;
   final double fontSize;
   final String fontFamily;
   final FontWeight fontWeight;
@@ -14,7 +14,7 @@ class OctaTextButton extends StatelessWidget {
   const OctaTextButton({
     required this.onPressed,
     required this.text,
-    this.color = AppColors.blue600,
+    this.color,
     this.fontSize = AppSizes.s03,
     this.fontFamily = "NotoSans",
     this.fontWeight = FontWeight.bold,
@@ -26,7 +26,7 @@ class OctaTextButton extends StatelessWidget {
     return OctaTextButton(
       onPressed: onPressed,
       text: text,
-      color: AppColors.blue400,
+      color: AppColors.blue.shade400,
       fontFamily: "Poppins",
       fontSize: AppSizes.s04_5,
       fontWeight: FontWeight.w600,
@@ -38,7 +38,7 @@ class OctaTextButton extends StatelessWidget {
     return OctaTextButton(
       onPressed: onPressed,
       text: text,
-      color: AppColors.gray300,
+      color: AppColors.info.shade300,
       fontSize: AppSizes.s03_5,
     );
   }
@@ -54,7 +54,7 @@ class OctaTextButton extends StatelessWidget {
           child: Text(
             text,
             style: TextStyle(
-              color: color,
+              color: color ?? AppColors.blue.shade600,
               fontWeight: fontWeight,
               fontFamily: fontFamily,
               fontSize: fontSize,

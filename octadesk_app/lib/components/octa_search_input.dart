@@ -18,10 +18,10 @@ class _OctaSearchInputState extends State<OctaSearchInput> {
 
   Color _renderBorderColor() {
     if (_inFocus) {
-      return AppColors.blue500;
+      return AppColors.blue;
     }
 
-    return AppColors.gray200;
+    return AppColors.info.shade200;
   }
 
   /// Tratar digitação da busca
@@ -76,7 +76,7 @@ class _OctaSearchInputState extends State<OctaSearchInput> {
           borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
           boxShadow: [
             BoxShadow(
-              color: _inFocus ? AppColors.blue400 : Colors.transparent,
+              color: _inFocus ? AppColors.blue.shade400 : Colors.transparent,
               blurRadius: 3,
               offset: const Offset(0, 0),
             ),
@@ -97,25 +97,25 @@ class _OctaSearchInputState extends State<OctaSearchInput> {
             Expanded(
               child: TextField(
                 controller: widget.controller ?? _searchController,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: "NotoSans",
                   fontWeight: FontWeight.normal,
                   fontSize: AppSizes.s04,
-                  color: AppColors.gray800,
+                  color: AppColors.info.shade800,
                 ),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   // Estilo do placeholder
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: 'NotoSans',
-                    color: AppColors.gray300,
+                    color: AppColors.info.shade300,
                   ),
 
-                  errorStyle: TextStyle(height: 0),
+                  errorStyle: const TextStyle(height: 0),
                   border: InputBorder.none,
                   hintText: "Buscar...",
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.s02),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s02),
                 ),
               ),
             )

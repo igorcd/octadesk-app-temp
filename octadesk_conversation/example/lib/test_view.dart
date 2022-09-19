@@ -1,6 +1,5 @@
 import 'package:example/rooms_view.dart';
 import 'package:flutter/material.dart';
-import 'package:octadesk_conversation/inbox_filters/inbox_filters.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:octadesk_services/enums/authentication_provider_enum.dart';
@@ -44,7 +43,6 @@ class _TestViewState extends State<TestView> {
         agentId: user.id,
         socketUrl: auth.apis["chatSocketBase"]!,
         subDomain: auth.octaAuthenticated.subDomain,
-        inboxFilter: InboxFilters.open(page: 1),
       );
     } catch (e) {
       return Future.error(e);

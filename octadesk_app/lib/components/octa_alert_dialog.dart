@@ -51,22 +51,30 @@ class _OctaAlertDialogState extends State<OctaAlertDialog> with TickerProviderSt
     // Gerar ação
     Widget generateAction(OctaAlertDialogAction action) {
       return Expanded(
-        child: OctaButton(
-          type: action.primary ? ButtonStyleEnum.primary : ButtonStyleEnum.secondary,
-          text: action.text,
-          onPressed: () async {
-            Navigator.of(context).pop();
-            await Future.delayed(const Duration(milliseconds: 300));
-            action.action();
-          },
-        ),
+        child: action.primary
+            ? OctaButton(
+                text: action.text,
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await Future.delayed(const Duration(milliseconds: 300));
+                  action.action();
+                },
+              )
+            : OctaButton(
+                text: action.text,
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  await Future.delayed(const Duration(milliseconds: 300));
+                  action.action();
+                },
+              ),
       );
     }
 
     // Gerar ações
     List<Widget> generateActions() {
       if (widget.actions == null) {
-        return [Expanded(child: OctaButton(onPressed: () => Navigator.of(context).pop(), text: "Ok"))];
+        return [Expanded(child: OctaButton(onTap: () => Navigator.of(context).pop(), text: "Ok"))];
       }
 
       var children = widget.actions!.asMap().entries.map((e) {

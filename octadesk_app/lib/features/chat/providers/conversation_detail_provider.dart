@@ -204,9 +204,9 @@ class ConversationDetailProvider extends ChangeNotifier {
           return el.name.replaceAll("(", "\\(").replaceAll(")", "\\)");
 
           // Estilização das citações
-        }).join("|")})+\\b"): const TextStyle(
+        }).join("|")})+\\b"): TextStyle(
           fontWeight: FontWeight.bold,
-          color: AppColors.yellow800,
+          color: AppColors.warning.shade800,
           fontFamily: "NotoSans",
         ),
       },

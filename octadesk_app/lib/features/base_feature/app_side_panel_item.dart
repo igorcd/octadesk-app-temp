@@ -15,7 +15,7 @@ class AppSidePanelItem extends StatelessWidget {
       child: Material(
         borderRadius: BorderRadius.circular(AppSizes.s02),
         clipBehavior: Clip.hardEdge,
-        color: selected ? AppColors.gray100 : Colors.transparent,
+        color: selected ? AppColors.info.shade100 : Colors.transparent,
         child: InkWell(
           onTap: onTap,
           child: Container(
@@ -29,7 +29,7 @@ class AppSidePanelItem extends StatelessWidget {
                         label,
                         style: TextStyle(
                           fontSize: AppSizes.s03,
-                          color: AppColors.gray800,
+                          color: AppColors.info.shade800,
                           fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                         ),
                       ),
@@ -39,7 +39,7 @@ class AppSidePanelItem extends StatelessWidget {
                         trailing!,
                         style: TextStyle(
                           fontSize: AppSizes.s03,
-                          color: AppColors.gray800,
+                          color: AppColors.info.shade800,
                           fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                         ),
                       )

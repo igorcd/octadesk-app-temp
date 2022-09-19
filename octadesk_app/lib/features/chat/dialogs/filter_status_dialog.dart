@@ -61,7 +61,7 @@ class _FilterStatusDialogState extends State<FilterStatusDialog> {
             bottom: AppSizes.s04 + MediaQuery.of(context).padding.bottom,
           ),
           child: OctaButton(
-            onPressed: () => Navigator.of(context).pop(_statusTemp),
+            onTap: () => Navigator.of(context).pop(_statusTemp),
             text: "Filtrar",
           ),
         )

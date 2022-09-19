@@ -17,22 +17,22 @@ class _AppWindowsToolbarState extends State<AppWindowsToolbar> {
     });
   }
 
-  final colors = WindowButtonColors(
-    iconNormal: Colors.black87,
-    mouseOver: Colors.grey.shade400,
-    mouseDown: Colors.grey.shade500,
-    iconMouseOver: Colors.black87,
-    iconMouseDown: Colors.black87,
-  );
-
   @override
   Widget build(BuildContext context) {
+    final colors = WindowButtonColors(
+      iconNormal: Theme.of(context).colorScheme.onBackground,
+      mouseOver: Theme.of(context).colorScheme.onSurface,
+      mouseDown: Theme.of(context).colorScheme.onSurface,
+      iconMouseOver: Theme.of(context).colorScheme.onBackground,
+      iconMouseDown: Theme.of(context).colorScheme.onBackground,
+    );
+
     return Scaffold(
       body: Column(
         children: [
           Container(
             height: AppSizes.s08,
-            color: Colors.grey.shade200,
+            color: Theme.of(context).colorScheme.background,
             child: Row(
               children: [
                 Expanded(
@@ -52,7 +52,9 @@ class _AppWindowsToolbarState extends State<AppWindowsToolbar> {
                             onPressed: maximizeOrRestore,
                             colors: colors,
                           ),
-                    CloseWindowButton(),
+                    CloseWindowButton(
+                      colors: colors,
+                    ),
                   ],
                 )
               ],

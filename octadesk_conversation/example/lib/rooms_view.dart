@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/models/room/room_pagination_model.dart';
 
 class RoomsView extends StatelessWidget {
@@ -9,7 +8,6 @@ class RoomsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<RoomPaginationModel?>(
-      stream: OctadeskConversation.instance.getRoomsListStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Text("Carregando");

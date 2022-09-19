@@ -165,7 +165,7 @@ class _TagsDialogState extends State<TagsDialog> {
         const Divider(height: 1, thickness: 1),
         Padding(
           padding: const EdgeInsets.all(AppSizes.s04),
-          child: OctaButton(text: "Concluir", onPressed: () => Navigator.of(context).pop(_selectedTags)),
+          child: OctaButton(text: "Concluir", onTap: () => Navigator.of(context).pop(_selectedTags)),
         )
       ],
     );

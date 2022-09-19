@@ -31,8 +31,8 @@ class ChatMessageReceived extends StatelessWidget {
     // Decoration do container
     BoxDecoration getDecoration(bool trimBorder) {
       return BoxDecoration(
-        color: AppColors.gray100,
-        border: Border.all(color: AppColors.gray300),
+        color: AppColors.info.shade100,
+        border: Border.all(color: AppColors.info.shade300),
         boxShadow: const [AppShadows.s200],
         borderRadius: BorderRadius.only(
           topLeft: trimBorder ? const Radius.circular(AppSizes.s00_5) : const Radius.circular(AppSizes.s03),
@@ -51,7 +51,7 @@ class ChatMessageReceived extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: AppSizes.s02, left: AppSizes.s00_5),
             child: Text(
               message.user.name,
-              style: const TextStyle(color: AppColors.gray800, fontWeight: FontWeight.bold, fontSize: AppSizes.s03),
+              style: TextStyle(color: AppColors.info.shade800, fontWeight: FontWeight.bold, fontSize: AppSizes.s03),
             ),
           ),
 

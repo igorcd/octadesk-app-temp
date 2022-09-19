@@ -46,7 +46,7 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
               ],
             ),
           ),
-          const Divider(thickness: 2, height: 2, color: AppColors.gray100),
+          Divider(thickness: 2, height: 2, color: AppColors.info.shade100),
 
           // Conteúdo
           Expanded(
