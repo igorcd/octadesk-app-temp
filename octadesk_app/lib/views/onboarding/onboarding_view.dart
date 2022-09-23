@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:octadesk_app/components/responsive/responsive_positioned.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
 import 'package:octadesk_app/resources/index.dart';
@@ -33,7 +34,7 @@ class _OnboardingViewState extends State<OnboardingView> {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SingleChildScrollView(
           //
           // Container Principal
@@ -70,7 +71,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                       // Terceira página do onboarding
                       OnboardingPageThree(
                         register: () async => await launchUrlString('https://octadesk.com', mode: LaunchMode.externalApplication),
-                        login: () => Navigator.pushNamed(context, PublicRouter.authenticationView),
+                        login: () => GoRouter.of(context).replaceNamed(AppRouter.authenticationView),
                       ),
                     ],
                   ),
@@ -89,6 +90,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                           child: Image.asset(
                             AppImages.appLogo,
                             height: AppSizes.s10,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ),
 

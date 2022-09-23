@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
-import 'package:octadesk_app/features/chat/sections/conversation_informations/conversation_informations.dart';
+import 'package:octadesk_app/features/chat/sections/chat_informations/chat_informations.dart';
 import 'package:provider/provider.dart';
 
 class ChatInformationsDialog extends StatelessWidget {
@@ -13,7 +13,7 @@ class ChatInformationsDialog extends StatelessWidget {
       value: conversationDetails,
       child: Consumer<ConversationDetailProvider>(
         builder: (context, value, child) {
-          return const ConversationInformations();
+          return const ChatInformations();
         },
       ),
     );

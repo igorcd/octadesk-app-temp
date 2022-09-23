@@ -1,44 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:octadesk_app/providers/authentication_provider.dart';
-import 'package:octadesk_app/resources/app_colors.dart';
-import 'package:octadesk_app/router/features_router.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:octadesk_app/resources/index.dart';
+import 'package:octadesk_app/views/main/components/app_menu_item.dart';
+import 'package:octadesk_app/views/main/components/app_user_button.dart';
+import 'package:octadesk_app/views/main/includes/app_menu.dart';
 
 class MainView extends StatelessWidget {
-  const MainView({Key? key}) : super(key: key);
+  final Widget currentFeature;
+  const MainView({required this.currentFeature, super.key});
 
   @override
   Widget build(BuildContext context) {
-    var authenticationProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+    var route = GoRouter.of(context);
 
-    return FutureBuilder(
-      future: authenticationProvider.checkUserStatusAndInitializeChat(),
-      builder: (context, snapshot) {
-        // Em caso de erro
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text(snapshot.error.toString()),
-            ),
-          );
-        }
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Row(
+        children: [
+          // Menu
+          AppMenu(
+            menuItems: [
+              //
+              // Chat
+              AppMenuItem(
+                selected: route.location == '/main',
+                icon: AppIcons.chatIcon,
+                selectedIcon: AppIcons.chatFillIcon,
+                onTap: () => route.go('/main'),
+              ),
 
-        // Loading
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(color: AppColors.blue),
-            ),
-          );
-        }
+              // Bot
+              AppMenuItem(
+                selected: route.location == '/bot',
+                icon: AppIcons.botIcon,
+                selectedIcon: AppIcons.botFillIcon,
+                onTap: () => route.go('/bot'),
+              ),
 
-        // Conteúdo
-        return Navigator(
-          key: FeaturesRouter.featuresNavigator,
-          onGenerateRoute: FeaturesRouter.controller,
-          initialRoute: FeaturesRouter.chatModule,
-        );
-      },
+              // Dashboard
+              AppMenuItem(
+                selected: route.location == '/dashboards',
+                icon: AppIcons.dashboardIcon,
+                selectedIcon: AppIcons.dashboardFillIcon,
+                onTap: () => route.go('/dashboards'),
+              ),
+
+              // Usuários
+              AppMenuItem(
+                selected: route.location == '/users',
+                icon: AppIcons.usersIcon,
+                selectedIcon: AppIcons.usersFillIcon,
+                onTap: () => route.go('/users'),
+              ),
+
+              const Spacer(),
+
+              // Configurações
+              AppMenuItem(
+                selected: route.location == '/settings',
+                icon: AppIcons.settingsIcon,
+                selectedIcon: AppIcons.settingsIconFill,
+                onTap: () => route.go('/settings'),
+              ),
+
+              // Ajuda
+              AppMenuItem(
+                selected: false,
+                icon: AppIcons.helpIcon,
+                onTap: () {},
+              ),
+
+              // Notificações
+              AppMenuItem(
+                selected: false,
+                icon: AppIcons.notificationIcon,
+                onTap: () {},
+              ),
+              const SizedBox(height: AppSizes.s04),
+              const AppUserButton(),
+            ],
+          ),
+
+          const VerticalDivider(),
+          Expanded(
+            child: currentFeature,
+          )
+        ],
+      ),
     );
   }
 }

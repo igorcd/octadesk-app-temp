@@ -35,7 +35,7 @@ class _OctaExpansionPanelState extends State<OctaExpansionPanel> with TickerProv
             onTap: () => _controller.value == 1 ? _controller.reverse() : _controller.forward(),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.s04),
-              height: AppSizes.s12,
+              height: AppSizes.s14,
               child: Row(
                 children: [
                   Expanded(
@@ -43,7 +43,11 @@ class _OctaExpansionPanelState extends State<OctaExpansionPanel> with TickerProv
                   ),
                   RotationTransition(
                     turns: Tween<double>(begin: 0, end: .5).animate(_animation),
-                    child: Image.asset(AppIcons.angleDown, width: AppSizes.s06),
+                    child: Image.asset(
+                      AppIcons.angleDown,
+                      width: AppSizes.s06,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ],
               ),

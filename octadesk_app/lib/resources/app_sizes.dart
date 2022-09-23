@@ -28,8 +28,11 @@ class AppSizes {
   /// 18px
   static const double s04_5 = _rem * 1.125;
 
-  /// 20px
-  static const double s05 = _rem * 1.25;
+  /// 22px
+  static const double s05 = _rem * 1.375;
+
+  /// 24px
+  static const double s05_5 = _rem * 1.5;
 
   /// 24px
   static const double s06 = _rem * 1.5;
@@ -84,6 +87,9 @@ class AppSizes {
 
   /// 80px
   static const double s20 = _rem * 5;
+
+  /// 84px
+  static const double s21 = _rem * 5.25;
 
   /// 90px
   static const double s22_5 = _rem * 5.625;

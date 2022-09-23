@@ -41,7 +41,6 @@ class OctaListItem extends StatelessWidget {
                   child: Row(
                     children: [
                       OctaAvatar(
-                        borderRadius: avatarBorderRadius,
                         source: pictureUrl,
                         name: title,
                         isLocalPicture: isLocalPicture,

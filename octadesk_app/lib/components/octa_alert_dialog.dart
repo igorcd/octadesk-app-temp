@@ -103,7 +103,7 @@ class _OctaAlertDialogState extends State<OctaAlertDialog> with TickerProviderSt
         child: Material(
           elevation: 20,
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(AppSizes.s04))),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           child: Container(
             constraints: const BoxConstraints(maxWidth: 360),
             width: width,

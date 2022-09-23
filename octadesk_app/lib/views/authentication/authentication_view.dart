@@ -20,11 +20,12 @@ class AuthenticationView extends StatelessWidget {
     var top = query.padding.top;
     var bottom = query.padding.bottom;
     var screenHeight = query.size.height - bottom - top - kAppToolbarHeight;
+    var colorScheme = Theme.of(context).colorScheme;
 
     return ChangeNotifierProvider(
       create: (context) => AuthenticationViewProvider(context, Provider.of<AuthenticationProvider>(context, listen: false)),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.background,
         body: SafeArea(
           child: SingleChildScrollView(
             //
@@ -55,7 +56,7 @@ class AuthenticationView extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: ResponsiveContainer(
-                        decoration: Responsive(const BoxDecoration(color: Colors.white)),
+                        decoration: Responsive(BoxDecoration(color: colorScheme.background)),
                         constraints: const BoxConstraints(maxHeight: 750),
                         width: Responsive(double.infinity, lg: 505, xxl: 550),
                         margin: Responsive(

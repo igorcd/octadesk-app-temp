@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/views/authentication/provider/authentication_view_provider.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +40,10 @@ class LoginInclude extends StatelessWidget {
                     const EdgeInsets.only(bottom: AppSizes.s04),
                     lg: const EdgeInsets.only(bottom: AppSizes.s12),
                   ),
-                  child: Image.asset(AppImages.appLogo),
+                  child: Image.asset(
+                    AppImages.appLogo,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
                 ),
 
                 // Conteúdo

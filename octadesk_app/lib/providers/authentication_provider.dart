@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
@@ -128,16 +129,6 @@ class AuthenticationProvider with ChangeNotifier {
     );
   }
 
-  // Checar status da tenant e inicializar o chat
-  Future<void> checkUserStatusAndInitializeChat() {
-    if (_initializationFuture != null) {
-      return _initializationFuture!;
-    }
-
-    _initializationFuture = _checkUserStatusAndInitializeChat();
-    return _initializationFuture!;
-  }
-
   /// Autenticar
   Future authenticate(AuthDTO data, AuthenticationProviderEnum authenticationMode) async {
     var user = await NucleusService.auth(data, authenticationMode);
@@ -148,38 +139,44 @@ class AuthenticationProvider with ChangeNotifier {
 
     await storage.setString(AppConstants.persistedAuthenticationData, jsonEncode(persistedData.toMap()));
 
+    // Inicializar clientes HTTP
     initializeHttpClients(
       accessToken: persistedData.accessToken,
       apis: persistedData.apis,
       jwt: persistedData.jwt,
     );
 
+    // Carregar dados do usuário
     await _loadUserData(
       accessToken: persistedData.accessToken,
       jwt: persistedData.jwt,
     );
+
+    // Checar licença do usuário
+    await _checkUserStatusAndInitializeChat();
   }
 
   /// Inicializar a aplicação
   Future initializeApplication(BuildContext context) async {
-    var navigator = Navigator.of(context);
+    var navigator = GoRouter.of(context);
     // Verificar se existe usuário persistido
     try {
       bool hasUser = await _checkIfHasUserDataPersisted();
 
       if (!hasUser) {
-        navigator.pushNamedAndRemoveUntil(PublicRouter.onboardingView, (route) => false);
+        navigator.replaceNamed(AppRouter.onboardingView);
         return;
       }
 
       // Setar os dados das APIs e JWTs
       await _initializeOctaHttpClient();
+      await _checkUserStatusAndInitializeChat();
 
       // Setar usuário do Crash Analytics
-      navigator.pushNamedAndRemoveUntil(PublicRouter.mainView, (route) => false);
+      navigator.goNamed(AppRouter.chatFeature);
     } catch (e) {
       // Enviar erro para o Firebase
-      navigator.pushNamedAndRemoveUntil(PublicRouter.onboardingView, (route) => false);
+      navigator.goNamed(AppRouter.onboardingView);
     }
   }
 
@@ -190,7 +187,7 @@ class AuthenticationProvider with ChangeNotifier {
       OctaAlertDialogAction(
         primary: true,
         action: () async {
-          PublicRouter.navigator.currentState!.pushNamedAndRemoveUntil(PublicRouter.authenticationView, (route) => false);
+          AppRouter.navigator.currentState!.pushNamedAndRemoveUntil(AppRouter.authenticationView, (route) => false);
           await _clearUserData();
         },
         text: "Sair",

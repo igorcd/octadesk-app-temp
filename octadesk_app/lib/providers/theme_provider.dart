@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:octadesk_app/resources/app_theme.dart';
 import 'package:octadesk_app/resources/index.dart';
-import 'package:octadesk_app/themes/app_theme.dart';
 
 enum DarkModeType {
   byOperatingSystem,

@@ -7,7 +7,7 @@ class AppIcons {
   static const String chatFillIcon = "lib/assets/icons/chat-fill-icon.png";
 
   static const String dashboardIcon = "lib/assets/icons/dashboard-icon.png";
-  static const String dashboardFillIcon = "lib/assets/icons/dashboard-fill-icon.png";
+  static const String dashboardFillIcon = "lib/assets/icons/dashboard-icon-fill.png";
 
   static const String usersIcon = "lib/assets/icons/users-icon.png";
   static const String usersFillIcon = "lib/assets/icons/users-fill-icon.png";
@@ -15,6 +15,7 @@ class AppIcons {
   static const String helpIcon = "lib/assets/icons/help-icon.png";
   static const String notificationIcon = "lib/assets/icons/notification-icon.png";
   static const String settingsIcon = "lib/assets/icons/settings-icon.png";
+  static const String settingsIconFill = "lib/assets/icons/settings-icon-fill.png";
 
   static const String angleLeft = "lib/assets/icons/angle-left.png";
   static const String menu = "lib/assets/icons/menu.png";

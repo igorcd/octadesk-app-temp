@@ -18,17 +18,20 @@ class OctaSocialMediaBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      width: 20,
-      height: 20,
+      width: 18,
+      height: 18,
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        borderRadius: const BorderRadius.all(Radius.circular(25)),
         border: Border.all(
-          color: Colors.white,
-          width: 2,
+          strokeAlign: StrokeAlign.outside,
+          color: colorScheme.surface,
+          width: 3,
         ),
         image: DecorationImage(image: AssetImage(images[socialMedia]!), fit: BoxFit.cover),
-        color: Colors.white,
+        color: colorScheme.surface,
       ),
     );
   }

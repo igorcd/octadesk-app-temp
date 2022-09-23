@@ -3,8 +3,8 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:octadesk_app/features/chat/sections/new_conversation/components/contact_phone_list.dart';
-import 'package:octadesk_app/features/chat/sections/new_conversation/components/origin_phone_list.dart';
+import 'package:octadesk_app/features/chat/sections/new_chat/components/contact_phone_list.dart';
+import 'package:octadesk_app/features/chat/sections/new_chat/components/origin_phone_list.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/dtos/contact/contact_list_dto.dart';

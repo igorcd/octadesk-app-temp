@@ -66,4 +66,9 @@ class InboxMessagesCounterController {
       print("Não foi possível atualizar o contador de mensagens");
     }
   }
+
+  void dispose() {
+    inboxFiltersUpdateTimer?.cancel();
+    _inboxFiltersMessagesCountStreamController.close();
+  }
 }

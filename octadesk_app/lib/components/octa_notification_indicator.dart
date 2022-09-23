@@ -28,6 +28,8 @@ class _OctaNotificationIndicatorState extends State<OctaNotificationIndicator> w
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Stack(
       children: [
         FadeTransition(
@@ -37,14 +39,14 @@ class _OctaNotificationIndicatorState extends State<OctaNotificationIndicator> w
             child: Container(
               height: AppSizes.s01_5,
               width: AppSizes.s01_5,
-              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: AppColors.info.shade800),
+              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: colorScheme.onSurface),
             ),
           ),
         ),
         Container(
           height: AppSizes.s01_5,
           width: AppSizes.s01_5,
-          decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: AppColors.info.shade800),
+          decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s01_5)), color: colorScheme.onSurface),
         ),
       ],
     );

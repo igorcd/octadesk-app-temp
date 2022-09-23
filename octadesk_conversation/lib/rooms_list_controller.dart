@@ -179,7 +179,9 @@ class RoomsListController {
     }
   }
 
+  ///
   /// Mudar inbox
+  ///
   void changeInbox(RoomFilterEnum inbox) async {
     // Atualizar valores
     _inboxFilter = InboxFilters.getFilterByType(inbox, page: 1, agentId: OctadeskConversation.instance.agent!.id);
@@ -191,5 +193,9 @@ class RoomsListController {
     } catch (e) {
       _roomsListStreamController.addError(e);
     }
+  }
+
+  void dispose() {
+    _roomsListStreamController.close();
   }
 }

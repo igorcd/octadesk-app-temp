@@ -32,7 +32,7 @@ class _AppWindowsToolbarState extends State<AppWindowsToolbar> {
         children: [
           Container(
             height: AppSizes.s08,
-            color: Theme.of(context).colorScheme.background,
+            color: MediaQuery.of(context).platformBrightness == Brightness.dark ? AppColors.info.shade900 : AppColors.info.shade100,
             child: Row(
               children: [
                 Expanded(

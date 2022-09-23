@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/octa_alert_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/chat_informations_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/tags_dialog.dart';
-import 'package:octadesk_app/features/chat/sections/conversation_detail/includes/chat_body.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
 import 'package:octadesk_app/resources/app_colors.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';

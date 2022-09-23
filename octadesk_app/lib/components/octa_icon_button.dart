@@ -32,6 +32,7 @@ class OctaIconButton extends StatelessWidget {
               fit: BoxFit.contain,
               height: iconSize,
               width: iconSize,
+              color: Theme.of(context).colorScheme.onBackground,
             ),
           ),
         ),

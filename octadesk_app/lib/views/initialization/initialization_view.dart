@@ -16,18 +16,21 @@ class _InitializationViewState extends State<InitializationView> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AuthenticationProvider>(context, listen: false).initializeApplication(context);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<AuthenticationProvider>(context, listen: false).initializeApplication(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: OctaPulseAnimation(
           child: Image.asset(
             AppImages.appLogoSplash,
             width: AppSizes.s30,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),

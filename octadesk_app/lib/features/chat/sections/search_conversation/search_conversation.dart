@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_separated_sliver_list.dart';
 import 'package:octadesk_app/features/chat/providers/search_conversation_provider.dart';
-import 'package:octadesk_app/features/chat/sections/conversations_list/components/conversation_list_item.dart';
+import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_list_item.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/models/index.dart';
 import 'package:provider/provider.dart';

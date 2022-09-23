@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:octadesk_app/providers/authentication_provider.dart';
 import 'package:octadesk_app/router/public_router.dart';
+import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_core/dtos/auth/auth_dto.dart';
 import 'package:octadesk_core/dtos/index.dart';
 import 'package:octadesk_core/exceptions/multiple_tenants_exception.dart';
@@ -50,7 +52,7 @@ class AuthenticationViewProvider extends ChangeNotifier {
 
   /// Autenticar
   void authenticate({String? tenantId, bool skipValidation = false}) async {
-    var navigator = Navigator.of(_context);
+    var navigator = GoRouter.of(_context);
     FocusScope.of(_context).unfocus();
 
     try {
@@ -77,7 +79,7 @@ class AuthenticationViewProvider extends ChangeNotifier {
           AuthenticationProviderEnum.email,
         );
 
-        navigator.pushNamedAndRemoveUntil(PublicRouter.mainView, (route) => false);
+        navigator.replaceNamed(AppRouter.chatFeature);
       }
     }
 
@@ -90,7 +92,7 @@ class AuthenticationViewProvider extends ChangeNotifier {
 
     // Erro genérico
     catch (e) {
-      showDialog(context: _context, builder: (context) => AlertDialog(title: Text(e.toString())));
+      displayAlertHelper(_context, subtitle: e.toString());
     } finally {
       _loading = false;
       notifyListeners();

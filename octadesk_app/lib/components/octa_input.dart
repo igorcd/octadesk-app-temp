@@ -38,21 +38,22 @@ class _OctaInputState extends State<OctaInput> {
   bool _inFocus = false;
   String _error = "";
 
-  Color _renderBorderColor() {
-    if (_inFocus) {
-      return AppColors.blue;
-    }
-
-    if (_error.isNotEmpty) {
-      return AppColors.warning;
-    }
-
-    return AppColors.info.shade200;
-  }
-
   @override
   Widget build(BuildContext context) {
     var is2xsScreenHelper = MediaQuery.of(context).size.height <= 640;
+    var colorScheme = Theme.of(context).colorScheme;
+
+    Color renderBorderColor() {
+      if (_inFocus) {
+        return colorScheme.primary;
+      }
+
+      if (_error.isNotEmpty) {
+        return colorScheme.error;
+      }
+
+      return colorScheme.outline;
+    }
 
     /// Função de renderização do TextField
     Widget renderTextField() {
@@ -62,7 +63,7 @@ class _OctaInputState extends State<OctaInput> {
           hintStyle: TextStyle(
             fontWeight: FontWeight.w300,
             fontFamily: 'NotoSans',
-            color: AppColors.info.shade300,
+            color: colorScheme.onBackground,
           ),
           errorStyle: const TextStyle(height: 0),
           border: InputBorder.none,
@@ -82,7 +83,7 @@ class _OctaInputState extends State<OctaInput> {
           fontFamily: "NotoSans",
           fontWeight: FontWeight.normal,
           fontSize: is2xsScreenHelper ? AppSizes.s04 * 0.875 : AppSizes.s04,
-          color: AppColors.info.shade800,
+          color: colorScheme.onSurface,
         ),
         onFieldSubmitted: (_) {
           if (widget.nextNode != null) {
@@ -128,7 +129,11 @@ class _OctaInputState extends State<OctaInput> {
           // Label
           Text(
             widget.label,
-            style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
+            style: TextStyle(
+              fontFamily: "NotoSans",
+              fontSize: AppSizes.s03,
+              color: colorScheme.onSurface,
+            ),
           ),
           const SizedBox(
             height: AppSizes.s01,
@@ -141,15 +146,15 @@ class _OctaInputState extends State<OctaInput> {
             //
             // Estilo
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: colorScheme.surface,
               border: Border.all(
                 width: 2,
-                color: _renderBorderColor(),
+                color: renderBorderColor(),
               ),
               borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
               boxShadow: [
                 BoxShadow(
-                  color: _inFocus ? AppColors.blue.shade400 : Colors.transparent,
+                  color: _inFocus ? colorScheme.primaryContainer : Colors.transparent,
                   blurRadius: 3,
                   offset: const Offset(0, 0),
                 ),
@@ -162,7 +167,7 @@ class _OctaInputState extends State<OctaInput> {
           _error.isNotEmpty
               ? Text(
                   _error,
-                  style: const TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: AppColors.warning, fontFamily: "NotoSans"),
+                  style: TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: colorScheme.error, fontFamily: "NotoSans"),
                 )
               : const SizedBox.shrink()
         ],
