@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:octadesk_app/features/chat/sections/new_chat/components/contact_phone_list.dart';
 import 'package:octadesk_app/features/chat/sections/new_chat/components/origin_phone_list.dart';
+import 'package:octadesk_app/features/chat/store/chat_store.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/dtos/contact/contact_list_dto.dart';
@@ -13,9 +14,8 @@ import 'package:octadesk_services/octadesk_services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dio/dio.dart';
 
-class NewConversationProvider extends ChangeNotifier {
-  final void Function(RoomListModel room) roomCreationCallback;
-  final void Function() backButtonCallback;
+class NewChatProvider extends ChangeNotifier {
+  late final ChatStore _chatStore;
 
   /// Controller do scroll da lista de contatos
   final ScrollController _scrollController = ScrollController();
@@ -145,7 +145,8 @@ class NewConversationProvider extends ChangeNotifier {
     return null;
   }
 
-  NewConversationProvider({required this.roomCreationCallback, required this.backButtonCallback}) {
+  NewChatProvider(ChatStore chatStore) {
+    _chatStore = chatStore;
     _initialize();
   }
 
@@ -215,21 +216,12 @@ class NewConversationProvider extends ChangeNotifier {
         user: contactPost,
       );
 
-      roomCreationCallback(RoomListModel.fromRoomDetailDTO(room));
+      _chatStore.selectConversation(RoomListModel.fromRoomDetailDTO(room));
     } catch (e) {
       displayAlertHelper(context, subtitle: "Não foi possível iniciar a conversa, teve novamente em breve");
     } finally {
       _creatingConversation = false;
       notifyListeners();
-    }
-  }
-
-  ///
-  /// Voltar
-  ///
-  void back() {
-    if (!_creatingConversation) {
-      backButtonCallback();
     }
   }
 

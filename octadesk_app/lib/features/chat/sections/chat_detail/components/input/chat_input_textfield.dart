@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
 import 'package:provider/provider.dart';
 import 'package:rich_text_controller/rich_text_controller.dart';
@@ -16,7 +16,7 @@ class ChatInputTextField extends StatelessWidget {
     var colorScheme = Theme.of(context).colorScheme;
     var isMobile = MediaQuery.of(context).size.width < 640;
 
-    return Consumer<ConversationDetailProvider>(
+    return Consumer<ChatDetailProvider>(
       builder: (context, value, child) {
         return Focus(
           onFocusChange: (inFocus) => value.inputInFocus = inFocus,

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
 import 'package:octadesk_app/components/responsive/utils/screen_size.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/features/chat/store/chat_store.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/models/index.dart';
@@ -23,7 +23,7 @@ class ChatHeader extends StatelessWidget {
     return Container(
       height: AppSizes.s18,
       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1))),
-      child: Consumer<ConversationDetailProvider>(
+      child: Consumer<ChatDetailProvider>(
         builder: (context, value, child) {
           return Row(
             children: [

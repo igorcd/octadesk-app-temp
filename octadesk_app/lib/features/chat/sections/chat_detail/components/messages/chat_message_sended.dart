@@ -110,7 +110,7 @@ class ChatMessageSended extends StatelessWidget {
                     child: ChatMessageContent(
                       message.comment,
                       isInternal: message.type == MessageTypeEnum.internal,
-                      textColor: colorScheme.onPrimaryContainer,
+                      textColor: message.type == MessageTypeEnum.internal ? colorScheme.onTertiary : colorScheme.onPrimaryContainer,
                     ),
                   )
               ],

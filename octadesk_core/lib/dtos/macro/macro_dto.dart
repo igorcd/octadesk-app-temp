@@ -17,7 +17,7 @@ class MacroDTO {
 
   /// Content do idioma atual
   MacroContentDTO get currentContent {
-    return contents.firstWhere((element) => element.culture == "pt-BR");
+    return contents.firstWhereOrNull((element) => element.culture == "pt-BR") ?? MacroContentDTO(culture: "pt-BR", components: []);
   }
 
   /// Body do template
@@ -25,6 +25,8 @@ class MacroDTO {
   MacroComponentDTO? get header => currentContent.components.firstWhereOrNull((element) => element.type == MacroComponentTypeEnum.header);
   MacroComponentDTO? get footer => currentContent.components.firstWhereOrNull((element) => element.type == MacroComponentTypeEnum.footer);
   MacroComponentDTO? get buttons => currentContent.components.firstWhereOrNull((element) => element.type == MacroComponentTypeEnum.buttons);
+
+  bool get hasVariables => body.variables.isNotEmpty || header?.variables.isNotEmpty == true || footer?.variables.isNotEmpty == true || buttons?.variables.isNotEmpty == true;
 
   MacroDTO({
     required this.id,

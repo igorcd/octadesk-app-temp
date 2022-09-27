@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/input/chat_input_tab.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/input/chat_input_textfield.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +14,7 @@ class ChatFooter extends StatelessWidget {
     var colorScheme = Theme.of(context).colorScheme;
     var isMobile = MediaQuery.of(context).size.width < 640;
 
-    return Consumer<ConversationDetailProvider>(
+    return Consumer<ChatDetailProvider>(
       builder: (context, value, child) {
         // Cor de foco
         Color focusColor = value.annotationActive ? colorScheme.tertiary : colorScheme.primary;
@@ -72,7 +72,7 @@ class ChatFooter extends StatelessWidget {
                   child: Row(
                     children: [
                       OctaIconButton(
-                        onPressed: () {},
+                        onPressed: () => value.openMacrosDialog(context),
                         icon: AppIcons.macro,
                         size: AppSizes.s08,
                         iconSize: AppSizes.s05,

@@ -165,14 +165,19 @@ class _FilterOperationDialogState extends State<FilterOperationDialog> {
                               var agent = filteredAgents[index];
 
                               return OctaListItem(
-                                showDivider: true,
-                                onPressed: () => _selectItem(GroupListModel(
-                                  enabled: true,
-                                  id: agent.id,
-                                  name: agent.name,
-                                  agents: [],
-                                )),
+                                onPressed: () => _selectItem(
+                                  GroupListModel(
+                                    enabled: true,
+                                    id: agent.id,
+                                    name: agent.name,
+                                    agents: [],
+                                  ),
+                                ),
                                 title: agent.name,
+                                leading: OctaAvatar(
+                                  source: agent.thumbUrl,
+                                  name: agent.name,
+                                ),
                               );
                             }, childCount: filteredAgents.length),
                           )
@@ -194,7 +199,6 @@ class _FilterOperationDialogState extends State<FilterOperationDialog> {
                         ? SliverList(
                             delegate: SliverChildBuilderDelegate((context, index) {
                               return OctaListItem(
-                                showDivider: true,
                                 onPressed: () => _selectItem(filteredGroups[index]),
                                 title: filteredGroups[index].name,
                               );

@@ -93,7 +93,7 @@ class OctaBottomSheet extends StatelessWidget {
 
                           // Titulo
                           Expanded(
-                            child: Center(child: OctaText.displaySmall(title)),
+                            child: Center(child: OctaText.titleLarge(title)),
                           ),
 
                           // Actions

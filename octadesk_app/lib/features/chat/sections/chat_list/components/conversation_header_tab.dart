@@ -29,6 +29,8 @@ class ConversationHeaderTab extends StatelessWidget {
           ),
         ),
         child: Material(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSizes.s02)),
+          clipBehavior: Clip.hardEdge,
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,

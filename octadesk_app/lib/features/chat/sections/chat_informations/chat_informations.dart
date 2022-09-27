@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
-import 'package:octadesk_app/components/responsive/utils/screen_size.dart';
-import 'package:octadesk_app/features/chat/sections/chat_informations/components/chat_history_button.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/features/chat/sections/chat_informations/includes/chat_events.dart';
 import 'package:octadesk_app/resources/app_icons.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
@@ -15,8 +13,7 @@ class ChatInformations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isXxl = MediaQuery.of(context).size.width >= ScreenSize.xxl;
-    var conversationDetailProvider = Provider.of<ConversationDetailProvider>(context);
+    var conversationDetailProvider = Provider.of<ChatDetailProvider>(context);
 
     return StreamBuilder<RoomModel?>(
       stream: conversationDetailProvider.roomDetailStream,

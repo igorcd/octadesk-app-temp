@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/resources/app_channel_badges.dart';
+import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 
@@ -18,10 +19,10 @@ class OriginPhoneList extends StatelessWidget {
         return OctaListItem(
           title: number.name.isEmpty ? "-" : number.name,
           subtitle: setPhoneMaskHelper(number.number),
-          showDivider: true,
-          pictureUrl: AppChannelBadges.whatsappBadge,
-          isLocalPicture: true,
-          avatarBorderRadius: 999,
+          leading: Image.asset(
+            AppChannelBadges.whatsappBadge,
+            width: AppSizes.s12,
+          ),
           onPressed: () => Navigator.of(context).pop(number),
         );
       },

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/macros/chat_macros_list_item.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/mentions/chat_mentions_empty.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +13,13 @@ class ChatMacrosContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Positioned(
       bottom: AppSizes.s04,
       left: AppSizes.s06,
       right: AppSizes.s06,
-      child: Consumer<ConversationDetailProvider>(
+      child: Consumer<ChatDetailProvider>(
         builder: (context, value, child) {
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
@@ -52,12 +54,16 @@ class ChatMacrosContainer extends StatelessWidget {
 
                             // Em caso de erro
                             else if (snapshot.hasError) {
-                              child = const ChatMacrosListItem(title: "Não conseguimoos carregar as mensagens rápidas, tente novamente em breve");
+                              child = const ChatMacrosListItem(
+                                title: "Não conseguimoos carregar as mensagens rápidas, tente novamente em breve",
+                              );
                             }
 
                             // Em caso de não possuir macros
                             else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              child = const ChatMacrosListItem(title: "Não foram encontradas mensagens rápidas");
+                              child = const ChatMacrosListItem(
+                                title: "Não foram encontradas mensagens rápidas",
+                              );
                             }
 
                             // Lista de macros
@@ -84,7 +90,7 @@ class ChatMacrosContainer extends StatelessWidget {
                                     return ChatMacrosListItem(
                                       title: macro.name,
                                       content: macro.getComment(),
-                                      onPressed: () => value.selectMacro(macro),
+                                      onPressed: () => value.selectMacro(macro, context),
                                     );
                                   },
                                 );
@@ -98,9 +104,9 @@ class ChatMacrosContainer extends StatelessWidget {
 
                               // Estilização
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.info.shade100),
+                                border: Border.all(color: colorScheme.outline),
                                 borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s03)),
-                                color: const Color.fromRGBO(255, 255, 255, .9),
+                                color: colorScheme.background.withOpacity(.9),
                               ),
                               //
                               // Lista de macros

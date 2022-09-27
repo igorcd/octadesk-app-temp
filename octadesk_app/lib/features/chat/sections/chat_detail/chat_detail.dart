@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_empty.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_footer.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_header.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_macros_container.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_mentions_container.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_skeleton.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_core/models/room/room_model.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class ChatDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var conversationDetailProvider = Provider.of<ConversationDetailProvider>(context);
+    var conversationDetailProvider = Provider.of<ChatDetailProvider>(context);
 
     return StreamBuilder<RoomModel?>(
       stream: conversationDetailProvider.roomDetailStream,
@@ -40,11 +41,15 @@ class ChatDetail extends StatelessWidget {
               children: [
                 // Conteúdo do chat
                 Positioned.fill(
-                  child: ChatBody(
-                    scrollController: conversationDetailProvider.scrollController,
-                    room: snapshot.data!,
-                  ),
-                ),
+                    child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: snapshot.data!.messages.isEmpty
+                      ? const ChatEmpty()
+                      : ChatBody(
+                          scrollController: conversationDetailProvider.scrollController,
+                          room: snapshot.data!,
+                        ),
+                )),
 
                 // Container de macros
                 const ChatMacrosContainer(),
@@ -59,13 +64,18 @@ class ChatDetail extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Header
             const ChatHeader(),
+
+            // Conteúdo
             Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 150),
                 child: content,
               ),
             ),
+
+            // Footer
             const ChatFooter(),
           ],
         );

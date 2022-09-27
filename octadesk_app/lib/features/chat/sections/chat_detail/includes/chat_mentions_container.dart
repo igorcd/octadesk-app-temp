@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/mentions/chat_mentions_empty.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/mentions/chat_mentions_list_item.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/octadesk_core.dart';
@@ -18,7 +18,7 @@ class ChatMentionsContainer extends StatelessWidget {
       bottom: AppSizes.s04,
       left: AppSizes.s06,
       right: AppSizes.s06,
-      child: Consumer<ConversationDetailProvider>(
+      child: Consumer<ChatDetailProvider>(
         builder: (context, value, child) {
           List<AgentDTO> filteredAgents = value.mentionFilter.isNotEmpty
               ? OctadeskConversation.instance.agents.where((e) {

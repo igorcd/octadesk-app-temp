@@ -18,13 +18,15 @@ class RoomsListController {
   ///
   /// Stream de salas
   ///
-  late final BehaviorSubject<RoomPaginationModel?> _roomsListStreamController;
-  Stream<RoomPaginationModel?> get roomsStream => _roomsListStreamController.stream;
+  late final BehaviorSubject<List<RoomListModel>?> _roomsListStreamController;
+  Stream<List<RoomListModel>?> get roomsStream => _roomsListStreamController.stream;
 
   ///
   /// Página atual
   ///
   int _currentPage = 1;
+  bool _hasMorePages = false;
+  bool _paginating = false;
 
   ///
   /// Validar o grupo do usuário atual
@@ -76,6 +78,19 @@ class RoomsListController {
     );
   }
 
+  Future<List<RoomListModel>> _getRooms({required int page, required int limit}) async {
+    var body = {..._inboxFilter.rule};
+
+    // Carregar dados iniciais
+    body["page"] = page;
+    body["limit"] = limit;
+
+    var paginator = await ChatService.getRooms(body);
+    var paginatorModel = RoomPaginationModel.fromDTO(paginator);
+    _hasMorePages = paginatorModel.hasMorePages;
+    return paginatorModel.rooms;
+  }
+
   ///
   /// Adicionar listerer de quando as salas forem alteradas
   ///
@@ -84,8 +99,8 @@ class RoomsListController {
 
     try {
       // Carregar dados iniciais
-      var paginator = await ChatService.getRooms(_inboxFilter.rule);
-      _roomsListStreamController.add(RoomPaginationModel.fromDTO(paginator));
+      var rooms = await _getRooms(page: 1, limit: 20);
+      _roomsListStreamController.add(rooms);
     } catch (e) {
       _roomsListStreamController.addError(e);
       return;
@@ -94,7 +109,7 @@ class RoomsListController {
     // Adicionar evento ao socket
     OctadeskConversation.instance.socketReference!.on(SocketEvents.roomsUpdate, (data) {
       // Estado atual da paginação
-      RoomPaginationModel currentPaginator = _roomsListStreamController.value!.clone();
+      List<RoomListModel> currentRoomList = [..._roomsListStreamController.value!];
 
       // Salas alteradas
       var changedRooms = List.from(data).map((d) {
@@ -105,11 +120,11 @@ class RoomsListController {
       // Varrer as salas
       changedRooms.forEach((changedRoom) {
         // Verificar se existe a sala
-        var room = currentPaginator.rooms.firstWhereOrNull((room) => room.key == changedRoom.key);
+        var room = currentRoomList.firstWhereOrNull((room) => room.key == changedRoom.key);
 
         // Verificar se a sala foi fechada
         if (!changedRoom.isOpened) {
-          currentPaginator.rooms.remove(room);
+          currentRoomList.remove(room);
           return;
         }
 
@@ -120,18 +135,18 @@ class RoomsListController {
 
         // Se a conversa ja existir e for transferida para outro grupo
         if (room != null && !validRoomGroupRule) {
-          currentPaginator.rooms.remove(room);
+          currentRoomList.remove(room);
           return;
         }
 
         // Caso a sala tenha saído dos critérios, remover
         if (room != null && !inboxFilter.validator(changedRoom)) {
-          currentPaginator.rooms.remove(room);
+          currentRoomList.remove(room);
         }
 
         // Caso a sala não existe e esteja dentro do filtro atual, adicionar
         if (room == null && _inboxFilter.validator(changedRoom) && validRoomGroupRule) {
-          currentPaginator.rooms.add(changedRoom);
+          currentRoomList.add(changedRoom);
           return;
         }
 
@@ -148,15 +163,21 @@ class RoomsListController {
           room.user = changedRoom.user;
         }
       });
-      currentPaginator.rooms = currentPaginator.rooms
+
+      // Atualizar
+      var newRoomList = currentRoomList
           .where((element) {
             return _inboxFilter.descriptor == RoomFilterEnum.bot ? element.status == RoomStatusEnum.started : element.status != RoomStatusEnum.started;
           })
           .sortedBy((element) => element.lastMessageTime)
-          .reversed
-          .toList();
+          .reversed;
 
-      _roomsListStreamController.add(currentPaginator);
+      // Caso esteja na primeira página pegar apenas os primeiros 20
+      if (!_paginating) {
+        newRoomList = newRoomList.take(20);
+      }
+
+      _roomsListStreamController.add(newRoomList.toList());
     });
   }
 
@@ -168,12 +189,16 @@ class RoomsListController {
   ///
   /// Atualizar salas
   ///
-  Future<void> refreshRooms() async {
+  Future<void> refreshRooms({bool clear = true}) async {
     try {
+      if (clear) {
+        _roomsListStreamController.add(null);
+      }
+
       _currentPage = 1;
-      var rooms = await ChatService.getRooms(_inboxFilter.rule);
-      var _roomsPaginator = RoomPaginationModel.fromDTO(rooms);
-      _roomsListStreamController.add(_roomsPaginator);
+      _paginating = false;
+      var rooms = await _getRooms(page: _currentPage, limit: 20);
+      _roomsListStreamController.add(rooms);
     } catch (e) {
       _roomsListStreamController.addError(e);
     }
@@ -184,6 +209,8 @@ class RoomsListController {
   ///
   void changeInbox(RoomFilterEnum inbox) async {
     // Atualizar valores
+    _currentPage = 1;
+    _paginating = false;
     _inboxFilter = InboxFilters.getFilterByType(inbox, page: 1, agentId: OctadeskConversation.instance.agent!.id);
     _inboxFilter.rule["limit"] = 20;
 
@@ -192,6 +219,32 @@ class RoomsListController {
       await refreshRooms();
     } catch (e) {
       _roomsListStreamController.addError(e);
+    }
+  }
+
+  ///
+  /// Paginar
+  ///
+  Future<void> paginate() async {
+    if (_hasMorePages) {
+      _currentPage += 1;
+      _paginating = false;
+
+      try {
+        List<RoomListModel> currentRooms = [..._roomsListStreamController.value!];
+        List<RoomListModel> newRooms;
+
+        // Caso seja a página 2, atualizar a primeira e carregar a segunda;
+        if (_currentPage == 2) {
+          newRooms = await _getRooms(page: 1, limit: 40);
+          _roomsListStreamController.add(newRooms);
+        } else {
+          newRooms = await _getRooms(page: _currentPage, limit: 20);
+          _roomsListStreamController.add([...currentRooms, ...newRooms]);
+        }
+      } catch (e) {
+        _roomsListStreamController.addError(e);
+      }
     }
   }
 

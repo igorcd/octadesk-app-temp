@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:octadesk_app/features/chat/providers/conversation_detail_provider.dart';
+import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/inbox_messages_counter_controller.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
@@ -11,14 +11,22 @@ import 'package:octadesk_core/models/index.dart';
 class ChatStore extends ChangeNotifier {
   // ====== Propriedades ======
 
-  // Stream da quantidade de inbox
+  ///
+  /// Stream da quantidade de inbox
+  ///
   InboxMessagesCounterController? _inboxMessagesCountController;
   Stream<Map<RoomFilterEnum, int>>? get inboxMessagesCountStream => _inboxMessagesCountController?.inboxFiltersMessagesStream;
 
+  ///
+  /// Stream da lista de converas
+  ///
   RoomsListController? _roomsListController;
-  Stream<RoomPaginationModel?>? get roomsListStream => _roomsListController?.roomsStream;
+  Stream<List<RoomListModel>?>? get roomsListStream => _roomsListController?.roomsStream;
 
   // ====== Variáveis =======
+
+  bool _conversationsListPaginating = false;
+  bool get conversationListPaginating => _conversationsListPaginating;
 
   // Verifica se existe uma conversa aberta para realização da animação no mobile
   bool _currentConversationOpened = false;
@@ -51,7 +59,7 @@ class ChatStore extends ChangeNotifier {
   RoomFilterEnum? get currentInbox => _currentInbox;
 
   // Conversa atual
-  ConversationDetailProvider? currentConversation;
+  ChatDetailProvider? currentConversation;
 
   // Pode abrir uma nova conversa
   bool _canChangeConversation = true;
@@ -68,7 +76,9 @@ class ChatStore extends ChangeNotifier {
     _initialize();
   }
 
+  ///
   /// Mudar o inbox
+  ///
   void changeInbox(RoomFilterEnum filter) async {
     if (_roomsListController != null) {
       _currentInbox = filter;
@@ -77,7 +87,21 @@ class ChatStore extends ChangeNotifier {
     }
   }
 
+  void paginate() async {
+    if (_roomsListController != null) {
+      _conversationsListPaginating = true;
+      notifyListeners();
+      try {
+        await _roomsListController!.paginate();
+      } finally {
+        _conversationsListPaginating = false;
+      }
+    }
+  }
+
+  ///
   /// Selecionar uma conversa
+  ///
   void selectConversation(RoomListModel room) async {
     _newConversationPanelOpened = false;
     notifyListeners();
@@ -92,7 +116,7 @@ class ChatStore extends ChangeNotifier {
 
         notifyListeners();
 
-        currentConversation = ConversationDetailProvider(
+        currentConversation = ChatDetailProvider(
           roomKey: room.key,
           userAvatar: room.user.thumbUrl,
           userName: room.user.name,
@@ -111,7 +135,9 @@ class ChatStore extends ChangeNotifier {
     }
   }
 
+  ///
   /// Fechar conversa atual (Utilizado apenas no mobile)
+  ///
   void closeConversation() async {
     // Fechar dialog
     _canChangeConversation = false;
@@ -127,13 +153,17 @@ class ChatStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///
   /// Abrir informações da conversa atual
+  ///
   void openConversationInformations() {
     _conversationInformationsOpened = true;
     notifyListeners();
   }
 
+  ///
   /// Fechar informações da conversa
+  ///
   void closeConversationInformations() {
     _conversationInformationsOpened = false;
     notifyListeners();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
+import 'package:octadesk_app/components/octa_pagination_indicator.dart';
 import 'package:octadesk_app/components/octa_search_sliver_button.dart';
 import 'package:octadesk_app/features/chat/store/chat_store.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_list_item.dart';
@@ -15,7 +16,7 @@ class OpenedConversations extends StatelessWidget {
   Widget build(BuildContext context) {
     ChatStore provider = Provider.of(context);
 
-    return StreamBuilder<RoomPaginationModel?>(
+    return StreamBuilder<List<RoomListModel>?>(
       stream: provider.roomsListStream,
       builder: (context, snapshot) {
         Widget child;
@@ -34,7 +35,7 @@ class OpenedConversations extends StatelessWidget {
         }
 
         // Nenhuma conversa
-        else if (snapshot.data!.rooms.isEmpty) {
+        else if (snapshot.data!.isEmpty) {
           child = Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(AppSizes.s02),
@@ -48,41 +49,38 @@ class OpenedConversations extends StatelessWidget {
         // Conteúdo
         else {
           child = NotificationListener<ScrollEndNotification>(
-              onNotification: (notification) {
-                if (notification.metrics.pixels > 0 && notification.metrics.atEdge) {
-                  print("PAGINAR");
-                }
-                return true;
-              },
-              child: CustomScrollView(
-                slivers: [
-                  OctaSearchSliverButton(),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      var room = snapshot.data!.rooms[index];
-                      return ConversationListItem(
-                        room,
-                        onPressed: () => provider.selectConversation(room),
-                        selected: provider.currentConversation?.roomKey == room.key,
-                      );
-                    }, childCount: snapshot.data!.rooms.length),
-                  )
-                ],
-              )
-              // child: ListView.separated(
-              //   controller: _scrollController,
-              //   itemCount: snapshot.data!.rooms.length,
-              //   separatorBuilder: (c, i) => Divider(height: 1, thickness: 1, color: AppColors.info.shade200),
-              //   itemBuilder: (context, index) {
-              //     var room = snapshot.data!.rooms[index];
-              //     return ConversationListItem(
-              //       room,
-              //       onPressed: () => provider.selectConversation(room),
-              //       selected: provider.currentConversation?.roomKey == room.key,
-              //     );
-              //   },
-              // ),
-              );
+            onNotification: (notification) {
+              if (notification.metrics.pixels > 0 && notification.metrics.atEdge) {
+                provider.paginate();
+              }
+              return true;
+            },
+            child: Stack(
+              children: [
+                // Lista
+                Positioned.fill(
+                  child: CustomScrollView(
+                    slivers: [
+                      const OctaSearchSliverButton(),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          var room = snapshot.data![index];
+                          return ConversationListItem(
+                            room,
+                            onPressed: () => provider.selectConversation(room),
+                            selected: provider.currentConversation?.roomKey == room.key,
+                          );
+                        }, childCount: snapshot.data!.length),
+                      )
+                    ],
+                  ),
+                ),
+
+                // Indicador de paginação
+                OctaPaginationIndication(loading: provider.conversationListPaginating)
+              ],
+            ),
+          );
         }
 
         return AnimatedSwitcher(

@@ -17,6 +17,9 @@ class RoomModel {
   final DateTime? clientLastMessageDate;
   final List<RoomEventModel> events;
   final RoomIntegratorModel? integrator;
+  final dynamic customFields;
+
+  bool canSendOnlyTemplateMessages;
 
   GroupListModel? group;
   List<TagModel> tags;
@@ -41,6 +44,8 @@ class RoomModel {
     required this.tags,
     required this.integrator,
     required this.clientLastMessageDate,
+    required this.customFields,
+    this.canSendOnlyTemplateMessages = false,
   });
 
   factory RoomModel.fromDTO(RoomDetailDTO data) {
@@ -69,6 +74,7 @@ class RoomModel {
       group: data.group != null ? GroupListModel.fromDTO(data.group!) : null,
       integrator: integrator != null ? RoomIntegratorModel.fromMap(integrator["integrator"]) : null,
       clientLastMessageDate: data.clientLastMessageDate != null ? DateTime.parse(data.clientLastMessageDate!).toLocal() : null,
+      customFields: data.customFields,
     );
   }
 
@@ -90,6 +96,21 @@ class RoomModel {
       group: group != null ? GroupListModel.clone(group!) : null,
       integrator: integrator,
       clientLastMessageDate: clientLastMessageDate,
+      customFields: customFields,
+      canSendOnlyTemplateMessages: canSendOnlyTemplateMessages,
     );
+  }
+
+  Map<String, dynamic> getRoomPropertiesAsMap() {
+    return {
+      "id": id,
+      "number": number,
+      "createdAt": createdAt.toIso8601String(),
+      "channel": channel.name,
+      "key": key,
+      "createdBy": createdBy.toMap(),
+      "lastMessageDate": createdAt.toIso8601String(),
+      "customFields": customFields,
+    };
   }
 }

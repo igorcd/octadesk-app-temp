@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_pagination_indicator.dart';
+import 'package:octadesk_app/components/octa_search_sliver_button.dart';
 import 'package:octadesk_app/features/chat/providers/closed_conversations_provider.dart';
 import 'package:octadesk_app/features/chat/store/chat_store.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_list_item.dart';
@@ -76,18 +77,24 @@ class _ClosedConversationsState extends State<ClosedConversations> {
                   },
                   child: RefreshIndicator(
                     onRefresh: () => closedConversationsProvider.refresh(),
-                    child: ListView.separated(
+                    child: CustomScrollView(
                       controller: _scrollController,
-                      itemCount: snapshot.data!.length,
-                      separatorBuilder: (c, i) => Divider(height: 1, thickness: 1, color: AppColors.info.shade200),
-                      itemBuilder: (context, index) {
-                        var room = snapshot.data![index];
-                        return ConversationListItem(
-                          room,
-                          onPressed: () => conversationsProvider.selectConversation(room),
-                          selected: conversationsProvider.currentConversation?.roomKey == room.key,
-                        );
-                      },
+                      slivers: [
+                        // Botão de busca
+                        const OctaSearchSliverButton(),
+
+                        // Lista de conversas
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate((context, index) {
+                            var room = snapshot.data![index];
+                            return ConversationListItem(
+                              room,
+                              onPressed: () => conversationsProvider.selectConversation(room),
+                              selected: conversationsProvider.currentConversation?.roomKey == room.key,
+                            );
+                          }, childCount: snapshot.data!.length),
+                        )
+                      ],
                     ),
                   ),
                 );

@@ -61,7 +61,6 @@ class _ChatBodyState extends State<ChatBody> {
 
   @override
   Widget build(BuildContext context) {
-    var colorSheme = Theme.of(context).colorScheme;
     final DateFormat formatter = DateFormat('HH:mm');
 
     return LayoutBuilder(builder: (context, constraints) {

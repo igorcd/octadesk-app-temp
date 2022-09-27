@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/octa_alert_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/chat_informations_dialog.dart';
+import 'package:octadesk_app/features/chat/dialogs/macros_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/tags_dialog.dart';
+import 'package:octadesk_app/features/chat/dialogs/template_variables_dialog.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
 import 'package:octadesk_app/resources/app_colors.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
@@ -13,7 +15,7 @@ import 'package:rich_text_controller/rich_text_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:collection/collection.dart';
 
-class ConversationDetailProvider extends ChangeNotifier {
+class ChatDetailProvider extends ChangeNotifier {
   final String roomKey;
   final String userName;
   final String? userAvatar;
@@ -237,7 +239,7 @@ class ConversationDetailProvider extends ChangeNotifier {
   }
 
   // Construtor
-  ConversationDetailProvider({
+  ChatDetailProvider({
     required this.roomKey,
     required this.userAvatar,
     required this.userName,
@@ -332,9 +334,61 @@ class ConversationDetailProvider extends ChangeNotifier {
   }
 
   /// Selecionar o Macro
-  void selectMacro(MacroDTO macro) {
-    _inputController.text = macro.currentContent.components.firstWhere((element) => element.type == MacroComponentTypeEnum.body).message;
-    _inputController.selection = TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
+  void selectMacro(MacroDTO macro, BuildContext context) async {
+    var canSendOnlyTemplateMessages = _roomDetailController.room!.canSendOnlyTemplateMessages;
+
+    // Caso tenha selecionado um macro e só possa enviar template messages
+    if (macro.type == MacroTypeEnum.macro && canSendOnlyTemplateMessages) {
+      return;
+    }
+
+    // Caso não tenha variáveis
+    if (!macro.hasVariables) {
+      _inputController.text = generateTemplateContent(macro.currentContent.components);
+      TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
+      return;
+    }
+
+    // Preencher variáveis
+    var templateResult = await showOctaBottomSheet(
+      context,
+      title: "Mensagens prontas",
+      child: TemplateVariablesDialog(macro, _roomDetailController.room!),
+    );
+
+    // Caso tenha finalizado
+    if (templateResult is MacroContentDTO) {
+      var isTemplate = macro.type == MacroTypeEnum.template;
+
+      // Caso seja um template, verificar quantidade de mensagens protivas disponíveis
+      if (isTemplate && canSendOnlyTemplateMessages) {
+        var avaiableMessages = await ChatService.getAvaiableTemplateMessages();
+
+        // Verificar se exite template messages disponíveis
+        if (avaiableMessages.whatsappApiTemplateMessage.available <= 0) {
+          displayAlertHelper(
+            context,
+            title: "Atenção",
+            subtitle: "Você não possui mensagens prontas disponíveis, por favor, acesse nosso site para mais informações",
+          );
+          return;
+        }
+
+        // Enviar template message
+        _roomDetailController.sendMessage(
+          message: inputController.text,
+          attachments: [],
+          mentions: [],
+          quotedMessage: null,
+          isInternal: annotationActive,
+          template: templateResult,
+        );
+        return;
+      }
+
+      _inputController.text = generateTemplateContent(templateResult.components);
+      TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
+    }
   }
 
   /// Abrir modal de finalização de conversa
@@ -376,6 +430,21 @@ class ConversationDetailProvider extends ChangeNotifier {
       stack: _dialogStack,
       child: ChatInformationsDialog(this),
     );
+  }
+
+  /// Abrir dialog de macros
+  void openMacrosDialog(BuildContext context) async {
+    var result = await showOctaBottomSheet(
+      context,
+      title: "Mensagens prontas",
+      child: MacrosDialog(
+        _roomDetailController.room!,
+      ),
+    );
+
+    if (result is MacroDTO) {
+      selectMacro(result, context);
+    }
   }
 
   @override

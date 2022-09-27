@@ -12,6 +12,8 @@ class ChatMacrosListItem extends StatelessWidget {
     return SizedBox(
       height: AppSizes.s15,
       width: double.infinity,
+
+      // Botão
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -22,16 +24,26 @@ class ChatMacrosListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Título
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "NotoSans",
+                    fontSize: AppSizes.s03,
+                  ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
+
+                // Conteúdo
                 if (content != null && content!.isNotEmpty)
                   Text(
                     content!,
-                    style: const TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info),
+                    style: const TextStyle(
+                      fontFamily: "NotoSans",
+                      fontSize: AppSizes.s03,
+                    ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),

@@ -18,7 +18,7 @@ class AppTextTheme {
         fontFamily: "Poppins",
         fontWeight: FontWeight.w600,
         letterSpacing: -1,
-        height: 1.1,
+        height: 1.3,
         fontSize: AppSizes.s06,
         color: AppColors.info.shade800,
       ),
@@ -43,7 +43,7 @@ class AppTextTheme {
         fontWeight: FontWeight.w600,
       ),
       bodySmall: TextStyle(
-        fontSize: AppSizes.s04,
+        fontSize: AppSizes.s03_5,
         color: AppColors.info.shade500,
       ),
 

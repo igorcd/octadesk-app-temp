@@ -66,4 +66,18 @@ class AgentModel {
       phones: [...phones],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "name": name,
+      "email": email,
+      "active": active,
+      "connectionStatus": connectionStatus,
+      "phones": phones,
+      "thumbUrl": thumbUrl,
+      "group": group,
+      "type": type,
+    };
+  }
 }

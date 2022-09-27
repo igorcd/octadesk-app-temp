@@ -101,15 +101,18 @@ class OctadeskConversation {
   void _addConnectionStatusChangeListener() async {
     print("▶️ ADICIONOU O LISTENER DO EVENTO: ${SocketEvents.agentConnectionStatusChange}");
 
-    var newStatus = ConnectionStatusEnum.values[_agent!.connectionStatus ?? 0];
+    var newStatus = connectionStatusEnumParser(_agent!.connectionStatus ?? 0);
     _connectionStatusStreamController!.add(newStatus);
 
     // Adicionar listener do status
     _socket!.on(SocketEvents.agentConnectionStatusChange, (data) {
       print("▶️ ATUALIZOU STATUS DO USUÁRIO");
+
+      // Fazer parse do status
       var resp = AgentConnectionStatusDTO.fromMap(data);
       if (resp.idAgent == _agentId) {
-        var newStatus = ConnectionStatusEnum.values[resp.status];
+        // Setar novo status
+        var newStatus = connectionStatusEnumParser(_agent!.connectionStatus ?? 0);
         _connectionStatusStreamController!.add(newStatus);
       }
     });
@@ -241,53 +244,10 @@ class OctadeskConversation {
       throw "Não inicializado";
     }
 
-    // Instanciar a stream
-    var roomStreamController = BehaviorSubject<RoomModel?>();
+    _loadRoomDetailCancelToken?.cancel();
+    _loadRoomDetailCancelToken = CancelToken();
 
-    // Adicionar evento do socket ao iniciar a primeira escuta
-    roomStreamController.onListen = () async {
-      print("▶️ COMEÇOU A ESCUTAR A STREAM $roomKey");
-      _loadRoomDetailCancelToken?.cancel();
-      _loadRoomDetailCancelToken = CancelToken();
-
-      // Adicionar evento de nova mensagem
-      _socket!.on(SocketEvents.roomUpdate, (room) {
-        print("▶️ CHEGOU MENSAGEM NA SALA $roomKey");
-        final data = RoomDetailDTO.fromMap(room);
-        var roomModel = RoomModel.fromDTO(data);
-        roomStreamController.add(roomModel);
-      });
-
-      // Acessar sala
-      _socket!.emit(SocketEvents.joinRoom, roomKey);
-
-      // Carregar dados iniciais
-      try {
-        var resp = await ChatService.getRoom(roomKey, cancelToken: _loadRoomDetailCancelToken);
-        var roomModel = RoomModel.fromDTO(resp);
-        if (!roomStreamController.isClosed) {
-          roomStreamController.add(roomModel);
-        }
-      } catch (e) {
-        // Caso seja apenas cancelar
-        if (e is DioError && e.type == DioErrorType.cancel) {
-          roomStreamController.close();
-        } else {
-          roomStreamController.addError(e);
-        }
-      }
-    };
-
-    // Quando para de escutar a stream
-    roomStreamController.onCancel = () {
-      print("▶️ SAIU DA SALA $roomKey");
-      // Sair da sala
-      _socket!.emit(SocketEvents.leaveRoom, roomKey);
-      // Parar de escutar o evento
-      _socket!.off(SocketEvents.roomUpdate);
-    };
-
-    return RoomController(roomStreamController: roomStreamController, agent: _agent!);
+    return RoomController(roomKey: roomKey, cancelToken: _loadRoomDetailCancelToken!);
   }
 
   ///

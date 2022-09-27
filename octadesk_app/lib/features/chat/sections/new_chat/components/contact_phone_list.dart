@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/resources/app_channel_badges.dart';
+import 'package:octadesk_app/resources/app_sizes.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_core/dtos/contact/contact_phone_dto.dart';
 
@@ -17,10 +18,10 @@ class ContactPhoneList extends StatelessWidget {
 
         return OctaListItem(
           title: setPhoneMaskHelper(contact.countryCode + contact.number),
-          showDivider: true,
-          pictureUrl: AppChannelBadges.whatsappBadge,
-          isLocalPicture: true,
-          avatarBorderRadius: 999,
+          leading: Image.asset(
+            AppChannelBadges.whatsappBadge,
+            width: AppSizes.s12,
+          ),
           onPressed: () => Navigator.of(context).pop(contact),
         );
       },

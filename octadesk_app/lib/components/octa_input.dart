@@ -13,6 +13,7 @@ class OctaInput extends StatefulWidget {
   final bool readOnly;
   final TextEditingController? controller;
   final Function? onSubmit;
+  final void Function(String value)? onChanged;
 
   const OctaInput(
     this.label, {
@@ -26,6 +27,7 @@ class OctaInput extends StatefulWidget {
     this.readOnly = false,
     this.controller,
     this.onSubmit,
+    this.onChanged,
     Key? key,
   }) : super(key: key);
 
@@ -94,6 +96,7 @@ class _OctaInputState extends State<OctaInput> {
         },
         readOnly: widget.readOnly,
         obscureText: widget.isPassword,
+        onChanged: widget.onChanged,
 
         // Valiação
         validator: (value) {
