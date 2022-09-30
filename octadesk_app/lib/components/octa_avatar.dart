@@ -76,7 +76,6 @@ class OctaAvatar extends StatelessWidget {
           height: size,
           clipBehavior: Clip.hardEdge,
           decoration: ShapeDecoration(
-            shadows: const [BoxShadow(color: Color.fromRGBO(0, 0, 0, .07), blurRadius: 4, offset: Offset(0, 4))],
             color: Theme.of(context).colorScheme.outline,
             shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(size / 2),

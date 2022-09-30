@@ -98,7 +98,8 @@ class AppRouter {
               ),
             ),
           ),
-          // Chat
+
+          // Bot
           GoRoute(
             path: '/bot',
             name: botFeature,

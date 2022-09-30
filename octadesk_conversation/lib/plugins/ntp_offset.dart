@@ -4,8 +4,8 @@ int _ntpOffset = 0;
 int _connectionAttempts = 0;
 
 List<String> _ntpServers = [
-  'pool.ntp.br',
   'time.google.com',
+  'pool.ntp.br',
   '0.br.pool.ntp.org',
   '1.br.pool.ntp.org',
   '2.br.pool.ntp.org',

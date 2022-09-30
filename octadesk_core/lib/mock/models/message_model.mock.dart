@@ -23,7 +23,6 @@ MessageModel messageModel = MessageModel(
       MessageAttachment(
         mimeType: null,
         thumbnail: null,
-        duration: 0,
         name: "anexo-mock.jpg",
         url: "www.mock.com/anexo-mock.jpg",
         isUnsupported: false,

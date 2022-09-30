@@ -12,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setEnvironment(environment: OctaEnvironmentEnum.qa);
+  setEnvironment(environment: OctaEnvironmentEnum.prod);
   // initializeDateFormatting('pt_BR', null);
 
   if (Platform.isWindows) {

@@ -1,3 +1,5 @@
+import 'package:path/path.dart';
+
 class AttachmentPostDTO {
   String name;
   String url;
@@ -6,6 +8,13 @@ class AttachmentPostDTO {
   final bool? ptt;
 
   AttachmentPostDTO({this.duration, this.thumbnailUrl, this.ptt, required this.name, required this.url});
+
+  factory AttachmentPostDTO.fromFilePath(String path) {
+    return AttachmentPostDTO(
+      name: basename(path),
+      url: "",
+    );
+  }
 
   factory AttachmentPostDTO.fromMap(Map<String, dynamic> map) {
     return AttachmentPostDTO(

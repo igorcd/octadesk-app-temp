@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/features/chat/sections/chat_informations/includes/chat_events.dart';
+import 'package:octadesk_app/features/chat/sections/chat_informations/includes/chat_history.dart';
 import 'package:octadesk_app/resources/app_icons.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
@@ -104,15 +105,16 @@ class ChatInformations extends StatelessWidget {
             const Divider(indent: AppSizes.s04, endIndent: AppSizes.s04),
 
             //Histórico de Conversas
-            OctaExpansionPanel(
-              isOpened: false,
-              title: "Histórico",
-              content: ChatEvents(
-                loading: snapshot.data == null,
-                events: snapshot.data?.events ?? [],
+            if (snapshot.data?.createdBy.id.isNotEmpty == true) ...[
+              OctaExpansionPanel(
+                isOpened: false,
+                title: "Histórico",
+                content: ChatHistory(
+                  onOpenConversation: (room) => conversationDetailProvider.openHistoryConversation(context, room),
+                ),
               ),
-            ),
-            const Divider(indent: AppSizes.s04, endIndent: AppSizes.s04),
+              const Divider(indent: AppSizes.s04, endIndent: AppSizes.s04),
+            ],
 
             // Eventos
             OctaExpansionPanel(

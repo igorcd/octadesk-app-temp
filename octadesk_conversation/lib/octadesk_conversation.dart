@@ -83,15 +83,10 @@ class OctadeskConversation {
       print("⚠️ CONEXÃO PERDIDA - $data");
     });
 
-    // // Adicionar evento de perda de conexão
-    // _socket!.on(SocketEvents.reconnect, (data) {
-    //   print("🔁 RECONECTADO - $data");
-    //   refreshRooms();
-
-    //   if (_currentRoom != null) {
-    //     _currentRoom!.reconnect();
-    //   }
-    // });
+    // Adicionar evento de perda de conexão
+    _socket!.on(SocketEvents.reconnect, (data) {
+      print("🔁 RECONECTADO - $data");
+    });
 
     // Conectar
     _socket!.connect();
@@ -112,7 +107,7 @@ class OctadeskConversation {
       var resp = AgentConnectionStatusDTO.fromMap(data);
       if (resp.idAgent == _agentId) {
         // Setar novo status
-        var newStatus = connectionStatusEnumParser(_agent!.connectionStatus ?? 0);
+        var newStatus = connectionStatusEnumParser(resp.status);
         _connectionStatusStreamController!.add(newStatus);
       }
     });

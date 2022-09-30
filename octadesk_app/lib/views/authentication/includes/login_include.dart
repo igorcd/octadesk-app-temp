@@ -42,7 +42,7 @@ class LoginInclude extends StatelessWidget {
                   ),
                   child: Image.asset(
                     AppImages.appLogo,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
 

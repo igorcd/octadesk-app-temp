@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
+
 import 'package:octadesk_conversation/constants/socket_events.dart';
 import 'package:octadesk_conversation/inbox_filters/inbox_filters.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
@@ -97,15 +99,6 @@ class RoomsListController {
   void _addRoomsUpdateListener() async {
     print("▶️ COMEÇOU A ESCUTAR O LISTENER ROOMS_UPDATE");
 
-    try {
-      // Carregar dados iniciais
-      var rooms = await _getRooms(page: 1, limit: 20);
-      _roomsListStreamController.add(rooms);
-    } catch (e) {
-      _roomsListStreamController.addError(e);
-      return;
-    }
-
     // Adicionar evento ao socket
     OctadeskConversation.instance.socketReference!.on(SocketEvents.roomsUpdate, (data) {
       // Estado atual da paginação
@@ -179,6 +172,15 @@ class RoomsListController {
 
       _roomsListStreamController.add(newRoomList.toList());
     });
+
+    try {
+      // Carregar dados iniciais
+      var rooms = await _getRooms(page: 1, limit: 20);
+      _roomsListStreamController.add(rooms);
+    } catch (e) {
+      _roomsListStreamController.addError(e);
+      return;
+    }
   }
 
   RoomsListController({required RoomFilterEnum inboxFilter}) {

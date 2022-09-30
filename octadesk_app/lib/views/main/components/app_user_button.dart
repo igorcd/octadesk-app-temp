@@ -76,7 +76,7 @@ class AppUserButton extends StatelessWidget {
     }
 
     /// Botão de mudar o status da conexão
-    PopupMenuItem statusChangeButton(ConnectionStatusEnum status) {
+    PopupMenuItem<String> statusChangeButton(ConnectionStatusEnum status) {
       return PopupMenuItem(
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
@@ -86,7 +86,10 @@ class AppUserButton extends StatelessWidget {
               margin: const EdgeInsets.only(right: AppSizes.s04),
               width: AppSizes.s04,
               height: AppSizes.s04,
-              decoration: BoxDecoration(color: connectionStatusColor(status), borderRadius: BorderRadius.circular(AppSizes.s04)),
+              decoration: BoxDecoration(
+                color: connectionStatusColor(status),
+                borderRadius: BorderRadius.circular(AppSizes.s04),
+              ),
             ),
             OctaText.bodySmall(connectionStatusEnumParser(status))
           ],
@@ -95,15 +98,21 @@ class AppUserButton extends StatelessWidget {
     }
 
     /// Menu item
-    PopupMenuItem popupMenuOption({required String text, required void Function() onTap}) {
-      return PopupMenuItem(
-        onTap: onTap,
+    PopupMenuItem<String> popupMenuOption({required String text}) {
+      return PopupMenuItem<String>(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
+        value: "logout",
         height: 40,
         child: Row(
           children: [OctaText.bodySmall(text)],
         ),
       );
+    }
+
+    void onSelectPopupOption(String value) {
+      if (value == 'logout') {
+        authenticationProvider.logout(context);
+      }
     }
 
     return StreamBuilder<ConnectionStatusEnum?>(
@@ -114,8 +123,10 @@ class AppUserButton extends StatelessWidget {
         // Status do usuário
         var connectionStatus = snapshot.data ?? ConnectionStatusEnum.offline;
 
-        return PopupMenuButton(
+        return PopupMenuButton<String>(
+          onSelected: onSelectPopupOption,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.s02)),
+
           constraints: const BoxConstraints(minWidth: 250),
 
           // Avatar do usuário
@@ -157,51 +168,11 @@ class AppUserButton extends StatelessWidget {
                   color: AppColors.info.shade200,
                 ),
               ),
-              popupMenuOption(text: "Desconectar", onTap: () => authenticationProvider.logout(context)),
+              popupMenuOption(text: "Desconectar"),
             ];
           },
         );
       },
     );
-
-    // return Container(
-    //   padding: const EdgeInsets.all(AppSizes.s02),
-    //   height: 75,
-    //   child: PopupMenuButton(
-    //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.s02)),
-    //     constraints: const BoxConstraints(minWidth: 300),
-    //     itemBuilder: (context) {
-    //       return [
-    //         // Informações do usuário
-    //         PopupMenuItem(
-    //           padding: const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04, top: AppSizes.s02, bottom: AppSizes.s04),
-    //           enabled: false,
-    //           child: userInformation(authenticationProvider.user!),
-    //         ),
-
-    //         // Status da conexão
-    //         statusChangeButton(ConnectionStatusEnum.online),
-    //         statusChangeButton(ConnectionStatusEnum.busy),
-    //         statusChangeButton(ConnectionStatusEnum.offline),
-
-    //         // Divisória
-    //         PopupMenuItem(
-    //           padding: EdgeInsets.zero,
-    //           enabled: false,
-    //           height: AppSizes.s03,
-    //           child: Divider(
-    //             height: 1,
-    //             color: AppColors.info.shade200,
-    //           ),
-    //         ),
-    //         popupMenuOption(text: "Desconectar", onTap: () => authenticationProvider.logout(context)),
-    //       ];
-    //     },
-    //     child: Padding(
-    //       padding: const EdgeInsets.all(AppSizes.s00_5),
-    //       child: userInformation(authenticationProvider.user!),
-    //     ),
-    //   ),
-    // );
   }
 }

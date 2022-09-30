@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_attachments.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_closing_details.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_empty.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_footer.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_header.dart';
@@ -41,15 +43,16 @@ class ChatDetail extends StatelessWidget {
               children: [
                 // Conteúdo do chat
                 Positioned.fill(
-                    child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: snapshot.data!.messages.isEmpty
-                      ? const ChatEmpty()
-                      : ChatBody(
-                          scrollController: conversationDetailProvider.scrollController,
-                          room: snapshot.data!,
-                        ),
-                )),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: snapshot.data!.messages.isEmpty
+                        ? const ChatEmpty()
+                        : ChatBody(
+                            scrollController: conversationDetailProvider.scrollController,
+                            room: snapshot.data!,
+                          ),
+                  ),
+                ),
 
                 // Container de macros
                 const ChatMacrosContainer(),
@@ -75,8 +78,18 @@ class ChatDetail extends StatelessWidget {
               ),
             ),
 
-            // Footer
-            const ChatFooter(),
+            // Anexos
+            if (conversationDetailProvider.attachedFiles.isNotEmpty) const ChatAttachments(),
+
+            // Detalhes do fechamento
+            if (snapshot.data?.closingDetails?.closedBy != null)
+              ChatClosingDetails(
+                userName: snapshot.data!.closingDetails!.closedBy.name,
+              )
+            else
+
+              // Input
+              const ChatFooter(),
           ],
         );
       },

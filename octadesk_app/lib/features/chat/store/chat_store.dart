@@ -169,6 +169,15 @@ class ChatStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///
+  /// Atualizar listagem
+  ///
+  void refreshRooms() {
+    if (_roomsListController != null) {
+      _roomsListController!.refreshRooms(clear: true);
+    }
+  }
+
   @override
   void dispose() {
     _roomsListController?.dispose();

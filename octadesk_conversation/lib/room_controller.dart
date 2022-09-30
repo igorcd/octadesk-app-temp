@@ -47,12 +47,21 @@ class RoomController {
     return intervalFromLastMessage > integrator.hoursToAnswer - 1;
   }
 
+  Future<void> _reconnect(dynamic _) async {
+    print("CHAMOU O RECONECT DENTRO DO DETALHE DA SALA");
+    if (!_roomStreamController.isClosed) {
+      ChatService.readMessages(roomKey);
+      OctadeskConversation.instance.socketReference!.emit(SocketEvents.joinRoom, roomKey);
+      refreshRoom();
+    }
+  }
+
   ///
   /// Enviar mensagem
   ///
   Future<void> _handleSendMessage({
     required String message,
-    required List<MessageAttachment> attachments,
+    required List<String> attachments,
     required List<AgentDTO> mentions,
     required bool isInternal,
     MessageModel? quotedMessage,
@@ -61,7 +70,7 @@ class RoomController {
   async {
     var internal = isInternal || mentions.isNotEmpty;
     var agent = OctadeskConversation.instance.agent!;
-    var date = ntpDateTime().toUtc();
+    var date = ntpDateTime();
 
     //Dados a serem enviados
     var dataToSend = MessagePostDTO(
@@ -73,7 +82,7 @@ class RoomController {
       chatKey: room!.key,
       comment: message,
       user: agent,
-      attachments: attachments.map((e) => AttachmentPostDTO(name: e.name, url: "", duration: e.duration, ptt: e.ptt)).toList(),
+      attachments: attachments.map((e) => AttachmentPostDTO.fromFilePath(e)).toList(),
       customFields: {},
       mentions: [...mentions],
     );
@@ -98,25 +107,23 @@ class RoomController {
       time: date,
       type: internal ? MessageTypeEnum.internal : MessageTypeEnum.public,
       status: MessageStatusEnum.tryingToSend,
-      attachments: attachments,
+      attachments: attachments.map((e) => MessageAttachment.fromFilePath(e)).toList(),
       catalog: null,
     );
 
     try {
-      messagePlaceholder.quotedMessage = quotedMessage != null ? MessageModel.clone(quotedMessage) : null;
-      messagePlaceholder.attachments = [...attachments];
-
       // Adicionar o placeholder
-
       newRoom.messages.insert(0, messagePlaceholder);
       _roomStreamController.add(newRoom);
 
       // Fazer upload dos arquivos
       if (attachments.isNotEmpty) {
-        var futures = attachments.map((e) => ChatService.uploadFile(
-              file: File(e.localFilePath!),
-              channel: newRoom.channel,
-            ));
+        var futures = attachments.map(
+          (e) => ChatService.uploadFile(
+            file: File(e),
+            channel: newRoom.channel,
+          ),
+        );
 
         var files = await Future.wait(futures);
 
@@ -159,6 +166,9 @@ class RoomController {
         _roomStreamController.add(roomModel);
       });
 
+      // Adicionar o listener para reconexão
+      socket.on(SocketEvents.reconnect, _reconnect);
+
       // Acessar sala
       socket.emit(SocketEvents.joinRoom, roomKey);
 
@@ -190,6 +200,7 @@ class RoomController {
 
       // Parar de escutar o evento
       socket.off(SocketEvents.roomUpdate);
+      socket.off(SocketEvents.reconnect, _reconnect);
     };
   }
 
@@ -213,7 +224,7 @@ class RoomController {
   ///
   Future<void> sendMessage({
     required String message,
-    required List<MessageAttachment> attachments,
+    required List<String> attachments,
     required List<AgentDTO> mentions,
     required bool isInternal,
     MessageModel? quotedMessage,

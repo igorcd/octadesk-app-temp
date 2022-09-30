@@ -53,6 +53,7 @@ class OctaBottomSheet extends StatelessWidget {
 
               // Container principal
               child: Container(
+                clipBehavior: Clip.hardEdge,
                 constraints: isMobile ? null : const BoxConstraints(maxWidth: 500, maxHeight: 600),
                 decoration: BoxDecoration(
                   color: Colors.white,

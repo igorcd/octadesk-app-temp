@@ -10,17 +10,19 @@ class ChatEvent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     Widget renderEvent(String message, String boldMessage) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSizes.s03),
         child: RichText(
           text: TextSpan(
             text: message,
-            style: TextStyle(fontFamily: "NotoSans", color: AppColors.info.shade600, fontSize: AppSizes.s03),
+            style: TextStyle(fontFamily: "NotoSans", color: colorScheme.onBackground, fontSize: AppSizes.s03),
             children: [
               TextSpan(
                 text: boldMessage,
-                style: TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: AppColors.info.shade600, fontSize: AppSizes.s03),
+                style: TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: colorScheme.onBackground, fontSize: AppSizes.s03),
               )
             ],
           ),
@@ -34,7 +36,7 @@ class ChatEvent extends StatelessWidget {
       return renderEvent(message, boldMessage);
     }
 
-    if (event.type == RoomEventTypeEnum.groupChange) {
+    if (event.type == RoomEventTypeEnum.groupChange && event.value.isNotEmpty) {
       return renderEvent("Conversa atribuida ao grupo ", event.value);
     }
     return const SizedBox.shrink();

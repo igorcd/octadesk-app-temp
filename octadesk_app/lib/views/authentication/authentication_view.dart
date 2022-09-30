@@ -25,7 +25,7 @@ class AuthenticationView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AuthenticationViewProvider(context, Provider.of<AuthenticationProvider>(context, listen: false)),
       child: Scaffold(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         body: SafeArea(
           child: SingleChildScrollView(
             //
@@ -56,7 +56,7 @@ class AuthenticationView extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: ResponsiveContainer(
-                        decoration: Responsive(BoxDecoration(color: colorScheme.background)),
+                        decoration: Responsive(BoxDecoration(color: colorScheme.surface)),
                         constraints: const BoxConstraints(maxHeight: 750),
                         width: Responsive(double.infinity, lg: 505, xxl: 550),
                         margin: Responsive(

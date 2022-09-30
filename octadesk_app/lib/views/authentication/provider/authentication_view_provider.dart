@@ -79,7 +79,7 @@ class AuthenticationViewProvider extends ChangeNotifier {
           AuthenticationProviderEnum.email,
         );
 
-        navigator.replaceNamed(AppRouter.chatFeature);
+        navigator.goNamed(AppRouter.chatFeature);
       }
     }
 

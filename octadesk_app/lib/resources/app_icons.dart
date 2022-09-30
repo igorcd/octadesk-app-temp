@@ -29,6 +29,8 @@ class AppIcons {
   static const String times = "lib/assets/icons/times.png";
   static const String check = "lib/assets/icons/check.png";
   static const String clearFilter = "lib/assets/icons/clear-filter.png";
+  static const String trash = "lib/assets/icons/trash.png";
+  static const String video = "lib/assets/icons/video.png";
 
   // Icones chat
   static const String copy = "lib/assets/icons/copy.png";
@@ -46,4 +48,6 @@ class AppIcons {
   static const String camera = "lib/assets/icons/camera.png";
   static const String transfer = "lib/assets/icons/transfer.png";
   static const String addUser = "lib/assets/icons/add-user.png";
+  static const String music = "lib/assets/icons/music.png";
+  static const String microphoneLg = "lib/assets/icons/microphone-lg.png";
 }

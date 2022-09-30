@@ -187,7 +187,7 @@ class AuthenticationProvider with ChangeNotifier {
       OctaAlertDialogAction(
         primary: true,
         action: () async {
-          AppRouter.navigator.currentState!.pushNamedAndRemoveUntil(AppRouter.authenticationView, (route) => false);
+          GoRouter.of(context).goNamed(AppRouter.authenticationView);
           await _clearUserData();
         },
         text: "Sair",

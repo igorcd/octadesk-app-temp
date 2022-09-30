@@ -26,6 +26,7 @@ class OpenedConversations extends StatelessWidget {
           child = OctaErrorContainer(
             subtitle: "Não foi possível carregar as conversas, por favor, tente novamente em breve",
             error: snapshot.error.toString(),
+            onTryAgain: () => provider.refreshRooms(),
           );
         }
 

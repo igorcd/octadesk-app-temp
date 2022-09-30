@@ -34,7 +34,6 @@ class ChatMessageReceived extends StatelessWidget {
     BoxDecoration getDecoration(bool trimBorder) {
       return BoxDecoration(
         color: colorScheme.background,
-        boxShadow: const [AppShadows.s200],
         borderRadius: BorderRadius.only(
           bottomLeft: trimBorder ? const Radius.circular(AppSizes.s00_5) : const Radius.circular(AppSizes.s03),
           topRight: const Radius.circular(AppSizes.s03),

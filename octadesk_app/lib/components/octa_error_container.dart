@@ -21,16 +21,22 @@ class OctaErrorContainer extends StatelessWidget {
         children: [
           Image.asset(AppIllustrations.illustrationError, height: AppSizes.s40),
           const SizedBox(height: AppSizes.s06),
-          OctaText.headlineMedium(
+
+          // Título do erro
+          OctaText.headlineLarge(
             "Opss...",
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSizes.s04),
+
+          // Subtitulo
           OctaText(
             subtitle,
             textAlign: TextAlign.center,
             maxLines: 3,
           ),
+
+          // Detalhe do erro
           if (error != null)
             Padding(
               padding: const EdgeInsets.only(top: AppSizes.s04),

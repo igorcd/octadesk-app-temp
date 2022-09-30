@@ -78,23 +78,23 @@ class ChatFooter extends StatelessWidget {
                         iconSize: AppSizes.s05,
                       ),
                       OctaIconButton(
-                        onPressed: () {},
+                        onPressed: () => value.attachFiles(context),
                         icon: AppIcons.attachVertical,
                         size: AppSizes.s08,
                         iconSize: AppSizes.s05,
                       ),
                       OctaIconButton(
-                        onPressed: () {},
+                        onPressed: () => value.openVoiceRecorder(context),
                         icon: AppIcons.microphone,
                         size: AppSizes.s08,
                         iconSize: AppSizes.s05,
                       ),
-                      OctaIconButton(
-                        onPressed: () {},
-                        icon: AppIcons.camera,
-                        size: AppSizes.s08,
-                        iconSize: AppSizes.s05,
-                      ),
+                      // OctaIconButton(
+                      //   onPressed: () => value.openCamera(context),
+                      //   icon: AppIcons.camera,
+                      //   size: AppSizes.s08,
+                      //   iconSize: AppSizes.s05,
+                      // ),
                       const Spacer(),
 
                       // Enviar

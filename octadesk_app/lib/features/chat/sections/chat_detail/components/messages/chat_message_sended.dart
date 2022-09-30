@@ -35,7 +35,6 @@ class ChatMessageSended extends StatelessWidget {
     BoxDecoration getDecoration(bool trinBorder) {
       return BoxDecoration(
         color: message.type == MessageTypeEnum.internal ? AppColors.warning.shade100 : colorScheme.primaryContainer,
-        boxShadow: const [AppShadows.s200],
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(AppSizes.s03),
           topRight: trinBorder ? const Radius.circular(AppSizes.s00_5) : const Radius.circular(AppSizes.s03),

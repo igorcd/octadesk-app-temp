@@ -61,6 +61,7 @@ class _OctaAlertDialogState extends State<OctaAlertDialog> with TickerProviderSt
                 },
               )
             : OctaButton(
+                outline: true,
                 text: action.text,
                 onTap: () async {
                   Navigator.of(context).pop();
@@ -136,6 +137,7 @@ class _OctaAlertDialogState extends State<OctaAlertDialog> with TickerProviderSt
                       OctaText(
                         widget.subtitle,
                         textAlign: TextAlign.center,
+                        maxLines: 5,
                       )
                     ],
                   ),

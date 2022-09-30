@@ -1,9 +1,15 @@
+import 'dart:math';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/octa_alert_dialog.dart';
+import 'package:octadesk_app/features/chat/dialogs/camera_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/chat_informations_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/macros_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/tags_dialog.dart';
 import 'package:octadesk_app/features/chat/dialogs/template_variables_dialog.dart';
+import 'package:octadesk_app/features/chat/dialogs/transfer_dialog.dart';
+import 'package:octadesk_app/features/chat/dialogs/voice_recorder_dialog.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
 import 'package:octadesk_app/resources/app_colors.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
@@ -11,6 +17,7 @@ import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_conversation/room_controller.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:octadesk_services/octadesk_services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rich_text_controller/rich_text_controller.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:collection/collection.dart';
@@ -28,7 +35,7 @@ class ChatDetailProvider extends ChangeNotifier {
   late final RoomController _roomDetailController;
   Stream<RoomModel?> get roomDetailStream => _roomDetailController.roomStream;
 
-  /// Position listener
+  /// Position listener, usado para ir para determinado index da lista de conversas
   final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   /// Controller do scroll
@@ -39,6 +46,7 @@ class ChatDetailProvider extends ChangeNotifier {
   late final RichTextController _inputController;
   RichTextController get inputController => _inputController;
 
+  /// Focus Node do input
   late final FocusNode _inputFocusNode;
   FocusNode get inputFocusNode => _inputFocusNode;
 
@@ -67,6 +75,10 @@ class ChatDetailProvider extends ChangeNotifier {
     _inputInFocus = value;
     notifyListeners();
   }
+
+  /// Lista de anexos
+  List<String> _attachedFiles = [];
+  List<String> get attachedFiles => _attachedFiles;
 
   /// Future de carregamento dos macros
   Future<List<MacroDTO>>? _macrosFuture;
@@ -250,7 +262,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
   /// Enviar mensagem
   void sendMessage() {
-    if (inputController.text.isNotEmpty) {
+    if (inputController.text.isNotEmpty || _attachedFiles.isNotEmpty && _roomDetailController.room != null) {
       // Verificar se existe alguma menção
       List<AgentDTO> agents = OctadeskConversation.instance.agents.where((element) {
         return _inputController.text.contains("@${element.name}");
@@ -259,7 +271,7 @@ class ChatDetailProvider extends ChangeNotifier {
       // Enviar a mensagem
       _roomDetailController.sendMessage(
         message: inputController.text,
-        attachments: [],
+        attachments: _attachedFiles,
         mentions: agents,
         quotedMessage: null,
         isInternal: annotationActive,
@@ -268,6 +280,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
       _inputController.clear();
       _annotationActive = false;
+      _attachedFiles.clear();
       notifyListeners();
     }
   }
@@ -335,74 +348,77 @@ class ChatDetailProvider extends ChangeNotifier {
 
   /// Selecionar o Macro
   void selectMacro(MacroDTO macro, BuildContext context) async {
-    var canSendOnlyTemplateMessages = _roomDetailController.room!.canSendOnlyTemplateMessages;
+    if (_roomDetailController.room != null) {
+      var canSendOnlyTemplateMessages = _roomDetailController.room!.canSendOnlyTemplateMessages;
 
-    // Caso tenha selecionado um macro e só possa enviar template messages
-    if (macro.type == MacroTypeEnum.macro && canSendOnlyTemplateMessages) {
-      return;
-    }
+      // Caso tenha selecionado um macro e só possa enviar template messages
+      if (macro.type == MacroTypeEnum.macro && canSendOnlyTemplateMessages) {
+        return;
+      }
 
-    // Caso não tenha variáveis
-    if (!macro.hasVariables) {
-      _inputController.text = generateTemplateContent(macro.currentContent.components);
-      TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
-      return;
-    }
+      // Caso não tenha variáveis
+      if (!macro.hasVariables) {
+        _inputController.text = generateTemplateContent(macro.currentContent.components);
+        TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
+        return;
+      }
 
-    // Preencher variáveis
-    var templateResult = await showOctaBottomSheet(
-      context,
-      title: "Mensagens prontas",
-      child: TemplateVariablesDialog(macro, _roomDetailController.room!),
-    );
+      // Preencher variáveis
+      var templateResult = await showOctaBottomSheet(
+        context,
+        title: "Mensagens prontas",
+        child: TemplateVariablesDialog(macro, _roomDetailController.room!),
+      );
 
-    // Caso tenha finalizado
-    if (templateResult is MacroContentDTO) {
-      var isTemplate = macro.type == MacroTypeEnum.template;
+      // Caso tenha finalizado
+      if (templateResult is MacroContentDTO) {
+        var isTemplate = macro.type == MacroTypeEnum.template;
 
-      // Caso seja um template, verificar quantidade de mensagens protivas disponíveis
-      if (isTemplate && canSendOnlyTemplateMessages) {
-        var avaiableMessages = await ChatService.getAvaiableTemplateMessages();
+        // Caso seja um template, verificar quantidade de mensagens protivas disponíveis
+        if (isTemplate && canSendOnlyTemplateMessages) {
+          var avaiableMessages = await ChatService.getAvaiableTemplateMessages();
 
-        // Verificar se exite template messages disponíveis
-        if (avaiableMessages.whatsappApiTemplateMessage.available <= 0) {
-          displayAlertHelper(
-            context,
-            title: "Atenção",
-            subtitle: "Você não possui mensagens prontas disponíveis, por favor, acesse nosso site para mais informações",
+          // Verificar se exite template messages disponíveis
+          if (avaiableMessages.whatsappApiTemplateMessage.available <= 0) {
+            displayAlertHelper(
+              context,
+              title: "Atenção",
+              subtitle: "Você não possui mensagens prontas disponíveis, por favor, acesse nosso site para mais informações",
+            );
+            return;
+          }
+
+          // Enviar template message
+          _roomDetailController.sendMessage(
+            message: inputController.text,
+            attachments: [],
+            mentions: [],
+            quotedMessage: null,
+            isInternal: annotationActive,
+            template: templateResult,
           );
           return;
         }
 
-        // Enviar template message
-        _roomDetailController.sendMessage(
-          message: inputController.text,
-          attachments: [],
-          mentions: [],
-          quotedMessage: null,
-          isInternal: annotationActive,
-          template: templateResult,
-        );
-        return;
+        _inputController.text = generateTemplateContent(templateResult.components);
+        TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
       }
-
-      _inputController.text = generateTemplateContent(templateResult.components);
-      TextSelection.fromPosition(TextPosition(offset: _inputController.text.length));
     }
   }
 
   /// Abrir modal de finalização de conversa
   void openFinishConversationDialog(BuildContext context) async {
-    displayAlertHelper(
-      context,
-      title: "Atenção!",
-      subtitle: "Tem certeza que deseja finalizar esse atendimento?",
-      actions: [
-        OctaAlertDialogAction(primary: false, action: () {}, text: "Voltar"),
-        OctaAlertDialogAction(primary: true, action: () => _closeCurrentConversation(context), text: "Finalizar"),
-      ],
-    );
-    await _roomDetailController.close();
+    if (_roomDetailController.room != null) {
+      displayAlertHelper(
+        context,
+        title: "Atenção!",
+        subtitle: "Tem certeza que deseja finalizar esse atendimento?",
+        actions: [
+          OctaAlertDialogAction(primary: false, action: () {}, text: "Voltar"),
+          OctaAlertDialogAction(primary: true, action: () => _closeCurrentConversation(context), text: "Finalizar"),
+        ],
+      );
+    }
   }
 
   /// Mostrar dialog de histórico de conversa
@@ -434,16 +450,116 @@ class ChatDetailProvider extends ChangeNotifier {
 
   /// Abrir dialog de macros
   void openMacrosDialog(BuildContext context) async {
-    var result = await showOctaBottomSheet(
-      context,
-      title: "Mensagens prontas",
-      child: MacrosDialog(
-        _roomDetailController.room!,
-      ),
+    if (_roomDetailController.room != null) {
+      var result = await showOctaBottomSheet(
+        context,
+        title: "Mensagens prontas",
+        child: MacrosDialog(
+          _roomDetailController.room!,
+        ),
+      );
+
+      if (result is MacroDTO) {
+        selectMacro(result, context);
+      }
+    }
+  }
+
+  /// Pegar um arquivo
+  void attachFiles(BuildContext context) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
+
+    if (result is FilePickerResult) {
+      // Verificar se existem arquivos maiores que o permitido
+      var hasOversizedFiles = result.files.firstWhereOrNull((element) => element.size > 15 * pow(1024, 2)) != null;
+      if (hasOversizedFiles) {
+        displayAlertHelper(context, subtitle: "Não é possível anexar arquivos maiores que 15mb");
+        return;
+      }
+
+      // Anexar arquivos
+      List<String> files = result.paths.map<String>((e) => e ?? "").where((element) => element.isNotEmpty).toList();
+      _attachedFiles.addAll(files);
+
+      // Remover repetidos
+      _attachedFiles = _attachedFiles.toSet().toList();
+      notifyListeners();
+    }
+  }
+
+  /// Remover anexo
+  void removeAttachment(int index) {
+    _attachedFiles.removeAt(index);
+  }
+
+  /// Abrir gravador de áudio
+  void openVoiceRecorder(BuildContext context) async {
+    var result = await Permission.microphone.request();
+    if (!result.isGranted) {
+      displayAlertHelper(context, subtitle: "Para continuar você precisa conceder permissão para acesso ao microfone");
+      return;
+    }
+
+    var resp = await showDialog(
+      barrierColor: Colors.white60,
+      context: context,
+      builder: (c) => const VoiceRecorderDialog(),
     );
 
-    if (result is MacroDTO) {
-      selectMacro(result, context);
+    if (resp is String) {
+      _attachedFiles.add(resp);
+
+      // Remover repetidos
+      _attachedFiles = _attachedFiles.toSet().toList();
+      notifyListeners();
+    }
+  }
+
+  /// Abrir camera
+  void openCamera(BuildContext context) async {
+    var result = await Permission.camera.request();
+    if (!result.isGranted) {
+      displayAlertHelper(context, subtitle: "Para continuar você precisa conceder permissão para acesso ao microfone");
+      return;
+    }
+
+    var resp = await showOctaBottomSheet(context, title: "Camera", child: const CameraDialog());
+
+    if (resp is String) {
+      _attachedFiles.add(resp);
+      notifyListeners();
+    }
+  }
+
+  /// Transfer chat
+  void transferChat(BuildContext context) async {
+    var room = _roomDetailController.room;
+
+    if (room is RoomModel) {
+      // Abrir dialogs
+      var newOwner = await showOctaBottomSheet(
+        context,
+        title: "Transferir conversa",
+        child: TransferDialog(
+          currentAgentId: room.agent?.id,
+          currentGroupId: room.group?.id,
+        ),
+      );
+
+      try {
+        if (newOwner is AgentModel) {
+          await ChatService.assignConversationToAgent(_roomDetailController.roomKey, newOwner.id);
+        }
+        if (newOwner is GroupListModel) {
+          await ChatService.assignConversationToGroup(_roomDetailController.roomKey, newOwner.id);
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Não foi possível transferir a conversa, por favor, tente novamente"),
+          ),
+        );
+      }
     }
   }
 

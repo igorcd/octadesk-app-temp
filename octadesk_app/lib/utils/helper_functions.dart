@@ -7,6 +7,7 @@ import 'package:octadesk_core/octadesk_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:math';
 
 /// Mostrar um alert
 void displayAlertHelper(BuildContext context, {String? title, required String subtitle, List<OctaAlertDialogAction>? actions}) {
@@ -20,6 +21,15 @@ void displayAlertHelper(BuildContext context, {String? title, required String su
       );
     },
   );
+}
+
+/// Formatar bytes
+String formatBytesHelper(int bytes, int decimals) {
+  if (bytes <= 0) return "0 B";
+
+  const suffixes = ["b", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb"];
+  var i = (log(bytes) / log(1024)).floor();
+  return "${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}";
 }
 
 AppLocalizations l10n(BuildContext context) {

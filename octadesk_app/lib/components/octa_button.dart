@@ -7,12 +7,14 @@ class OctaButton extends StatelessWidget {
   final bool loading;
   final double? width;
   final bool disabled;
+  final bool outline;
 
   const OctaButton({
     required this.onTap,
     required this.text,
     this.loading = false,
     this.disabled = false,
+    this.outline = false,
     this.width,
     Key? key,
   }) : super(key: key);
@@ -23,11 +25,11 @@ class OctaButton extends StatelessWidget {
 
     Widget renderContent() {
       return loading
-          ? const SizedBox(
+          ? SizedBox(
               width: AppSizes.s05,
               height: AppSizes.s05,
               child: CircularProgressIndicator(
-                color: Colors.white,
+                color: outline ? backgroundColor : Colors.white,
                 strokeWidth: 3,
               ),
             )
@@ -36,7 +38,7 @@ class OctaButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: AppSizes.s04,
                 fontFamily: "NotoSans",
-                color: disabled ? Colors.white.withOpacity(.6) : Colors.white,
+                color: outline ? backgroundColor : Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             );
@@ -54,11 +56,13 @@ class OctaButton extends StatelessWidget {
         // Container principal
         child: Container(
           height: AppSizes.s12,
+          width: width,
           //
           // Estilização
           decoration: BoxDecoration(
-            color: disabled ? backgroundColor.withOpacity(.6) : backgroundColor,
+            color: outline ? Colors.transparent : backgroundColor,
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
+            border: outline ? Border.all(color: backgroundColor) : null,
           ),
 
           // Conteúdo

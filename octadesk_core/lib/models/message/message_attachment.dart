@@ -11,7 +11,6 @@ class MessageAttachment {
   final String? thumbnail;
   final String? mimeType;
   final bool? ptt;
-  final int? uploadPercentage;
 
   String get extension {
     var fileUrl = localFilePath ?? url;
@@ -39,24 +38,33 @@ class MessageAttachment {
   MessageAttachment({
     required this.mimeType,
     required this.thumbnail,
-    this.duration,
     required this.name,
     required this.url,
+    this.duration,
     this.localFilePath,
     this.ptt,
     required this.isUnsupported,
-    this.uploadPercentage,
   });
+
+  factory MessageAttachment.fromFilePath(String path) {
+    return MessageAttachment(
+      mimeType: null,
+      thumbnail: null,
+      name: basename(path),
+      url: "",
+      isUnsupported: false,
+    );
+  }
 
   factory MessageAttachment.fromDTO(MessageAttachmentDTO dto) {
     return MessageAttachment(
       mimeType: dto.mimeType,
-      duration: dto.duration,
       name: dto.name,
       url: dto.url,
       thumbnail: dto.thumbnailUrl,
+      duration: dto.duration,
+      ptt: dto.ptt,
       isUnsupported: dto.isUnsupported,
-      uploadPercentage: 0,
     );
   }
 }

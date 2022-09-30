@@ -20,11 +20,14 @@ class ChatHeader extends StatelessWidget {
     var isXxl = screenWidth >= ScreenSize.xxl;
     var formatter = DateFormat("dd/MM/yyyy 'às' HH:mm", "pt_BR");
 
+    ChatDetailProvider chatDetailProvider = Provider.of(context);
+
     return Container(
       height: AppSizes.s18,
       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outline, width: 1))),
-      child: Consumer<ChatDetailProvider>(
-        builder: (context, value, child) {
+      child: StreamBuilder<RoomModel?>(
+        stream: chatDetailProvider.roomDetailStream,
+        builder: (context, snapshot) {
           return Row(
             children: [
               // Botão de voltar
@@ -40,7 +43,7 @@ class ChatHeader extends StatelessWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: isXxl ? null : () => value.showConversationInformations(context),
+                    onTap: isXxl ? null : () => chatDetailProvider.showConversationInformations(context),
                     child: Padding(
                       padding: const EdgeInsets.all(AppSizes.s01),
                       child: Row(
@@ -51,8 +54,8 @@ class ChatHeader extends StatelessWidget {
                             padding: isSm ? EdgeInsets.zero : const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04),
                             child: OctaAvatar(
                               size: AppSizes.s12,
-                              name: value.userName,
-                              source: value.userAvatar,
+                              name: chatDetailProvider.userName,
+                              source: chatDetailProvider.userAvatar,
                             ),
                           ),
 
@@ -63,13 +66,8 @@ class ChatHeader extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 OctaText.titleLarge(chatProvider.currentConversation!.userName),
-                                StreamBuilder<RoomModel?>(
-                                  stream: chatProvider.currentConversation!.roomDetailStream,
-                                  builder: (context, snapshot) {
-                                    return OctaText.labelMedium(
-                                      snapshot.data != null ? "Chat iniciado em ${formatter.format(snapshot.data!.createdAt.toLocal())}" : "Carregando...",
-                                    );
-                                  },
+                                OctaText.labelMedium(
+                                  snapshot.data != null ? "Chat iniciado em ${formatter.format(snapshot.data!.createdAt.toLocal())}" : "Carregando...",
                                 ),
                               ],
                             ),
@@ -81,20 +79,25 @@ class ChatHeader extends StatelessWidget {
                 ),
               ),
 
-              OctaIconButton(
-                onPressed: () {},
-                icon: AppIcons.transfer,
-                size: AppSizes.s08,
-                iconSize: AppSizes.s05,
-              ),
-              const SizedBox(width: AppSizes.s02),
-              OctaIconButton(
-                onPressed: () {},
-                icon: AppIcons.check,
-                size: AppSizes.s08,
-                iconSize: AppSizes.s05,
-              ),
-              const SizedBox(width: AppSizes.s04),
+              // Transferir
+              if (snapshot.data?.closingDetails?.closedBy == null) ...[
+                OctaIconButton(
+                  onPressed: () => chatDetailProvider.transferChat(context),
+                  icon: AppIcons.transfer,
+                  size: AppSizes.s08,
+                  iconSize: AppSizes.s05,
+                ),
+                const SizedBox(width: AppSizes.s02),
+
+                // Finalizar
+                OctaIconButton(
+                  onPressed: () => chatDetailProvider.openFinishConversationDialog(context),
+                  icon: AppIcons.check,
+                  size: AppSizes.s08,
+                  iconSize: AppSizes.s05,
+                ),
+                const SizedBox(width: AppSizes.s04),
+              ]
             ],
           );
         },
