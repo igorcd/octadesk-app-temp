@@ -67,7 +67,7 @@ class ChatMessageSended extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: AppSizes.s01),
             child: Container(
-              constraints: BoxConstraints(maxWidth: maxContainerWidth),
+              width: 300,
               decoration: getDecoration(first),
               child: ChatMessageAttachmentsContainer(
                 attachments: message.attachments,

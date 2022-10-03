@@ -12,6 +12,13 @@ class AppTheme {
         thickness: 1,
         color: AppColors.info.shade200,
       ),
+      sliderTheme: SliderThemeData(
+        thumbColor: primarySwatch,
+        overlayShape: SliderComponentShape.noOverlay,
+        thumbShape: const RoundSliderThumbShape(
+          enabledThumbRadius: 8,
+        ),
+      ),
       colorScheme: const ColorScheme.light().copyWith(
         onSecondary: AppColors.info.shade400,
 
