@@ -18,7 +18,7 @@ class ChatAttachments extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.s05),
             itemCount: value.attachedFiles.length,
             scrollDirection: Axis.horizontal,
-            separatorBuilder: (c, i) => const SizedBox(width: AppSizes.s04),
+            separatorBuilder: (c, i) => const SizedBox(width: AppSizes.s02),
             itemBuilder: (context, index) => AttachmentListTile(
               file: value.attachedFiles[index],
               onDismissed: () => value.removeAttachment(index),

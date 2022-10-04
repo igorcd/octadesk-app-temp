@@ -18,7 +18,10 @@ class MediaDocumentContainer extends StatelessWidget {
         mainAxisAlignment: isVertical ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
           // Tipo do arquivo
-          Image.asset(AppIcons.file, width: AppSizes.s10),
+          Image.asset(
+            AppIcons.fileFill,
+            width: AppSizes.s10,
+          ),
           const SizedBox(
             width: AppSizes.s01_5,
             height: AppSizes.s00_5,

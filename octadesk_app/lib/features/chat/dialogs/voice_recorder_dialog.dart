@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_timer.dart';
 import 'package:octadesk_app/resources/app_icons.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 
 class VoiceRecorderDialog extends StatefulWidget {
@@ -23,20 +21,9 @@ class _VoiceRecorderDialogState extends State<VoiceRecorderDialog> {
 
   /// Iniciar a gravação
   void _startRecorder() async {
-    var now = DateTime.now();
-    var fileName = "${now.microsecondsSinceEpoch}_recorder.opus";
-
-    // Pasta temporário
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-
-    // Setar diretório do arquivo
-    var directory = "$tempPath/$fileName";
-
     // Start recording
     await _recorder.start(
-      path: directory,
-      encoder: AudioEncoder.opus,
+      encoder: AudioEncoder.wav,
     );
     _timerController.start();
   }

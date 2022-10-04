@@ -6,20 +6,14 @@ class MediaContainer extends StatelessWidget {
   final void Function()? onPressed;
   final void Function()? onDownload;
   final void Function()? onShare;
-  final double? width;
-  final double? height;
   final Widget child;
   final bool showDropdown;
-
-  bool get isVertical => width != null || height != null;
 
   const MediaContainer({
     this.onDownload,
     this.onShare,
     this.onPressed,
     required this.child,
-    required this.width,
-    required this.height,
     this.showDropdown = true,
     Key? key,
   }) : super(key: key);
@@ -56,40 +50,25 @@ class MediaContainer extends StatelessWidget {
       );
     }
 
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Container(color: Colors.red),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onPressed,
+              child: child,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Visibility(
+            visible: showDropdown,
+            child: renderMenu(),
+          ),
+        )
+      ],
     );
-
-    // return SizedBox(
-    //   width: width ?? double.infinity,
-    //   height: height,
-    //   child: Stack(
-    //     children: [
-    //       Positioned.fill(
-    //         child: SizedBox(
-    //           width: width ?? double.infinity,
-    //           height: height,
-
-    //           // Detecção do clique
-    //           child: Material(
-    //             color: Colors.transparent,
-    //             child: InkWell(
-    //               onTap: onPressed,
-    //               child: child,
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //       Align(
-    //         alignment: isVertical ? Alignment.topRight : Alignment.centerRight,
-    //         child: Visibility(
-    //           visible: showDropdown,
-    //           child: renderMenu(),
-    //         ),
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }

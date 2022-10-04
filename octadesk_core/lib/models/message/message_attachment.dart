@@ -13,9 +13,7 @@ class MessageAttachment {
   final bool? ptt;
 
   String get extension {
-    var fileUrl = localFilePath ?? url;
-    var fileName = basename(fileUrl);
-    var sections = fileName.split('.');
+    var sections = name.split('.');
     return sections.length > 1 ? sections[1].toLowerCase() : "";
   }
 
@@ -51,6 +49,7 @@ class MessageAttachment {
       mimeType: null,
       thumbnail: null,
       name: basename(path),
+      localFilePath: path,
       url: "",
       isUnsupported: false,
     );

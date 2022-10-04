@@ -40,7 +40,7 @@ class AttachmentContainer extends StatelessWidget {
       return AttachedPicture(fileDirectory);
     }
 
-    String icon = AppIcons.file;
+    String icon = AppIcons.fileFill;
     // Video
     if (type == AttachmentTypeEnum.video) {
       icon = AppIcons.video;

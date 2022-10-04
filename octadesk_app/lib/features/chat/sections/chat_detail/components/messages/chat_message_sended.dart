@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_message_attachments_container.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/multiple_media_container.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/single_media_container.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_message_clock.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_message_content.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_message_quoted.dart';
@@ -63,15 +64,24 @@ class ChatMessageSended extends StatelessWidget {
 
         //
         // Attachments
-        if (message.attachments.isNotEmpty)
+        if (message.attachments.length == 1)
           Padding(
             padding: const EdgeInsets.only(bottom: AppSizes.s01),
             child: Container(
               width: 300,
               decoration: getDecoration(first),
-              child: ChatMessageAttachmentsContainer(
-                attachments: message.attachments,
-              ),
+              child: SingleMediaContainer(message.attachments[0]),
+            ),
+          ),
+
+        // Multiplos attachments
+        if (message.attachments.length > 1)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSizes.s01),
+            child: Container(
+              width: 300,
+              decoration: getDecoration(first),
+              child: MultipleMediaContainer(message.attachments),
             ),
           ),
 

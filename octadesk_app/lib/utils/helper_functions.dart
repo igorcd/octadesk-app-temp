@@ -170,3 +170,8 @@ DateFormat formatDateHelper() {
 String formatPeriod(DateTimeRange range) {
   return "${formatDateHelper().format(range.start)} - ${formatDateHelper().format(range.end)}";
 }
+
+// Formatar duração
+String formatDurationHelper(Duration duration) {
+  return "${duration.inMinutes.toString().padLeft(2, "0")}:${duration.inSeconds.toString().padLeft(2, "0")}";
+}

@@ -1,15 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_audio_container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_document_container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_more_attachments._container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_not_supported_container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_picture_container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/components/media/media_video_container.dart';
-import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/models/message/message_attachment.dart';
-import 'package:octadesk_core/octadesk_core.dart';
-import 'dart:math' as math;
 
 class ChatMessageAttachmentsContainer extends StatelessWidget {
   final List<MessageAttachment> attachments;
@@ -75,109 +65,120 @@ class ChatMessageAttachmentsContainer extends StatelessWidget {
     //   }
     // }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        //
-        // Limitar total de celulas a quatro
-        var totalCells = math.min(attachments.length, 4);
-
-        // Tamanho de uma celula
-        var cellSize = ((constraints.maxWidth - AppSizes.s01) / 2).floor().toDouble();
-
-        // Tamanho dos elementos
-        var cellsWidth = List.generate(totalCells, (index) {
-          return totalCells <= 2 || totalCells == 3 && index + 1 == 3 ? constraints.maxWidth : cellSize;
-        });
-
-        return Wrap(
-          alignment: WrapAlignment.center,
-          spacing: AppSizes.s01,
-          runSpacing: AppSizes.s01,
-          children: List.generate(
-            totalCells,
-            (index) {
-              final attachment = attachments[index];
-              final width = totalCells == 1 ? null : cellsWidth[index];
-              final height = totalCells == 1 ? null : cellSize.toDouble();
-              final isVertical = width != null;
-
-              // Caso seja o último anexo e possuir mais de 4
-              if (attachments.length > 4 && index == 3) {
-                return MediaContainer(
-                  width: width,
-                  height: height,
-                  showDropdown: false,
-                  child: const MediaMoreAttachmentsContainer(),
-                  onPressed: () {},
-                );
-              }
-
-              if (attachment.isUnsupported) {
-                return MediaNotSupportedContainer(attachment: attachment);
-              }
-
-              // Caso seja uma imagem
-              if (attachment.type == AttachmentTypeEnum.photo) {
-                return MediaContainer(
-                  width: width,
-                  height: totalCells == 1 ? 300 : height,
-                  onDownload: () {},
-                  onShare: () {},
-                  onPressed: () {},
-                  showDropdown: attachment.localFilePath == null,
-                  child: MediaPictureContainer(
-                    stretchImage: attachments.length > 1,
-                    attachment: attachment,
-                  ),
-                );
-              }
-
-              // Caso seja um áudio
-              if (attachment.type == AttachmentTypeEnum.audio) {
-                return MediaContainer(
-                  width: width,
-                  height: height ?? AppSizes.s18,
-                  showDropdown: attachment.localFilePath == null,
-                  child: MediaAudioContainer(
-                    attachment: attachment,
-                    isVertical: isVertical,
-                  ),
-                );
-              }
-
-              // Caso seja um vídeo
-              if (attachment.type == AttachmentTypeEnum.video) {
-                return MediaContainer(
-                  width: width,
-                  height: totalCells == 1 ? null : height,
-                  onDownload: () {},
-                  onShare: () {},
-                  onPressed: () {},
-                  showDropdown: attachment.localFilePath == null,
-                  child: MediaVideoContainer(
-                    stretchImage: attachments.length > 1,
-                    attachment: attachment,
-                  ),
-                );
-              }
-
-              // Caso seja um documento
-              return MediaContainer(
-                width: width,
-                height: height ?? AppSizes.s18,
-                onDownload: () {},
-                onShare: () {},
-                onPressed: () {},
-                showDropdown: attachment.localFilePath == null,
-                child: MediaDocumentContainer(
-                  attachment: attachment,
-                  isVertical: isVertical,
-                ),
-              );
-            },
-          ),
-        );
-      },
+    return Wrap(
+      direction: Axis.horizontal,
+      runSpacing: 6,
+      spacing: 6,
+      children: [
+        SizedBox(width: 147, child: AspectRatio(aspectRatio: 1, child: Container(color: Colors.red))),
+        SizedBox(width: 147, child: AspectRatio(aspectRatio: 1, child: Container(color: Colors.blue))),
+        SizedBox(width: 300, child: AspectRatio(aspectRatio: 2, child: Container(color: Colors.blue))),
+      ],
     );
+
+    // return LayoutBuilder(
+    //   builder: (context, constraints) {
+    //     //
+    //     // Limitar total de celulas a quatro
+    //     var totalCells = math.min(attachments.length, 4);
+
+    //     // Tamanho de uma celula
+    //     var cellSize = ((constraints.maxWidth - AppSizes.s01) / 2).floor().toDouble();
+
+    //     // Tamanho dos elementos
+    //     var cellsWidth = List.generate(totalCells, (index) {
+    //       return totalCells <= 2 || totalCells == 3 && index + 1 == 3 ? constraints.maxWidth : cellSize;
+    //     });
+
+    //     return Wrap(
+    //       alignment: WrapAlignment.center,
+    //       spacing: AppSizes.s01,
+    //       runSpacing: AppSizes.s01,
+    //       children: List.generate(
+    //         totalCells,
+    //         (index) {
+    //           final attachment = attachments[index];
+    //           final width = totalCells == 1 ? null : cellsWidth[index];
+    //           final height = totalCells == 1 ? null : cellSize.toDouble();
+    //           final isVertical = width != null;
+
+    //           // Caso seja o último anexo e possuir mais de 4
+    //           if (attachments.length > 4 && index == 3) {
+    //             return MediaContainer(
+    //               width: width,
+    //               height: height,
+    //               showDropdown: false,
+    //               child: const MediaMoreAttachmentsContainer(),
+    //               onPressed: () {},
+    //             );
+    //           }
+
+    //           if (attachment.isUnsupported) {
+    //             return MediaNotSupportedContainer(attachment: attachment);
+    //           }
+
+    //           // Caso seja uma imagem
+    //           if (attachment.type == AttachmentTypeEnum.photo) {
+    //             return MediaContainer(
+    //               width: width,
+    //               height: totalCells == 1 ? 300 : height,
+    //               onDownload: () {},
+    //               onShare: () {},
+    //               onPressed: () {},
+    //               showDropdown: attachment.localFilePath == null,
+    //               child: MediaPictureContainer(
+    //                 stretchImage: attachments.length > 1,
+    //                 attachment: attachment,
+    //               ),
+    //             );
+    //           }
+
+    //           // Caso seja um áudio
+    //           if (attachment.type == AttachmentTypeEnum.audio) {
+    //             return MediaContainer(
+    //               width: width,
+    //               height: height ?? AppSizes.s18,
+    //               showDropdown: attachment.localFilePath == null,
+    //               child: MediaAudioContainer(
+    //                 attachment: attachment,
+    //                 isVertical: isVertical,
+    //               ),
+    //             );
+    //           }
+
+    //           // Caso seja um vídeo
+    //           if (attachment.type == AttachmentTypeEnum.video) {
+    //             return MediaContainer(
+    //               width: width,
+    //               height: totalCells == 1 ? null : height,
+    //               onDownload: () {},
+    //               onShare: () {},
+    //               onPressed: () {},
+    //               showDropdown: attachment.localFilePath == null,
+    //               child: MediaVideoContainer(
+    //                 stretchImage: attachments.length > 1,
+    //                 attachment: attachment,
+    //               ),
+    //             );
+    //           }
+
+    //           // Caso seja um documento
+    //           return MediaContainer(
+    //             width: width,
+    //             height: height ?? AppSizes.s18,
+    //             onDownload: () {},
+    //             onShare: () {},
+    //             onPressed: () {},
+    //             showDropdown: attachment.localFilePath == null,
+    //             child: MediaDocumentContainer(
+    //               attachment: attachment,
+    //               isVertical: isVertical,
+    //             ),
+    //           );
+    //         },
+    //       ),
+    //     );
+    // },
+    // );
   }
 }

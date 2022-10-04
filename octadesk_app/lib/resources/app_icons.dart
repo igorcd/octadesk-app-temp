@@ -39,6 +39,7 @@ class AppIcons {
   static const String playFill = "lib/assets/icons/play-fill.png";
   static const String pause = "lib/assets/icons/pause.png";
   static const String file = "lib/assets/icons/file.png";
+  static const String fileFill = "lib/assets/icons/file-fill.png";
   static const String attach = "lib/assets/icons/attach.png";
   static const String pictureError = "lib/assets/icons/picture_error.png";
   static const String picture = "lib/assets/icons/picture.png";

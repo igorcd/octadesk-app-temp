@@ -1,200 +1,144 @@
+import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/resources/index.dart';
+import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_core/models/message/message_attachment.dart';
-import 'dart:math' as math;
 
-// // TODO - FAZER REFACTORY DA LÓGICA
-// class MediaAudioContainer extends StatefulWidget {
-//   final bool isVertical;
-//   final MessageAttachment attachment;
-//   const MediaAudioContainer({required this.attachment, required this.isVertical, Key? key}) : super(key: key);
-
-//   @override
-//   State<MediaAudioContainer> createState() => _MediaAudioContainerState();
-// }
-
-// class _MediaAudioContainerState extends State<MediaAudioContainer> {
-//   // ==== State ====
-//   bool playing = false;
-
-//   bool loaded = false;
-
-//   bool _inError = false;
-
-//   Duration totalDuration = const Duration();
-
-//   double percentage = 0;
-
-//   AudioPlayer audioPlayer = AudioPlayer();
-
-//   // ==== Métodos ====
-//   Future _pause() async {
-//     await audioPlayer.pause();
-//     setState(() {
-//       playing = false;
-//     });
-//   }
-
-//   Future _resume() async {
-//     await audioPlayer.resume();
-//     setState(() {
-//       playing = true;
-//     });
-//   }
-
-//   /// Tratar botão de play / payse
-//   void _handleIteractionButton() async {
-//     var future = playing ? _pause() : _resume();
-//     await future;
-//   }
-
-//   void _onUserChangeValue(double value) async {
-//     var miliseconds = (totalDuration.inMilliseconds * value) / 100;
-//     var duration = Duration(milliseconds: miliseconds.round());
-//     audioPlayer.seek(duration);
-//     await _resume();
-//   }
-
-//   /// Inicializar oi player
-//   void _initPlayer() async {
-//     try {
-//       //
-//       // Listener de quando mudar de posição
-//       audioPlayer.onPositionChanged.listen((Duration p) {
-//         if (totalDuration.inMilliseconds > 0) {
-//           setState(() {
-//             percentage = ((p.inMilliseconds / totalDuration.inMilliseconds) * 100).ceil().toDouble();
-//           });
-//         }
-//       });
-
-//       // Listener de quando finalizar
-//       audioPlayer.onPlayerComplete.listen((event) {
-//         setState(() {
-//           playing = false;
-//           percentage = 0;
-//           audioPlayer.seek(Duration.zero);
-//         });
-//       });
-
-//       audioPlayer.onDurationChanged.listen((event) {
-//         setState(() => totalDuration = Duration(seconds: event.inSeconds));
-//       });
-
-//       if (mounted) {
-//         await audioPlayer.setSource(UrlSource(widget.attachment.url));
-//         setState(() => loaded = true);
-//       }
-//     } catch (e) {
-//       if (mounted) {
-//         setState(() => _inError = true);
-//       }
-//     }
-//   }
-
-//   @override
-//   void initState() {
-//     _initPlayer();
-//     super.initState();
-//   }
-
-//   @override
-//   void dispose() {
-//     audioPlayer.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     Widget renderChild() {
-//       if (_inError) {
-//         return const Text("Não foi possível carregar o áudio");
-//       }
-
-//       if (loaded) {
-//         return OctaAnimatedIconButton(
-//           onPressed: _handleIteractionButton,
-//           icon: playing ? AppIcons.pause : AppIcons.play,
-//         );
-//       }
-
-//       return Container(
-//         width: AppSizes.s12,
-//         alignment: Alignment.center,
-//         child: const SizedBox(
-//           width: AppSizes.s06,
-//           height: AppSizes.s06,
-//           child: CircularProgressIndicator(
-//             strokeWidth: 2,
-//           ),
-//         ),
-//       );
-//     }
-
-//     return Padding(
-//       padding: widget.isVertical ? EdgeInsets.zero : const EdgeInsets.only(left: AppSizes.s02_5, right: AppSizes.s01),
-//       child: Flex(
-//         direction: widget.isVertical ? Axis.vertical : Axis.horizontal,
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           // Botão de play / pause / loading
-//           AnimatedSwitcher(
-//             duration: const Duration(milliseconds: 150),
-//             child: renderChild(),
-//           ),
-
-//           // Slider
-//           Flexible(
-//             flex: widget.isVertical ? 0 : 1,
-//             child: Container(
-//               transform: widget.isVertical ? null : Matrix4.translationValues(-10, 0, 0),
-//               padding: widget.isVertical ? null : const EdgeInsets.only(right: AppSizes.s02),
-//               child: totalDuration.inMilliseconds > 0
-//                   ? Slider(
-//                       value: math.min(math.max(percentage, 0), 100),
-//                       min: 0,
-//                       max: 100,
-//                       onChangeStart: (value) async => await _pause(),
-//                       onChanged: (value) => setState(() => percentage = value),
-//                       onChangeEnd: (value) => _onUserChangeValue(value),
-//                     )
-//                   : const SizedBox.shrink(),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-class MediaAudioContainer extends StatelessWidget {
+class MediaAudioContainer extends StatefulWidget {
   final bool isVertical;
   final MessageAttachment attachment;
   const MediaAudioContainer({required this.attachment, required this.isVertical, super.key});
 
   @override
+  State<MediaAudioContainer> createState() => _MediaAudioContainerState();
+}
+
+class _MediaAudioContainerState extends State<MediaAudioContainer> {
+  // Player
+  late AudioPlayer _player;
+
+  // Streams
+  final List<StreamSubscription> _streams = [];
+
+  // Duração total
+  Duration? _totalDuration;
+
+  /// Posição
+  Duration _position = const Duration();
+
+  /// Playing
+  bool _playing = false;
+
+  /// Porcentagem
+  double _percentage = 0;
+
+  void _initialize() async {
+    _player = AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+
+    if (widget.attachment.url.isNotEmpty) {
+      // Adicionar stream de quando mudar a posição
+      _streams.add(_player.onPositionChanged.listen((Duration p) {
+        setState(() {
+          _position = p;
+        });
+
+        if (_totalDuration != null) {
+          setState(() {
+            if (p.inMicroseconds > 0) {
+              _percentage = ((p.inMilliseconds / _totalDuration!.inMilliseconds) * 100).ceil().toDouble();
+            } else {
+              _percentage = 0;
+            }
+          });
+        }
+      }));
+
+      // Listener de quando finalizar
+      _streams.add(_player.onPlayerComplete.listen((event) {
+        setState(() {
+          _playing = false;
+          _player.seek(Duration.zero);
+        });
+      }));
+
+      // Listener para quando mudar a duração
+      _streams.add(_player.onDurationChanged.listen((event) {
+        setState(() {
+          _totalDuration = event;
+        });
+      }));
+
+      // Listener para quando mudar o estado
+      _streams.add(_player.onPlayerStateChanged.listen((PlayerState event) {
+        setState(() {
+          _playing = event == PlayerState.playing;
+        });
+      }));
+
+      await _player.setSourceUrl(widget.attachment.url);
+    }
+  }
+
+  /// Quando apertar o play
+  void _handlePlayButton() {
+    _player.state == PlayerState.playing ? _player.pause() : _player.resume();
+  }
+
+  void _onUserChangeValue(double value) async {
+    if (_totalDuration != null) {
+      var miliseconds = (_totalDuration!.inMilliseconds * value) / 100;
+      var duration = Duration(milliseconds: miliseconds.round());
+      _player.seek(duration);
+      await _player.resume();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (var stream in _streams) {
+      stream.cancel();
+    }
+    _player.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s02),
-      child: Row(
+      padding: widget.isVertical ? const EdgeInsets.symmetric(vertical: AppSizes.s06, horizontal: AppSizes.s02) : const EdgeInsets.symmetric(horizontal: AppSizes.s02),
+      child: Flex(
+        direction: widget.isVertical ? Axis.vertical : Axis.horizontal,
         children: [
-          OctaAnimatedIconButton(onPressed: () {}, icon: AppIcons.playFill),
+          OctaAnimatedIconButton(
+            onPressed: _handlePlayButton,
+            icon: _playing ? AppIcons.pause : AppIcons.playFill,
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.s02),
               child: Slider(
-                onChanged: (value) {},
-                value: 1,
-                min: 1,
-                max: 1,
+                onChanged: _totalDuration == null ? null : (value) => setState(() => _percentage = value),
+                value: _percentage,
+                onChangeStart: (value) => _player.pause(),
+                onChangeEnd: (value) => _onUserChangeValue(value),
+                min: 0,
+                max: 100,
               ),
             ),
           ),
           SizedBox(
             width: AppSizes.s10,
-            child: OctaText.bodySmall("00:00"),
+            child: OctaText.bodySmall(
+              !_playing && _totalDuration != null ? formatDurationHelper(_totalDuration!) : formatDurationHelper(_position),
+            ),
           )
         ],
       ),

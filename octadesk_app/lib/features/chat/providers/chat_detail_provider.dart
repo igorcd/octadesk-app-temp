@@ -490,6 +490,7 @@ class ChatDetailProvider extends ChangeNotifier {
   /// Remover anexo
   void removeAttachment(int index) {
     _attachedFiles.removeAt(index);
+    notifyListeners();
   }
 
   /// Abrir gravador de áudio
