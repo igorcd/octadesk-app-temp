@@ -2,10 +2,12 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:octadesk_conversation/constants/socket_events.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_conversation/plugins/ntp_offset.dart';
 import 'package:octadesk_core/dtos/message/attachment_post_dto.dart';
+import 'package:octadesk_core/dtos/message/messages_pagination_dto.dart';
 import 'package:octadesk_core/models/message/message_attachment.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:octadesk_services/octadesk_services.dart';
@@ -18,8 +20,15 @@ class RoomController {
   final String roomKey;
   final CancelToken cancelToken;
 
+  /// Stream da sala
   late BehaviorSubject<RoomModel?> _roomStreamController;
   Stream<RoomModel?> get roomStream => _roomStreamController.stream;
+
+  late BehaviorSubject<MessagesPaginatorDTO?> _messagesStreamController;
+  Stream<MessagesPaginatorDTO?> get messagesStream => _messagesStreamController.stream;
+
+  final ValueNotifier<int> _newMessagesLength = ValueNotifier(0);
+  ValueNotifier<int> get newMessagesLength => _newMessagesLength;
 
   /// Sala atual
   RoomModel? get room => _roomStreamController.value;
@@ -27,9 +36,14 @@ class RoomController {
   // Se a sala está ativa
   bool get active => !_roomStreamController.isClosed;
 
+  // Paginação
+  int _currentPage = 1;
+  bool _hasPrevPage = true;
   // ====== Métodos privados ======
 
+  ///
   /// Verificar se pode mandar apenas mensagens template (WhatsApp Oficial)
+  ///
   bool _checkIfCanSendOnlyTemplateMessages(RoomModel room) {
     // Caso a sala não possua integrator
     if (room.integrator == null || room.integrator?.integratorName == 'octadesk') {
@@ -47,6 +61,9 @@ class RoomController {
     return intervalFromLastMessage > integrator.hoursToAnswer - 1;
   }
 
+  ///
+  /// Reconectar
+  ///
   Future<void> _reconnect(dynamic _) async {
     print("CHAMOU O RECONECT DENTRO DO DETALHE DA SALA");
     if (!_roomStreamController.isClosed) {
@@ -59,16 +76,8 @@ class RoomController {
   ///
   /// Enviar mensagem
   ///
-  Future<void> _handleSendMessage({
-    required String message,
-    required List<String> attachments,
-    required List<AgentDTO> mentions,
-    required bool isInternal,
-    MessageModel? quotedMessage,
-    MacroContentDTO? template,
-  }) //
-  async {
-    var internal = isInternal || mentions.isNotEmpty;
+  Future<void> _handleSendMessage(SendMessageParams params) async {
+    var internal = params.isInternal || params.mentions.isNotEmpty;
     var agent = OctadeskConversation.instance.agent!;
     var date = ntpDateTime();
 
@@ -76,20 +85,20 @@ class RoomController {
     var dataToSend = MessagePostDTO(
       key: Uuid().v4(),
       time: date.toIso8601String(),
-      quotedMessageKey: quotedMessage?.key,
+      quotedMessageKey: params.quotedMessage?.key,
       type: internal ? 'internal' : 'public',
       status: 'sending',
       chatKey: room!.key,
-      comment: message,
+      comment: params.message,
       user: agent,
-      attachments: attachments.map((e) => AttachmentPostDTO.fromFilePath(e)).toList(),
+      attachments: params.attachments.map((e) => AttachmentPostDTO.fromFilePath(e)).toList(),
       customFields: {},
-      mentions: [...mentions],
+      mentions: [...params.mentions],
     );
 
-    if (template != null) {
+    if (params.template != null) {
       dataToSend.customFields.addAll({
-        'template': template.toMap(),
+        'template': params.template!.toMap(),
       });
     }
 
@@ -99,26 +108,27 @@ class RoomController {
     // Criar placeholder
     var messagePlaceholder = MessageModel(
       quotedStory: null,
-      buttons: template?.components.firstWhereOrNull((element) => element.type == MacroComponentTypeEnum.buttons)?.buttons.map((e) => e.label).toList() ?? [],
-      quotedMessage: quotedMessage != null ? MessageModel.clone(quotedMessage) : null,
+      buttons: params.template?.components.firstWhereOrNull((element) => element.type == MacroComponentTypeEnum.buttons)?.buttons.map((e) => e.label).toList() ?? [],
+      quotedMessage: params.quotedMessage != null ? MessageModel.clone(params.quotedMessage!) : null,
       key: dataToSend.key,
       user: AgentModel.fromAgentDTO(agent),
-      comment: template != null ? generateTemplateContent(template.components) : dataToSend.comment,
+      comment: params.template != null ? generateTemplateContent(params.template!.components) : dataToSend.comment,
       time: date,
       type: internal ? MessageTypeEnum.internal : MessageTypeEnum.public,
       status: MessageStatusEnum.tryingToSend,
-      attachments: attachments.map((e) => MessageAttachment.fromFilePath(e)).toList(),
+      attachments: params.attachments.map((e) => MessageAttachment.fromFilePath(e)).toList(),
       catalog: null,
     );
 
     try {
       // Adicionar o placeholder
+      // TODO - AJEITAR
       newRoom.messages.insert(0, messagePlaceholder);
       _roomStreamController.add(newRoom);
 
       // Fazer upload dos arquivos
-      if (attachments.isNotEmpty) {
-        var futures = attachments.map(
+      if (params.attachments.isNotEmpty) {
+        var futures = params.attachments.map(
           (e) => ChatService.uploadFile(
             file: File(e),
             channel: newRoom.channel,
@@ -145,6 +155,9 @@ class RoomController {
     }
   }
 
+  ///
+  /// Inicializar
+  ///
   void _initialize() {
     var socket = OctadeskConversation.instance.socketReference!;
 
@@ -158,12 +171,18 @@ class RoomController {
       // Adicionar evento de nova mensagem
       socket.on(SocketEvents.roomUpdate, (room) {
         print("▶️ CHEGOU MENSAGEM NA SALA $roomKey");
-        final data = RoomDetailDTO.fromMap(room);
-        var roomModel = RoomModel.fromDTO(data);
 
-        // Verificar se pode enviar apenas template messages
-        roomModel.canSendOnlyTemplateMessages = _checkIfCanSendOnlyTemplateMessages(roomModel);
-        _roomStreamController.add(roomModel);
+        if (_currentPage == 1) {
+          newMessagesLength.value = 0;
+          final data = RoomDetailDTO.fromMap(room);
+          var roomModel = RoomModel.fromDTO(data);
+
+          // Verificar se pode enviar apenas template messages
+          roomModel.canSendOnlyTemplateMessages = _checkIfCanSendOnlyTemplateMessages(roomModel);
+          _roomStreamController.add(roomModel);
+        } else {
+          newMessagesLength.value += 1;
+        }
       });
 
       // Adicionar o listener para reconexão
@@ -204,6 +223,9 @@ class RoomController {
     };
   }
 
+  ///
+  /// Construtor
+  ///
   RoomController({required this.roomKey, required this.cancelToken}) {
     _initialize();
   }
@@ -222,35 +244,28 @@ class RoomController {
   ///
   /// Enviar mensagems
   ///
-  Future<void> sendMessage({
-    required String message,
-    required List<String> attachments,
-    required List<AgentDTO> mentions,
-    required bool isInternal,
-    MessageModel? quotedMessage,
-    MacroContentDTO? template,
-  })
-  //
-  async {
+  Future<void> sendMessage(SendMessageParams params) async {
     //
     // Verificar se é um chat de Whatsapp, caso seja só é permitido um anexo por mensagem
-    if (room!.channel == ChatChannelEnum.whatsapp && attachments.length > 1) {
+    if (room!.channel == ChatChannelEnum.whatsapp && params.attachments.length > 1 && _roomStreamController.value != null) {
       List<Future> futures = [];
-      for (var i = 0; i < attachments.length; i++) {
-        var attachment = attachments[i];
-        var isLastAttachment = i == attachments.length - 1;
+      for (var i = 0; i < params.attachments.length; i++) {
+        var attachment = params.attachments[i];
+        var isLastAttachment = i == params.attachments.length - 1;
 
-        var comment = isLastAttachment ? message : "";
-        var quoted = isLastAttachment ? quotedMessage : null;
+        var comment = isLastAttachment ? params.message : "";
+        var quoted = isLastAttachment ? params.quotedMessage : null;
 
         futures.add(
           _handleSendMessage(
-            attachments: [attachment],
-            message: comment,
-            quotedMessage: quoted,
-            isInternal: isInternal,
-            mentions: mentions,
-            template: template,
+            SendMessageParams(
+              attachments: [attachment],
+              message: comment,
+              quotedMessage: quoted,
+              isInternal: params.isInternal,
+              mentions: params.mentions,
+              template: params.template,
+            ),
           ),
         );
       }
@@ -260,12 +275,14 @@ class RoomController {
 
     // Caso contrário enviar mensagem normalmente
     await _handleSendMessage(
-      message: message,
-      attachments: attachments,
-      quotedMessage: quotedMessage,
-      isInternal: isInternal,
-      mentions: mentions,
-      template: template,
+      SendMessageParams(
+        message: params.message,
+        attachments: params.attachments,
+        quotedMessage: params.quotedMessage,
+        isInternal: params.isInternal,
+        mentions: params.mentions,
+        template: params.template,
+      ),
     );
   }
 
@@ -325,10 +342,45 @@ class RoomController {
   }
 
   ///
+  /// Carregar página anterior
+  ///
+  Future<void> loadPrevPage() async {
+    if (_hasPrevPage && room != null) {
+      var resp = await ChatService.getMessages(roomKey, page: _currentPage + 1, limit: 15);
+      _currentPage = resp.page;
+      _hasPrevPage = resp.page < resp.pages;
+      var newRoom = room!.clone();
+
+      newRoom.messages.addAll(resp.messages);
+      newRoom.messages = [...newRoom.messages, ...resp.messages].take(30);
+
+      print(newRoom);
+    }
+  }
+
+  ///
   /// Método de dispose
   ///
   Future<void> dispose() async {
     _roomStreamController.add(null);
     await _roomStreamController.close();
   }
+}
+
+class SendMessageParams {
+  final String message;
+  final List<String> attachments;
+  final List<AgentDTO> mentions;
+  final bool isInternal;
+  final MessageModel? quotedMessage;
+  final MacroContentDTO? template;
+
+  SendMessageParams({
+    required this.message,
+    required this.attachments,
+    required this.mentions,
+    required this.isInternal,
+    this.quotedMessage,
+    this.template,
+  });
 }
