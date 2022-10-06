@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:octadesk_core/dtos/message/messages_pagination_dto.dart';
 import 'package:octadesk_core/dtos/upload/upload_response_dto.dart';
 import 'package:octadesk_services/utils/get_media_type.dart';
 import 'package:path/path.dart' as path;
@@ -22,8 +23,21 @@ class ChatService {
 
   /// Pegar os detalhes de uma sala
   static Future<RoomDetailDTO> getRoom(String key, {CancelToken? cancelToken}) async {
-    var resp = await OctaClient.chat.get('/rooms/$key/open', cancelToken: cancelToken);
+    var resp = await OctaClient.chat.get('/rooms/$key/open/page', cancelToken: cancelToken, queryParameters: {
+      "page": 1,
+      "limit": 15,
+    });
     return RoomDetailDTO.fromMap(resp.data);
+  }
+
+  /// Pegar mensagens
+  static Future<MessagesPaginatorDTO> getMessages(String key, {required int page, required int limit}) async {
+    var resp = await OctaClient.chat.get("/rooms/$key/messages/paginated", queryParameters: {
+      "page": page,
+      "limit": limit,
+    });
+
+    return MessagesPaginatorDTO.fromMap(resp.data);
   }
 
   /// Carregar agente

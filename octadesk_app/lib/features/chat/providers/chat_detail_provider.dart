@@ -33,6 +33,8 @@ class ChatDetailProvider extends ChangeNotifier {
 
   // Stream de detalhe da sala
   late final RoomController _roomDetailController;
+
+  // Stream da sala
   Stream<RoomModel?> get roomDetailStream => _roomDetailController.roomStream;
 
   /// Position listener, usado para ir para determinado index da lista de conversas
@@ -75,6 +77,9 @@ class ChatDetailProvider extends ChangeNotifier {
     _inputInFocus = value;
     notifyListeners();
   }
+
+  bool _loadingPrevPage = false;
+  bool get loadingPrevPage => _loadingPrevPage;
 
   /// Lista de anexos
   List<String> _attachedFiles = [];
@@ -207,6 +212,7 @@ class ChatDetailProvider extends ChangeNotifier {
   /// Inicializar o provider
   void _initialize() {
     _inputFocusNode = FocusNode();
+
     // Instanciar controle da sala
     _roomDetailController = OctadeskConversation.instance.getRoomDetailController(roomKey);
 
@@ -270,12 +276,14 @@ class ChatDetailProvider extends ChangeNotifier {
 
       // Enviar a mensagem
       _roomDetailController.sendMessage(
-        message: inputController.text,
-        attachments: _attachedFiles,
-        mentions: agents,
-        quotedMessage: null,
-        isInternal: annotationActive,
-        template: null,
+        SendMessageParams(
+          message: inputController.text,
+          attachments: _attachedFiles,
+          mentions: agents,
+          quotedMessage: null,
+          isInternal: annotationActive,
+          template: null,
+        ),
       );
 
       _inputController.clear();
@@ -390,12 +398,14 @@ class ChatDetailProvider extends ChangeNotifier {
 
           // Enviar template message
           _roomDetailController.sendMessage(
-            message: inputController.text,
-            attachments: [],
-            mentions: [],
-            quotedMessage: null,
-            isInternal: annotationActive,
-            template: templateResult,
+            SendMessageParams(
+              message: inputController.text,
+              attachments: [],
+              mentions: [],
+              quotedMessage: null,
+              isInternal: annotationActive,
+              template: templateResult,
+            ),
           );
           return;
         }
@@ -560,6 +570,28 @@ class ChatDetailProvider extends ChangeNotifier {
             content: Text("Não foi possível transferir a conversa, por favor, tente novamente"),
           ),
         );
+      }
+    }
+  }
+
+  /// Carregar página anterior
+  void loadPrevPage(BuildContext context) async {
+    if (!_loadingPrevPage) {
+      _loadingPrevPage = true;
+      notifyListeners();
+
+      try {
+        // Realizar a requisição
+        await _roomDetailController.loadPrevPage();
+      }
+      // Mostrar alerta de erro
+      catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Não foi possível realizar a paginação, por favor, tente novamente em breve")));
+      }
+      // Finalizar o carregamento
+       finally {
+        _loadingPrevPage = false;
+        notifyListeners();
       }
     }
   }

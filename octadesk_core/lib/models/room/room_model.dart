@@ -12,15 +12,14 @@ class RoomModel {
   final ChatChannelEnum channel;
   final String key;
   final AgentModel createdBy;
+  final RoomIntegratorModel? integrator;
+  final dynamic customFields;
   final List<MessageModel> messages;
   final DateTime lastMessageDate;
   final DateTime? clientLastMessageDate;
-  final List<RoomEventModel> events;
-  final RoomIntegratorModel? integrator;
-  final dynamic customFields;
 
+  List<RoomEventModel> events;
   bool canSendOnlyTemplateMessages;
-
   GroupListModel? group;
   List<TagModel> tags;
   AgentModel? agent;
@@ -48,7 +47,7 @@ class RoomModel {
     this.canSendOnlyTemplateMessages = false,
   });
 
-  factory RoomModel.fromDTO(RoomDetailDTO data) {
+  factory RoomModel.fromDTO(RoomDetailDTO data, {int messagesTake = 15}) {
     // Integrator
     var integrator = data.customFields.firstWhereOrNull((element) => element["integrator"] != null);
     var createdAt = DateTime.parse(data.created).toLocal();
@@ -65,7 +64,7 @@ class RoomModel {
       key: data.key,
       agent: data.agent != null ? AgentModel.fromAgentDTO(data.agent!) : null,
       createdBy: AgentModel.fromAgentDTO(data.createdBy),
-      messages: data.messages.reversed.map((m) => MessageModel.fromDTO(m)).toList(),
+      messages: data.messages.reversed.map((m) => MessageModel.fromDTO(m)).take(messagesTake).toList(),
       lastMessageDate: DateTime.parse(data.lastMessageDate).toLocal(),
       closingDetails: data.closed != null ? RoomClosingDetailsModel.fromDTO(data.closed!) : null,
       events: events,
