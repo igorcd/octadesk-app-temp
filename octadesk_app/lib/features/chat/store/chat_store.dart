@@ -121,6 +121,7 @@ class ChatStore extends ChangeNotifier {
           userAvatar: room.user.thumbUrl,
           userName: room.user.name,
           userId: room.user.id,
+          roomChannel: room.channel,
         );
         _currentConversationOpened = true;
         _canChangeConversation = true;

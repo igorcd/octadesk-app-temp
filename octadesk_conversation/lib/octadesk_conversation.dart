@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:octadesk_conversation/constants/socket_events.dart';
 import 'package:octadesk_conversation/inbox_filters/inbox_filters.dart';
 import 'package:octadesk_conversation/inbox_messages_counter_controller.dart';
+import 'package:octadesk_conversation/messages_controller.dart';
 import 'package:octadesk_conversation/plugins/ntp_offset.dart';
 import 'package:octadesk_conversation/room_controller.dart';
 import 'package:octadesk_conversation/rooms_list_controller.dart';
@@ -243,6 +244,22 @@ class OctadeskConversation {
     _loadRoomDetailCancelToken = CancelToken();
 
     return RoomController(roomKey: roomKey, cancelToken: _loadRoomDetailCancelToken!);
+  }
+
+  ///
+  /// Pegar Stream de mensagems
+  ///
+  CancelToken? _loadRoomMessagesCancelToken;
+  MessagesController getRoomMessagesController(String roomKey, ChatChannelEnum chatChannel) {
+    // Verificar se está inicializado
+    if (!initialized) {
+      throw "Não inicializado";
+    }
+
+    _loadRoomMessagesCancelToken?.cancel();
+    _loadRoomMessagesCancelToken = CancelToken();
+
+    return MessagesController(roomKey: roomKey, cancelToken: _loadRoomMessagesCancelToken!, roomChannel: chatChannel);
   }
 
   ///

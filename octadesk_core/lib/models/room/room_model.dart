@@ -14,7 +14,6 @@ class RoomModel {
   final AgentModel createdBy;
   final RoomIntegratorModel? integrator;
   final dynamic customFields;
-  final List<MessageModel> messages;
   final DateTime lastMessageDate;
   final DateTime? clientLastMessageDate;
 
@@ -36,7 +35,6 @@ class RoomModel {
     required this.key,
     required this.agent,
     required this.createdBy,
-    required this.messages,
     required this.lastMessageDate,
     required this.events,
     required this.users,
@@ -64,7 +62,6 @@ class RoomModel {
       key: data.key,
       agent: data.agent != null ? AgentModel.fromAgentDTO(data.agent!) : null,
       createdBy: AgentModel.fromAgentDTO(data.createdBy),
-      messages: data.messages.reversed.map((m) => MessageModel.fromDTO(m)).take(messagesTake).toList(),
       lastMessageDate: DateTime.parse(data.lastMessageDate).toLocal(),
       closingDetails: data.closed != null ? RoomClosingDetailsModel.fromDTO(data.closed!) : null,
       events: events,
@@ -85,7 +82,6 @@ class RoomModel {
       agent: agent,
       createdBy: createdBy,
       key: key,
-      messages: [...messages],
       lastMessageDate: lastMessageDate,
       closingDetails: closingDetails,
       channel: channel,

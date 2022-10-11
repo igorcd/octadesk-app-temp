@@ -24,6 +24,7 @@ class OctaBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
     var isMobile = MediaQuery.of(context).size.width < ScreenSize.md;
 
     Widget transition(Widget child) {
@@ -56,7 +57,7 @@ class OctaBottomSheet extends StatelessWidget {
                 clipBehavior: Clip.hardEdge,
                 constraints: isMobile ? null : const BoxConstraints(maxWidth: 500, maxHeight: 600),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: colorScheme.surface,
                   borderRadius: isMobile
                       ? const BorderRadius.vertical(
                           top: Radius.circular(AppSizes.s03),

@@ -1,6 +1,6 @@
 import 'package:octadesk_core/dtos/message/message_dto.dart';
 
-class MessagesPaginatorDTO {
+class MessagePaginatorDTO {
   final String roomKey;
   final int pages;
   final int limit;
@@ -9,7 +9,7 @@ class MessagesPaginatorDTO {
   final List<dynamic> quotedMessages;
   final List<dynamic> users;
 
-  MessagesPaginatorDTO({
+  MessagePaginatorDTO({
     required this.roomKey,
     required this.page,
     required this.limit,
@@ -19,13 +19,13 @@ class MessagesPaginatorDTO {
     required this.users,
   });
 
-  factory MessagesPaginatorDTO.fromMap(Map<String, dynamic> map) {
-    return MessagesPaginatorDTO(
+  factory MessagePaginatorDTO.fromMap(Map<String, dynamic> map) {
+    return MessagePaginatorDTO(
       roomKey: map["roomKey"],
       page: map["page"],
       limit: map["limit"],
       pages: map["pages"],
-      messages: List.from(map["messages"]).map((e) => MessageDTO.fromMap(e)).toList(),
+      messages: List.from(map["messages"]).reversed.map((e) => MessageDTO.fromMap(e)).toList(),
       quotedMessages: List.from(map["quotedMessages"]),
       users: List.from(map["users"]),
     );

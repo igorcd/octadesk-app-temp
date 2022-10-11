@@ -1,189 +1,182 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:octadesk_app/components/octa_slidable_action.dart';
+import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_event.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_message.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/components/messages/chat_time.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_skeleton.dart';
 import 'package:octadesk_app/resources/index.dart';
-import 'package:octadesk_core/octadesk_core.dart';
-import 'package:collection/collection.dart';
+import 'package:octadesk_core/models/index.dart';
+import 'package:octadesk_core/models/message/message_paginator_model.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class ChatBody extends StatefulWidget {
-  final void Function(MessageModel message)? onQuoteMessage;
-  final ItemScrollController scrollController;
-  final ItemPositionsListener? itemPositionsListener;
-  final RoomModel room;
-
-  const ChatBody({
-    required this.scrollController,
-    this.itemPositionsListener,
-    this.onQuoteMessage,
-    required this.room,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<ChatBody> createState() => _ChatBodyState();
-}
-
-class _ChatBodyState extends State<ChatBody> {
-  int highlightIndex = -1;
-
-  void _jumpToQuotedMessage(String key) {
-    var el = widget.room.messages.firstWhereOrNull((element) => element.key == key);
-    if (el != null) {
-      var index = widget.room.messages.indexOf(el);
-      widget.scrollController.jumpTo(index: index > 0 ? index - 1 : index);
-
-      // Destacar a mensagem
-      Timer(const Duration(milliseconds: 300), () {
-        if (mounted) {
-          setState(() {
-            highlightIndex = index;
-          });
-
-          Timer(const Duration(milliseconds: 350), () {
-            if (mounted) {
-              setState(() {
-                highlightIndex = -1;
-              });
-            }
-          });
-        }
-      });
-    }
-  }
+class ChatBody extends StatelessWidget {
+  final RoomModel? room;
+  final bool canQuoteMessage;
+  const ChatBody({required this.room, this.canQuoteMessage = true, super.key});
 
   @override
   Widget build(BuildContext context) {
-    ChatDetailProvider provider = Provider.of(context);
-
     final DateFormat formatter = DateFormat('HH:mm');
+    ChatDetailProvider chatProvider = Provider.of(context);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      var isLgScreen = constraints.maxWidth > 640;
+    return StreamBuilder<MessagePaginatorModel?>(
+      stream: chatProvider.messagesStream,
+      builder: (context, snapshot) {
+        Widget content;
 
-      return SlidableAutoCloseBehavior(
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification notification) {
-            if (notification is ScrollEndNotification && notification.metrics.atEdge) {
-              if (notification.metrics.pixels > 0) {
-                provider.loadPrevPage(context);
-              } else {
-                print("Próxima página");
-              }
-            }
-            return true;
-          },
-          child: ScrollablePositionedList.separated(
-            key: const ValueKey("ScrollList"),
-            reverse: true,
-            itemScrollController: widget.scrollController,
-            itemPositionsListener: widget.itemPositionsListener,
-            itemCount: widget.room.messages.isEmpty ? 0 : widget.room.messages.length + 1,
-            padding: EdgeInsets.only(
-              top: AppSizes.s05,
-              bottom: AppSizes.s03,
-              left: isLgScreen ? AppSizes.s03 : 0,
-              right: isLgScreen ? AppSizes.s03 : 0,
-            ),
-            separatorBuilder: (c, i) {
-              var nextMessage = widget.room.messages[i];
-              var prevMessage = widget.room.messages.length - 1 == i ? null : widget.room.messages[i + 1];
-              var showDate = prevMessage == null || !DateUtils.isSameDay(nextMessage.time, prevMessage.time);
+        // Erro
+        if (snapshot.hasError) {
+          content = OctaErrorContainer(subtitle: snapshot.error.toString());
+        }
 
-              if (showDate) {
-                return ChatTime(nextMessage.time);
-              }
-              return const SizedBox.shrink();
-            },
-            itemBuilder: (context, i) {
-              if (i == widget.room.messages.length) {
-                return const SizedBox.shrink();
-              }
+        // Caso esteja carregando
+        else if (room == null || snapshot.data is! MessagePaginatorModel || snapshot.connectionState == ConnectionState.done) {
+          content = const ChatSkeleton();
+        }
 
-              // Mensagem
-              var currentMessage = widget.room.messages[i];
+        // Conteúdo
+        else {
+          content = LayoutBuilder(
+            builder: (context, constraints) {
+              var messages = snapshot.data!.messages;
+              var isLgScreen = constraints.maxWidth > 640;
 
-              // Próxima mensagem
-              var nextMessage = i == 0 ? null : widget.room.messages[i - 1];
+              return SlidableAutoCloseBehavior(
+                child: NotificationListener<ScrollEndNotification>(
+                  onNotification: (ScrollEndNotification notification) {
+                    if (notification.metrics.atEdge) {
+                      if (notification.metrics.pixels > 0) {
+                        chatProvider.paginate(context, direction: 1);
+                      } else {
+                        chatProvider.paginate(context, direction: -1);
+                      }
+                    }
+                    return true;
+                  },
+                  child: ScrollablePositionedList.separated(
+                    key: const ValueKey("ScrollList"),
+                    reverse: true,
+                    itemScrollController: chatProvider.scrollController,
+                    itemPositionsListener: chatProvider.itemPositionsListener,
+                    itemCount: messages.isEmpty ? 0 : messages.length + 1,
+                    padding: EdgeInsets.only(
+                      top: AppSizes.s05,
+                      bottom: AppSizes.s03,
+                      left: isLgScreen ? AppSizes.s03 : 0,
+                      right: isLgScreen ? AppSizes.s03 : 0,
+                    ),
+                    separatorBuilder: (c, i) {
+                      var nextMessage = messages[i];
+                      var prevMessage = messages.length - 1 == i ? null : messages[i + 1];
+                      var showDate = prevMessage == null || !DateUtils.isSameDay(nextMessage.time, prevMessage.time);
 
-              // Mensagem anterior
-              var prevMessage = i == widget.room.messages.length - 1 ? null : widget.room.messages[i + 1];
+                      if (showDate) {
+                        return ChatTime(nextMessage.time);
+                      }
+                      return const SizedBox.shrink();
+                    },
+                    itemBuilder: (context, i) {
+                      if (i == messages.length) {
+                        return const SizedBox.shrink();
+                      }
 
-              // Verificar se tem um evento
-              var events = widget.room.events.where((e) {
-                var isAfterCurrentMessage = e.time.isAfter(currentMessage.time);
-                var isBeforeNextMessage = nextMessage == null || e.time.isBefore(nextMessage.time);
-                return isAfterCurrentMessage && isBeforeNextMessage;
-              });
+                      // Mensagem
+                      var currentMessage = messages[i];
 
-              // Mostrar relógio
-              var showClock = nextMessage == null ||
-                  nextMessage.user.id != currentMessage.user.id ||
-                  nextMessage.time.toIso8601String().substring(0, 16) != currentMessage.time.toIso8601String().substring(0, 16);
+                      // Próxima mensagem
+                      var nextMessage = i == 0 ? null : messages[i - 1];
 
-              var prevMessageInDifferentTime = prevMessage == null || prevMessage.time.toIso8601String().substring(0, 16) != currentMessage.time.toIso8601String().substring(0, 16);
+                      // Mensagem anterior
+                      var prevMessage = i == messages.length - 1 ? null : messages[i + 1];
 
-              // Mostrar o nome
-              var showName = prevMessageInDifferentTime || prevMessage.user.name != currentMessage.user.name || prevMessage.user.id != currentMessage.user.id;
+                      // Verificar se tem um evento
+                      var events = room!.events.where((e) {
+                        var isAfterCurrentMessage = e.time.isAfter(currentMessage.time);
+                        var isBeforeNextMessage = nextMessage == null || e.time.isBefore(nextMessage.time);
+                        return isAfterCurrentMessage && isBeforeNextMessage;
+                      });
 
-              // É uma mensagem enviada
-              var sended = !currentMessage.fromClient;
+                      // Mostrar relógio
+                      var showClock = nextMessage == null ||
+                          nextMessage.user.id != currentMessage.user.id ||
+                          nextMessage.time.toIso8601String().substring(0, 16) != currentMessage.time.toIso8601String().substring(0, 16);
 
-              // Ações
-              var actions = ActionPane(
-                extentRatio: isLgScreen ? .15 : .3,
-                motion: const DrawerMotion(),
-                children: [
-                  // Reponser mensagem
-                  if (widget.onQuoteMessage != null) OctaSlidableAction(icon: AppIcons.reply, onPressed: () => widget.onQuoteMessage!(currentMessage)),
+                      var prevMessageInDifferentTime =
+                          prevMessage == null || prevMessage.time.toIso8601String().substring(0, 16) != currentMessage.time.toIso8601String().substring(0, 16);
 
-                  // Copiar para o clipboard
-                  OctaSlidableAction(
-                    icon: AppIcons.copy,
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: currentMessage.comment));
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Texto copiado para a área de transferência.")));
+                      // Mostrar o nome
+                      var showName = prevMessageInDifferentTime || prevMessage.user.name != currentMessage.user.name || prevMessage.user.id != currentMessage.user.id;
+
+                      // É uma mensagem enviada
+                      var sended = !currentMessage.fromClient;
+
+                      // Ações
+                      var actions = ActionPane(
+                        extentRatio: isLgScreen ? .15 : .3,
+                        motion: const DrawerMotion(),
+                        children: [
+                          // Reponser mensagem
+                          if (canQuoteMessage)
+                            OctaSlidableAction(
+                              icon: AppIcons.reply,
+                              onPressed: () => chatProvider.quoteMessage(currentMessage),
+                            ),
+
+                          // Copiar para o clipboard
+                          OctaSlidableAction(
+                            icon: AppIcons.copy,
+                            onPressed: () {
+                              Clipboard.setData(ClipboardData(text: "[${currentMessage.time.toIso8601String()}] ${currentMessage.user.name}: ${currentMessage.comment}"));
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Texto copiado para a área de transferência.")));
+                            },
+                          ),
+                        ],
+                      );
+
+                      return AnimatedContainer(
+                        key: ValueKey(currentMessage.key),
+                        duration: const Duration(milliseconds: 300),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Slidable(
+                              key: ValueKey(messages.length - i),
+                              groupTag: "0",
+                              startActionPane: sended ? null : actions,
+                              endActionPane: sended ? actions : null,
+                              child: ChatMessage(
+                                onQuotedMessageTap: chatProvider.jumpToQuotedMessage,
+                                showName: showName,
+                                first: prevMessage == null || prevMessage.user.name != currentMessage.user.name,
+                                sended: sended,
+                                showClock: showClock,
+                                time: formatter.format(currentMessage.time),
+                                message: currentMessage,
+                              ),
+                            ),
+                            ...events.map((e) => ChatEvent(event: e))
+                          ],
+                        ),
+                      );
                     },
                   ),
-                ],
-              );
-
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                child: Column(
-                  children: [
-                    Slidable(
-                      key: ValueKey(widget.room.messages.length - i),
-                      groupTag: "0",
-                      startActionPane: sended ? null : actions,
-                      endActionPane: sended ? actions : null,
-                      child: ChatMessage(
-                        onQuotedMessageTap: _jumpToQuotedMessage,
-                        showName: showName,
-                        first: prevMessage == null || prevMessage.user.name != currentMessage.user.name,
-                        sended: sended,
-                        showClock: showClock,
-                        time: formatter.format(currentMessage.time),
-                        message: currentMessage,
-                      ),
-                    ),
-                    ...events.map((e) => ChatEvent(event: e))
-                  ],
                 ),
               );
             },
-          ),
-        ),
-      );
-    });
+          );
+        }
+
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 150),
+          child: content,
+        );
+      },
+    );
   }
 }

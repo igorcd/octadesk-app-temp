@@ -16,6 +16,7 @@ class ChatEvent extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: AppSizes.s03),
         child: RichText(
+          textAlign: TextAlign.center,
           text: TextSpan(
             text: message,
             style: TextStyle(fontFamily: "NotoSans", color: colorScheme.onBackground, fontSize: AppSizes.s03),

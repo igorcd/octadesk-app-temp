@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/octa_alert_dialog.dart';
@@ -13,8 +13,10 @@ import 'package:octadesk_app/features/chat/dialogs/voice_recorder_dialog.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
 import 'package:octadesk_app/resources/app_colors.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
+import 'package:octadesk_conversation/messages_controller.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_conversation/room_controller.dart';
+import 'package:octadesk_core/models/message/message_paginator_model.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:octadesk_services/octadesk_services.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,22 +29,26 @@ class ChatDetailProvider extends ChangeNotifier {
   final String userName;
   final String? userAvatar;
   final String userId;
+  final ChatChannelEnum roomChannel;
 
   // Posição da stack de dialogs
   final ValueNotifier<int> _dialogStack = ValueNotifier(0);
 
   // Stream de detalhe da sala
   late final RoomController _roomDetailController;
+  late final MessagesController _messagesController;
 
   // Stream da sala
   Stream<RoomModel?> get roomDetailStream => _roomDetailController.roomStream;
 
+  // Stream de mensagems
+  Stream<MessagePaginatorModel?> get messagesStream => _messagesController.messagesStream;
+
+  ValueNotifier<int> get newMessagesLength => _messagesController.newMessagesLength;
+
   /// Position listener, usado para ir para determinado index da lista de conversas
   final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
-
-  /// Controller do scroll
-  final ItemScrollController _scrollController = ItemScrollController();
-  ItemScrollController get scrollController => _scrollController;
+  final ItemScrollController scrollController = ItemScrollController();
 
   /// Controller do Input
   late final RichTextController _inputController;
@@ -78,9 +84,6 @@ class ChatDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _loadingPrevPage = false;
-  bool get loadingPrevPage => _loadingPrevPage;
-
   /// Lista de anexos
   List<String> _attachedFiles = [];
   List<String> get attachedFiles => _attachedFiles;
@@ -96,6 +99,11 @@ class ChatDetailProvider extends ChangeNotifier {
   /// Filtro de menções
   String _mentionFilter = "";
   String get mentionFilter => _mentionFilter;
+
+  /// Paginando
+  ValueNotifier<bool> get loadingPagination => _messagesController.loadingPagination;
+
+  void Function() get refresh => _messagesController.refresh;
 
   ///  Callback para selecionar um agente
   void Function(String value)? _selectAgentInMentionsCallback;
@@ -215,6 +223,7 @@ class ChatDetailProvider extends ChangeNotifier {
 
     // Instanciar controle da sala
     _roomDetailController = OctadeskConversation.instance.getRoomDetailController(roomKey);
+    _messagesController = OctadeskConversation.instance.getRoomMessagesController(roomKey, roomChannel);
 
     // Instanciar controller de texto
     _inputController = RichTextController(
@@ -262,6 +271,7 @@ class ChatDetailProvider extends ChangeNotifier {
     required this.userAvatar,
     required this.userName,
     required this.userId,
+    required this.roomChannel,
   }) {
     _initialize();
   }
@@ -275,7 +285,7 @@ class ChatDetailProvider extends ChangeNotifier {
       }).toList();
 
       // Enviar a mensagem
-      _roomDetailController.sendMessage(
+      _messagesController.sendMessage(
         SendMessageParams(
           message: inputController.text,
           attachments: _attachedFiles,
@@ -397,7 +407,7 @@ class ChatDetailProvider extends ChangeNotifier {
           }
 
           // Enviar template message
-          _roomDetailController.sendMessage(
+          _messagesController.sendMessage(
             SendMessageParams(
               message: inputController.text,
               attachments: [],
@@ -439,10 +449,7 @@ class ChatDetailProvider extends ChangeNotifier {
       context,
       title: room.createdBy.name,
       stack: _dialogStack,
-      child: ChatBody(
-        room: room,
-        scrollController: ItemScrollController(),
-      ),
+      child: ChatBody(room: room),
     );
 
     notifyListeners();
@@ -574,24 +581,29 @@ class ChatDetailProvider extends ChangeNotifier {
     }
   }
 
-  /// Carregar página anterior
-  void loadPrevPage(BuildContext context) async {
-    if (!_loadingPrevPage) {
-      _loadingPrevPage = true;
-      notifyListeners();
+  /// Citar mensagem
+  void quoteMessage(MessageModel message) {}
 
+  /// Ir para a mensagem
+  void jumpToQuotedMessage(String key) {}
+
+  /// Carregar página anterior
+  void paginate(BuildContext context, {required int direction}) async {
+    if (scrollController.isAttached && !loadingPagination.value) {
       try {
-        // Realizar a requisição
-        await _roomDetailController.loadPrevPage();
-      }
-      // Mostrar alerta de erro
-      catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Não foi possível realizar a paginação, por favor, tente novamente em breve")));
-      }
-      // Finalizar o carregamento
-       finally {
-        _loadingPrevPage = false;
-        notifyListeners();
+        var request = direction == 1 ? _messagesController.loadNextPage() : _messagesController.loadPrevPage();
+        var hasNewPage = await request;
+        if (hasNewPage) {
+          Timer(Duration(milliseconds: 500), () {
+            scrollController.scrollTo(
+              duration: const Duration(milliseconds: 100),
+              index: 15,
+              alignment: direction == 1 ? .9 : 0,
+            );
+          });
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Não foi possível carregar as informações, tente novamente em breve")));
       }
     }
   }

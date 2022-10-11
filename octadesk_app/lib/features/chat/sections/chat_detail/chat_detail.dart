@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/components/layout/new_messages_container.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_attachments.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_body.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_closing_details.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_empty.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_footer.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_header.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_macros_container.dart';
 import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_mentions_container.dart';
-import 'package:octadesk_app/features/chat/sections/chat_detail/includes/chat_skeleton.dart';
 import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_core/models/room/room_model.dart';
 import 'package:provider/provider.dart';
@@ -30,11 +29,6 @@ class ChatDetail extends StatelessWidget {
           content = OctaErrorContainer(subtitle: snapshot.error.toString());
         }
 
-        // Caso esteja carregando
-        else if (snapshot.data is! RoomModel || snapshot.connectionState == ConnectionState.done) {
-          content = const ChatSkeleton();
-        }
-
         // Caso tenha carregado
         else {
           content = Container(
@@ -43,14 +37,43 @@ class ChatDetail extends StatelessWidget {
               children: [
                 // Conteúdo do chat
                 Positioned.fill(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: snapshot.data!.messages.isEmpty
-                        ? const ChatEmpty()
-                        : ChatBody(
-                            scrollController: conversationDetailProvider.scrollController,
-                            room: snapshot.data!,
-                          ),
+                  child: ChatBody(
+                    room: snapshot.data,
+                  ),
+                ),
+
+                // Loading da paginação
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  left: 0,
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: conversationDetailProvider.loadingPagination,
+                    builder: (context, value, child) {
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: value ? const LinearProgressIndicator(minHeight: 2) : const SizedBox.shrink(),
+                      );
+                    },
+                  ),
+                ),
+
+                // Container de novas mensagens
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ValueListenableBuilder<int>(
+                    valueListenable: conversationDetailProvider.newMessagesLength,
+                    builder: (context, value, child) {
+                      return AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: value >= 0
+                            ? NewMassagesContainer(
+                                value,
+                                onTap: conversationDetailProvider.refresh,
+                              )
+                            : const SizedBox.shrink(),
+                      );
+                    },
                   ),
                 ),
 
@@ -86,9 +109,9 @@ class ChatDetail extends StatelessWidget {
               ChatClosingDetails(
                 userName: snapshot.data!.closingDetails!.closedBy.name,
               )
-            else
 
-              // Input
+            // Input
+            else
               const ChatFooter(),
           ],
         );
