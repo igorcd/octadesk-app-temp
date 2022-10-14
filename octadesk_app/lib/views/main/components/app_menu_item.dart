@@ -7,7 +7,9 @@ class AppMenuItem extends StatelessWidget {
   final String icon;
   final String? selectedIcon;
   final void Function() onTap;
-  const AppMenuItem({required this.onTap, required this.selected, required this.icon, this.selectedIcon, super.key});
+  final bool disableSelectedForeground;
+
+  const AppMenuItem({required this.onTap, required this.selected, required this.icon, this.selectedIcon, this.disableSelectedForeground = false, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class AppMenuItem extends StatelessWidget {
             shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
-            color: selected ? colorScheme.surfaceVariant : colorScheme.surfaceVariant.withOpacity(0),
+            color: selected && !disableSelectedForeground ? colorScheme.surfaceVariant : colorScheme.surfaceVariant.withOpacity(0),
           ),
           child: Material(
             color: Colors.transparent,

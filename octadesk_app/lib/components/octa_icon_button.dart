@@ -6,10 +6,14 @@ class OctaIconButton extends StatelessWidget {
   final double size;
   final double iconSize;
   final String icon;
+  final double borderRadius;
+  final Color? color;
 
   const OctaIconButton({
     this.size = AppSizes.s12,
     this.iconSize = AppSizes.s08,
+    this.borderRadius = 999,
+    this.color,
     required this.onPressed,
     required this.icon,
     Key? key,
@@ -21,7 +25,7 @@ class OctaIconButton extends StatelessWidget {
       height: size,
       width: size,
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(999))),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(borderRadius)),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -32,7 +36,7 @@ class OctaIconButton extends StatelessWidget {
               fit: BoxFit.contain,
               height: iconSize,
               width: iconSize,
-              color: Theme.of(context).colorScheme.onBackground,
+              color: color ?? Theme.of(context).colorScheme.onBackground,
             ),
           ),
         ),

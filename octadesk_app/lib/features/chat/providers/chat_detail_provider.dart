@@ -70,8 +70,11 @@ class ChatDetailProvider extends ChangeNotifier {
   bool get annotationActive => _annotationActive;
   set annotationActive(value) {
     if (_annotationActive != value) {
-      _inputController.clear();
       _annotationActive = value;
+      if (!value) {
+        _inputController.clear();
+      }
+      _inputFocusNode.requestFocus();
       notifyListeners();
     }
   }
@@ -167,6 +170,12 @@ class ChatDetailProvider extends ChangeNotifier {
 
   /// Verificar se está fazendo uma menção
   void _checkIfIsMentioning() {
+    if (inputController.text.isEmpty && _annotationActive) {
+      _annotationActive = false;
+      notifyListeners();
+      return;
+    }
+
     // Palavras
     var words = _inputController.text.split(' ');
 
@@ -299,6 +308,7 @@ class ChatDetailProvider extends ChangeNotifier {
       _inputController.clear();
       _annotationActive = false;
       _attachedFiles.clear();
+      _inputFocusNode.requestFocus();
       notifyListeners();
     }
   }
@@ -591,26 +601,24 @@ class ChatDetailProvider extends ChangeNotifier {
   void paginate(BuildContext context, {required int direction}) async {
     if (scrollController.isAttached && !loadingPagination.value) {
       try {
-        var request = direction == 1 ? _messagesController.loadNextPage() : _messagesController.loadPrevPage();
-        var hasNewPage = await request;
-        if (hasNewPage) {
-          Timer(Duration(milliseconds: 500), () {
-            scrollController.scrollTo(
-              duration: const Duration(milliseconds: 100),
-              index: 15,
-              alignment: direction == 1 ? .9 : 0,
-            );
-          });
-        }
+        await _messagesController.loadNextPage();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Não foi possível carregar as informações, tente novamente em breve")));
       }
     }
   }
 
+  ///
+  /// Adicionar mensagens que chegaram durante a paginação
+  ///
+  void Function() get addIncomingMessages => _messagesController.addIncomingMessages;
+
   @override
   Future<void> dispose() async {
-    await _roomDetailController.dispose();
+    await Future.wait([
+      _roomDetailController.dispose(),
+      _messagesController.dispose(),
+    ]);
     _inputController.dispose();
     _inputFocusNode.dispose();
     super.dispose();

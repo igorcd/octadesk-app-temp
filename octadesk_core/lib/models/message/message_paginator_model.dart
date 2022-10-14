@@ -6,7 +6,7 @@ class MessagePaginatorModel {
   final int limit;
   final List<dynamic> quotedMessages;
   final List<dynamic> users;
-  final int page;
+  int page;
   int pages;
   List<MessageModel> messages;
 

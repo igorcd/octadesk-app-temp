@@ -31,8 +31,8 @@ class AppSizes {
   /// 22px
   static const double s05 = _rem * 1.375;
 
-  /// 24px
-  static const double s05_5 = _rem * 1.5;
+  /// 22px
+  static const double s05_5 = _rem * 1.375;
 
   /// 24px
   static const double s06 = _rem * 1.5;

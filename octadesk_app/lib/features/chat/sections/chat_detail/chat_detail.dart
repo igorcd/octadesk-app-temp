@@ -19,103 +19,106 @@ class ChatDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     var conversationDetailProvider = Provider.of<ChatDetailProvider>(context);
 
-    return StreamBuilder<RoomModel?>(
-      stream: conversationDetailProvider.roomDetailStream,
-      builder: (context, snapshot) {
-        Widget content;
+    return Container(
+      color: Theme.of(context).colorScheme.surface,
+      child: StreamBuilder<RoomModel?>(
+        stream: conversationDetailProvider.roomDetailStream,
+        builder: (context, snapshot) {
+          Widget content;
 
-        // Erro
-        if (snapshot.hasError) {
-          content = OctaErrorContainer(subtitle: snapshot.error.toString());
-        }
+          // Erro
+          if (snapshot.hasError) {
+            content = OctaErrorContainer(subtitle: snapshot.error.toString());
+          }
 
-        // Caso tenha carregado
-        else {
-          content = Container(
-            constraints: const BoxConstraints.expand(),
-            child: Stack(
-              children: [
-                // Conteúdo do chat
-                Positioned.fill(
-                  child: ChatBody(
-                    room: snapshot.data,
+          // Caso tenha carregado
+          else {
+            content = Container(
+              constraints: const BoxConstraints.expand(),
+              child: Stack(
+                children: [
+                  // Conteúdo do chat
+                  Positioned.fill(
+                    child: ChatBody(
+                      room: snapshot.data,
+                    ),
                   ),
-                ),
 
-                // Loading da paginação
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  left: 0,
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: conversationDetailProvider.loadingPagination,
-                    builder: (context, value, child) {
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: value ? const LinearProgressIndicator(minHeight: 2) : const SizedBox.shrink(),
-                      );
-                    },
+                  // Loading da paginação
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    child: ValueListenableBuilder<bool>(
+                      valueListenable: conversationDetailProvider.loadingPagination,
+                      builder: (context, value, child) {
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: value ? const LinearProgressIndicator(minHeight: 2) : const SizedBox.shrink(),
+                        );
+                      },
+                    ),
                   ),
-                ),
 
-                // Container de novas mensagens
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ValueListenableBuilder<int>(
-                    valueListenable: conversationDetailProvider.newMessagesLength,
-                    builder: (context, value, child) {
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: value >= 0
-                            ? NewMassagesContainer(
-                                value,
-                                onTap: conversationDetailProvider.refresh,
-                              )
-                            : const SizedBox.shrink(),
-                      );
-                    },
+                  // Container de novas mensagens
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: conversationDetailProvider.newMessagesLength,
+                      builder: (context, value, child) {
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: value >= 0
+                              ? NewMassagesContainer(
+                                  value,
+                                  onTap: conversationDetailProvider.refresh,
+                                )
+                              : const SizedBox.shrink(),
+                        );
+                      },
+                    ),
                   ),
-                ),
 
-                // Container de macros
-                const ChatMacrosContainer(),
+                  // Container de macros
+                  const ChatMacrosContainer(),
 
-                // Container de menções
-                const ChatMentionsContainer(),
-              ],
-            ),
-          );
-        }
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Header
-            const ChatHeader(),
-
-            // Conteúdo
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 150),
-                child: content,
+                  // Container de menções
+                  const ChatMentionsContainer(),
+                ],
               ),
-            ),
+            );
+          }
 
-            // Anexos
-            if (conversationDetailProvider.attachedFiles.isNotEmpty) const ChatAttachments(),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header
+              const ChatHeader(),
 
-            // Detalhes do fechamento
-            if (snapshot.data?.closingDetails?.closedBy != null)
-              ChatClosingDetails(
-                userName: snapshot.data!.closingDetails!.closedBy.name,
-              )
+              // Conteúdo
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 150),
+                  child: content,
+                ),
+              ),
 
-            // Input
-            else
-              const ChatFooter(),
-          ],
-        );
-      },
+              // Anexos
+              if (conversationDetailProvider.attachedFiles.isNotEmpty) const ChatAttachments(),
+
+              // Detalhes do fechamento
+              if (snapshot.data?.closingDetails?.closedBy != null)
+                ChatClosingDetails(
+                  userName: snapshot.data!.closingDetails!.closedBy.name,
+                )
+
+              // Input
+              else
+                const ChatFooter(),
+            ],
+          );
+        },
+      ),
     );
   }
 }

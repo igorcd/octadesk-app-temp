@@ -49,12 +49,10 @@ class ChatBody extends StatelessWidget {
               return SlidableAutoCloseBehavior(
                 child: NotificationListener<ScrollEndNotification>(
                   onNotification: (ScrollEndNotification notification) {
-                    if (notification.metrics.atEdge) {
-                      if (notification.metrics.pixels > 0) {
-                        chatProvider.paginate(context, direction: 1);
-                      } else {
-                        chatProvider.paginate(context, direction: -1);
-                      }
+                    if (notification.metrics.atEdge && notification.metrics.pixels > 0) {
+                      chatProvider.paginate(context, direction: 1);
+                    } else if (notification.metrics.atEdge && notification.metrics.pixels == 0) {
+                      chatProvider.addIncomingMessages();
                     }
                     return true;
                   },

@@ -1,90 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:octadesk_app/resources/index.dart';
-import 'package:octadesk_app/views/main/components/app_menu_item.dart';
-import 'package:octadesk_app/views/main/components/app_user_button.dart';
-import 'package:octadesk_app/views/main/includes/app_menu.dart';
+import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
+import 'package:octadesk_app/views/main/includes/app_menu_horizontal.dart';
+import 'package:octadesk_app/views/main/includes/app_menu_vertical.dart';
 
 class MainView extends StatelessWidget {
   final Widget currentFeature;
-  const MainView({required this.currentFeature, super.key});
+  final String currentFeatureLocation;
+  const MainView({required this.currentFeature, required this.currentFeatureLocation, super.key});
 
   @override
   Widget build(BuildContext context) {
-    var route = GoRouter.of(context);
+    var isMd = MediaQuery.of(context).size.width < ScreenSize.md;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Row(
+      body: Flex(
+        direction: isMd ? Axis.vertical : Axis.horizontal,
         children: [
-          // Menu
-          AppMenu(
-            menuItems: [
-              //
-              // Chat
-              AppMenuItem(
-                selected: route.location == '/main',
-                icon: AppIcons.chatIcon,
-                selectedIcon: AppIcons.chatFillIcon,
-                onTap: () => route.go('/main'),
-              ),
+          // Menu Vertical
+          if (!isMd) AppMenuVertical(currentFeatureLocation),
 
-              // Bot
-              AppMenuItem(
-                selected: route.location == '/bot',
-                icon: AppIcons.botIcon,
-                selectedIcon: AppIcons.botFillIcon,
-                onTap: () => route.go('/bot'),
-              ),
-
-              // Dashboard
-              AppMenuItem(
-                selected: route.location == '/dashboards',
-                icon: AppIcons.dashboardIcon,
-                selectedIcon: AppIcons.dashboardFillIcon,
-                onTap: () => route.go('/dashboards'),
-              ),
-
-              // Usuários
-              AppMenuItem(
-                selected: route.location == '/users',
-                icon: AppIcons.usersIcon,
-                selectedIcon: AppIcons.usersFillIcon,
-                onTap: () => route.go('/users'),
-              ),
-
-              const Spacer(),
-
-              // Configurações
-              AppMenuItem(
-                selected: route.location == '/settings',
-                icon: AppIcons.settingsIcon,
-                selectedIcon: AppIcons.settingsIconFill,
-                onTap: () => route.go('/settings'),
-              ),
-
-              // Ajuda
-              AppMenuItem(
-                selected: false,
-                icon: AppIcons.helpIcon,
-                onTap: () {},
-              ),
-
-              // Notificações
-              AppMenuItem(
-                selected: false,
-                icon: AppIcons.notificationIcon,
-                onTap: () {},
-              ),
-              const SizedBox(height: AppSizes.s04),
-              const AppUserButton(),
-            ],
-          ),
-
-          const VerticalDivider(),
           Expanded(
             child: currentFeature,
-          )
+          ),
+
+          if (isMd) AppMenuHorizontal(currentFeatureLocation)
         ],
       ),
     );

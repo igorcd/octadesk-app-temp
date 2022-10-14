@@ -26,31 +26,33 @@ class _ChatListState extends State<ChatList> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      ConversationsHeader(
-        controller: _controller,
-      ),
-      Expanded(
-        child: TabBarView(
+    return Column(
+      children: [
+        ConversationsHeader(
           controller: _controller,
-          children: [
-            // Conversas abertas
-            const OpenedConversations(),
-
-            // Conversas fechadas
-            ChangeNotifierProvider(
-              create: (context) => ClosedConversationsProvider(),
-              child: const ClosedConversations(),
-            ),
-
-            // Nova conversa
-            ChangeNotifierProvider(
-              create: (context) => NewChatProvider(Provider.of<ChatStore>(context, listen: false)),
-              child: const NewChat(),
-            )
-          ],
         ),
-      ),
-    ]);
+        Expanded(
+          child: TabBarView(
+            controller: _controller,
+            children: [
+              // Conversas abertas
+              const OpenedConversations(),
+
+              // Conversas fechadas
+              ChangeNotifierProvider(
+                create: (context) => ClosedConversationsProvider(),
+                child: const ClosedConversations(),
+              ),
+
+              // Nova conversa
+              ChangeNotifierProvider(
+                create: (context) => NewChatProvider(Provider.of<ChatStore>(context, listen: false)),
+                child: const NewChat(),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

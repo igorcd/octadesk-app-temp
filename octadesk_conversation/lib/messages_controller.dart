@@ -16,11 +16,6 @@ import 'package:dio/dio.dart';
 import 'package:uuid/uuid.dart';
 import 'package:collection/collection.dart';
 
-enum PaginationDirection {
-  up,
-  down,
-}
-
 class MessagesController {
   final String roomKey;
   final CancelToken cancelToken;
@@ -44,18 +39,7 @@ class MessagesController {
   final ValueNotifier<bool> _loadingPagination = ValueNotifier(false);
   ValueNotifier<bool> get loadingPagination => _loadingPagination;
 
-  /// Direção que está ocorrendo o scroll
-  PaginationDirection _direction = PaginationDirection.up;
-
-  /// Está realizando uma paginação
-  bool get isPaginating {
-    var paginator = _messagesStreamController.value;
-    if (paginator == null) {
-      return false;
-    }
-
-    return paginator.page > 2 || (paginator.page == 2 && _direction == PaginationDirection.down);
-  }
+  final List<MessageModel> _incomingMessages = [];
 
   void _handleRoomUpdate(dynamic roomMap) {
     var currentPagination = _messagesStreamController.value;
@@ -64,34 +48,28 @@ class MessagesController {
     if (currentPagination == null) {
       return;
     }
-
-    // Caso esteja em uma página maior que a 2
-    if (isPaginating) {
-      _newMessagesLength.value += 1;
-      return;
-    }
-
-    _newMessagesLength.value = -1;
-
+    // Dados atuais
     final data = RoomDetailDTO.fromMap(roomMap);
-    var newPaginator = _messagesStreamController.value!.clone();
 
-    // Caso esteja na segunda página, atualizar as 30 primeiras
-    if (currentPagination.page == 2 && _direction == PaginationDirection.up) {
-      newPaginator.messages = data.messages.reversed.take(30).map((e) => MessageModel.fromDTO(e)).toList();
-    }
-    // Caso não tenha realizado a página atualizar os últimos 15
-    else {
+    // Caso esteja na última página, atualizar
+    if (currentPagination.page == 1) {
+      var newPaginator = _messagesStreamController.value!.clone();
       newPaginator.messages = data.messages.reversed.take(15).map((e) => MessageModel.fromDTO(e)).toList();
-      _direction = PaginationDirection.up;
+      newPaginator.page = 1;
+      _messagesStreamController.add(newPaginator);
     }
+    // Armazenar novas mensagens para adicionar ao fim da paginação
+    else {
+      var lastMessageKey = _incomingMessages.isEmpty ? currentPagination.messages[0].key : _incomingMessages[0].key;
 
-    // Quando chega novas mensagens não é possível saber o total, representado pelo valor -1;
-    newPaginator.pages = -1;
+      // Verificar índice da última mensagem
+      var lastMessage = data.messages.firstWhere((element) => element.key == lastMessageKey);
+      var lastMessageIndex = data.messages.indexOf(lastMessage);
+      var newMessages = data.messages.getRange(lastMessageIndex + 1, data.messages.length).map((e) => MessageModel.fromDTO(e)).toList().reversed.toList();
 
-    // Colocar a página igual a zero, para forçar que realize a paginação
-
-    _messagesStreamController.add(newPaginator);
+      _incomingMessages.insertAll(0, newMessages);
+      _newMessagesLength.value = _incomingMessages.length;
+    }
   }
 
   ///
@@ -164,15 +142,13 @@ class MessagesController {
     );
 
     var newPaginator = _messagesStreamController.value!.clone();
-    newPaginator.messages.removeLast();
-    newPaginator.messages.insert(0, messagePlaceholder);
+    if (newPaginator.page == 1) {
+      newPaginator.messages.removeLast();
+      newPaginator.messages.insert(0, messagePlaceholder);
+      _messagesStreamController.add(newPaginator);
+    }
 
     try {
-      // Adicionar o placeholder
-      if (!isPaginating) {
-        _messagesStreamController.add(newPaginator);
-      }
-
       // Fazer upload dos arquivos
       if (params.attachments.isNotEmpty) {
         var futures = params.attachments.map(
@@ -197,7 +173,7 @@ class MessagesController {
       // Enviar a mensagem
       await ChatService.sendMessage(dataToSend);
     } catch (e) {
-      if (!isPaginating) {
+      if (newPaginator.page == 1) {
         messagePlaceholder.status = MessageStatusEnum.error;
         _messagesStreamController.add(newPaginator);
       }
@@ -253,82 +229,42 @@ class MessagesController {
     );
   }
 
+  ///
   /// Carregar próxima página
-  Future<bool> loadNextPage() async {
-    var currentPagination = _messagesStreamController.value;
-
-    /// Quando o currentPagination.pages == -1 signigica que o chat está na página 1 e chegou mensagens novas, nessa situação
-    /// não é possível saber qual o total de páginas enquanto não fizer uma nova paginação
-    if (!_loadingPagination.value && currentPagination != null && (currentPagination.page < currentPagination.pages || currentPagination.pages == -1)) {
+  ///
+  Future<void> loadNextPage() async {
+    if (!_loadingPagination.value && _messagesStreamController.value != null) {
+      var currentPagination = _messagesStreamController.value!;
       _loadingPagination.value = true;
 
+      // Setar a últiuma mensagem
+      if (_newMessagesLength.value < 0) {
+        _newMessagesLength.value = 0;
+      }
+
       try {
-        // Realizar a requisição
-        int nextPage = _direction == PaginationDirection.up ? currentPagination.page + 1 : currentPagination.page + 2;
+        var resp = await ChatService.getMessages(roomKey, page: currentPagination.page + 1, limit: 15);
+        if (resp.messages.isNotEmpty) {
+          var newPaginator = MessagePaginatorModel.fromDTO(resp);
 
-        var resp = await ChatService.getMessages(roomKey, page: nextPage, limit: 15);
-        var newPaginator = MessagePaginatorModel.fromDTO(resp);
+          // Adicionar mensagens anteriores
+          newPaginator.messages.insertAll(0, currentPagination.messages);
+          _messagesStreamController.add(newPaginator);
 
-        // Adicionar mensagens anteriores
-        newPaginator.messages.insertAll(0, currentPagination.messages.getRange(currentPagination.messages.length - 15, currentPagination.messages.length));
-        _messagesStreamController.add(newPaginator);
-
-        // Mostrar balão de voltar para o começo caso tenha passado da página
-        if (_newMessagesLength.value < 0 && newPaginator.page > 2) {
-          _newMessagesLength.value = 0;
+          // Página atual
+          print("${newPaginator.page}/${newPaginator.pages}");
         }
-
-        _direction = PaginationDirection.up;
-
-        // Página atual
-        print("${newPaginator.page}/${newPaginator.pages}");
-        return true;
       } finally {
         Timer(Duration(milliseconds: 500), () {
           _loadingPagination.value = false;
         });
       }
-    } else {
-      return false;
     }
   }
 
-  /// Carregar página anterior
-  Future<bool> loadPrevPage() async {
-    var currentPagination = _messagesStreamController.value;
-
-    if (!_loadingPagination.value && currentPagination != null && _newMessagesLength.value >= 0) {
-      try {
-        int nextPage = _direction == PaginationDirection.down ? currentPagination.page - 1 : currentPagination.page - 2;
-
-        // Realizar a requisição
-        var resp = await ChatService.getMessages(roomKey, page: nextPage, limit: 15);
-        var newPaginator = MessagePaginatorModel.fromDTO(resp);
-
-        // Adicionar mensagens anteriores
-        newPaginator.messages.addAll(currentPagination.messages.take(15));
-        _messagesStreamController.add(newPaginator);
-
-        // Caso a página seja menor do que a
-        if (newPaginator.page == 1) {
-          _newMessagesLength.value = -1;
-        }
-
-        // Página atual
-        print("${newPaginator.page}/${newPaginator.pages}");
-        _direction = PaginationDirection.down;
-        return true;
-      } finally {
-        Timer(Duration(milliseconds: 500), () {
-          _loadingPagination.value = false;
-        });
-      }
-    } else {
-      return false;
-    }
-  }
-
+  ///
   /// Atualizar
+  ///
   void refresh() async {
     _messagesStreamController.add(null);
     _newMessagesLength.value = -1;
@@ -343,5 +279,27 @@ class MessagesController {
     } finally {
       _loadingPagination.value = false;
     }
+  }
+
+  ///
+  /// Adicionar mensagens que chegaram
+  ///
+  void addIncomingMessages() {
+    if (_messagesStreamController.value != null && _messagesStreamController.value!.page > 1) {
+      var newPaginator = _messagesStreamController.value!.clone();
+      newPaginator.page = 1;
+      newPaginator.messages.insertAll(0, _incomingMessages);
+      newPaginator.messages = newPaginator.messages.take(15).toList();
+      _incomingMessages.clear();
+      _newMessagesLength.value = -1;
+      _messagesStreamController.add(newPaginator);
+    }
+  }
+
+  Future<void> dispose() async {
+    _messagesStreamController.add(null);
+    _newMessagesLength.value = -1;
+    _loadingPagination.value = false;
+    await _messagesStreamController.close();
   }
 }

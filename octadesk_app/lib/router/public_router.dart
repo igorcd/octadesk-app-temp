@@ -84,6 +84,7 @@ class AppRouter {
         navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) => MainView(
           currentFeature: child,
+          currentFeatureLocation: state.location,
         ),
         routes: [
           // Chat

@@ -4,6 +4,7 @@ import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
 import 'package:octadesk_app/components/responsive/utils/screen_size.dart';
 import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
+import 'package:octadesk_app/features/chat/sections/chat_detail/components/header/chat_options.dart';
 import 'package:octadesk_app/features/chat/store/chat_store.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/models/index.dart';
@@ -28,6 +29,8 @@ class ChatHeader extends StatelessWidget {
       child: StreamBuilder<RoomModel?>(
         stream: chatDetailProvider.roomDetailStream,
         builder: (context, snapshot) {
+          var roomIsOpened = snapshot.data?.closingDetails?.closedBy == null;
+
           return Row(
             children: [
               // Botão de voltar
@@ -51,7 +54,7 @@ class ChatHeader extends StatelessWidget {
                           //
                           // Avatar do usuário
                           Padding(
-                            padding: isSm ? EdgeInsets.zero : const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04),
+                            padding: isSm ? const EdgeInsets.only(right: AppSizes.s04) : const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04),
                             child: OctaAvatar(
                               size: AppSizes.s12,
                               name: chatDetailProvider.userName,
@@ -65,7 +68,7 @@ class ChatHeader extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                OctaText.titleLarge(chatProvider.currentConversation!.userName),
+                                OctaText.titleLarge(chatProvider.currentConversation?.userName ?? ""),
                                 OctaText.labelMedium(
                                   snapshot.data != null ? "Chat iniciado em ${formatter.format(snapshot.data!.createdAt.toLocal())}" : "Carregando...",
                                 ),
@@ -80,7 +83,7 @@ class ChatHeader extends StatelessWidget {
               ),
 
               // Transferir
-              if (snapshot.data?.closingDetails?.closedBy == null) ...[
+              if (roomIsOpened && !isSm) ...[
                 OctaIconButton(
                   onPressed: () => chatDetailProvider.transferChat(context),
                   icon: AppIcons.transfer,
@@ -97,7 +100,14 @@ class ChatHeader extends StatelessWidget {
                   iconSize: AppSizes.s05,
                 ),
                 const SizedBox(width: AppSizes.s04),
-              ]
+              ],
+              if (roomIsOpened && isSm)
+                ChatOptions(
+                  options: [
+                    ChatOptionItem(text: "Transferir", action: () => chatDetailProvider.transferChat(context)),
+                    ChatOptionItem(text: "Finalizar", action: () => chatDetailProvider.openFinishConversationDialog(context)),
+                  ],
+                ),
             ],
           );
         },

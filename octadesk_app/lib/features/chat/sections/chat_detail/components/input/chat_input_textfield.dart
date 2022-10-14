@@ -14,8 +14,6 @@ class ChatInputTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-    var isMobile = MediaQuery.of(context).size.width < 640;
-
     return Consumer<ChatDetailProvider>(
       builder: (context, value, child) {
         return Focus(
@@ -31,7 +29,7 @@ class ChatInputTextField extends StatelessWidget {
             focusNode: focusNode,
             controller: controller,
             textInputAction: TextInputAction.none,
-            minLines: isMobile ? 1 : 2,
+            minLines: 1,
             maxLines: 4,
             style: TextStyle(
               fontSize: AppSizes.s04,
@@ -40,9 +38,9 @@ class ChatInputTextField extends StatelessWidget {
               color: colorScheme.onSurface,
             ),
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s04, vertical: AppSizes.s04),
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s03, vertical: AppSizes.s04),
               border: InputBorder.none,
-              hintText: isMobile ? "Digite a sua mensagem" : "Digite / para adicionar uma mensagem pronta",
+              hintText: "Digite a sua mensagem",
               hintStyle: TextStyle(
                 fontFamily: "NotoSans",
                 color: colorScheme.onBackground,

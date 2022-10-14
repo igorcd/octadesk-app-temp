@@ -6,27 +6,16 @@ import 'package:octadesk_core/octadesk_core.dart';
 import 'package:provider/provider.dart';
 
 import '../../../components/index.dart';
+import '../../../components/responsive/responsive_widgets.dart';
 
 class AppUserButton extends StatelessWidget {
   const AppUserButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var authenticationProvider = Provider.of<AuthenticationProvider>(context);
+    var isMd = MediaQuery.of(context).size.width < ScreenSize.md;
 
-    /// Parser do enum
-    String connectionStatusEnumParser(ConnectionStatusEnum? status) {
-      switch (status) {
-        case ConnectionStatusEnum.online:
-          return "Disponível";
-        case ConnectionStatusEnum.offline:
-          return "Offline";
-        case ConnectionStatusEnum.busy:
-          return "Ausente";
-        default:
-          return "Carregando";
-      }
-    }
+    var authenticationProvider = Provider.of<AuthenticationProvider>(context);
 
     /// Cor do status
     Color connectionStatusColor(ConnectionStatusEnum? status) {
@@ -42,31 +31,49 @@ class AppUserButton extends StatelessWidget {
       }
     }
 
+    Widget userAvatar(ConnectionStatusEnum status) {
+      return OctaAvatar(
+        name: authenticationProvider.user!.name,
+        source: authenticationProvider.user!.avatar,
+        size: isMd ? AppSizes.s09 : AppSizes.s13,
+        badge: Container(
+          width: isMd ? AppSizes.s04 : AppSizes.s05,
+          height: isMd ? AppSizes.s04 : AppSizes.s05,
+          decoration: BoxDecoration(
+            color: connectionStatusColor(status),
+            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s04)),
+            border: Border.all(color: Colors.white, width: 2),
+          ),
+        ),
+      );
+    }
+
+    /// Parser do enum
+    String connectionStatusEnumParser(ConnectionStatusEnum? status) {
+      switch (status) {
+        case ConnectionStatusEnum.online:
+          return "Disponível";
+        case ConnectionStatusEnum.offline:
+          return "Offline";
+        case ConnectionStatusEnum.busy:
+          return "Ausente";
+        default:
+          return "Carregando";
+      }
+    }
+
     /// Informações do usuário
-    Widget userInformation(UserModel user, ConnectionStatusEnum status) {
+    Widget userInformation(ConnectionStatusEnum status) {
       return Row(
         children: [
-          OctaAvatar(
-            name: user.name,
-            source: user.avatar,
-            size: AppSizes.s13,
-            badge: Container(
-              width: AppSizes.s05,
-              height: AppSizes.s05,
-              decoration: BoxDecoration(
-                color: connectionStatusColor(status),
-                borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s04)),
-                border: Border.all(color: Colors.white, width: 2),
-              ),
-            ),
-          ),
+          userAvatar(status),
           const SizedBox(width: AppSizes.s02),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                OctaText.titleMedium(user.name),
+                OctaText.titleMedium(authenticationProvider.user!.name),
                 OctaText.titleSmall(connectionStatusEnumParser(status)),
               ],
             ),
@@ -130,27 +137,14 @@ class AppUserButton extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 250),
 
           // Avatar do usuário
-          child: OctaAvatar(
-            name: authenticationProvider.user!.name,
-            size: AppSizes.s13,
-            source: authenticationProvider.user!.avatar,
-            badge: Container(
-              width: AppSizes.s05,
-              height: AppSizes.s05,
-              decoration: BoxDecoration(
-                color: connectionStatusColor(connectionStatus),
-                borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s04)),
-                border: Border.all(color: Colors.white, width: 2),
-              ),
-            ),
-          ),
+          child: userAvatar(connectionStatus),
           itemBuilder: (context) {
             return [
               // Informações do usuário
               PopupMenuItem(
                 padding: const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04, top: AppSizes.s02, bottom: AppSizes.s04),
                 enabled: false,
-                child: userInformation(authenticationProvider.user!, connectionStatus),
+                child: userInformation(connectionStatus),
               ),
 
               // Status da conexão

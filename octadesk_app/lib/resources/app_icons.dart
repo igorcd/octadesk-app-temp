@@ -14,6 +14,7 @@ class AppIcons {
 
   static const String helpIcon = "lib/assets/icons/help-icon.png";
   static const String notificationIcon = "lib/assets/icons/notification-icon.png";
+
   static const String settingsIcon = "lib/assets/icons/settings-icon.png";
   static const String settingsIconFill = "lib/assets/icons/settings-icon-fill.png";
 
@@ -31,6 +32,8 @@ class AppIcons {
   static const String clearFilter = "lib/assets/icons/clear-filter.png";
   static const String trash = "lib/assets/icons/trash.png";
   static const String video = "lib/assets/icons/video.png";
+  static const String eye = "lib/assets/icons/eye.png";
+  static const String crossEye = "lib/assets/icons/cross-eye.png";
 
   // Icones chat
   static const String copy = "lib/assets/icons/copy.png";
