@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_radio_list_tile.dart';
-import 'package:octadesk_app/resources/app_channel_badges.dart';
 import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/enums/chat_channel_enum.dart';
 
@@ -41,11 +40,7 @@ class _FilterChannelDialogState extends State<FilterChannelDialog> {
                 groupValue: _selectedChannelTemp,
                 value: ChatChannelEnum.web,
                 onSelect: _setChannelTemp,
-                child: Row(children: [
-                  Image.asset(AppChannelBadges.webBadge, width: AppSizes.s06),
-                  const SizedBox(width: AppSizes.s02),
-                  OctaText.bodyLarge("Chat Web"),
-                ]),
+                label: "Chat Web",
               ),
               const Divider(height: 1, thickness: 1),
 
@@ -54,38 +49,16 @@ class _FilterChannelDialogState extends State<FilterChannelDialog> {
                 groupValue: _selectedChannelTemp,
                 value: ChatChannelEnum.whatsapp,
                 onSelect: _setChannelTemp,
-                child: Row(children: [
-                  Image.asset(AppChannelBadges.whatsappBadge, width: AppSizes.s06),
-                  const SizedBox(width: AppSizes.s02),
-                  OctaText.bodyLarge("WhatsApp"),
-                ]),
+                label: "WhatsApp",
               ),
               const Divider(height: 1, thickness: 1),
 
               // Facebook
-              OctaRadioListTile(
-                groupValue: _selectedChannelTemp,
-                value: ChatChannelEnum.facebookMessenger,
-                onSelect: _setChannelTemp,
-                child: Row(children: [
-                  Image.asset(AppChannelBadges.menssegerBadge, width: AppSizes.s06),
-                  const SizedBox(width: AppSizes.s02),
-                  OctaText.bodyLarge("Facebook Messenger"),
-                ]),
-              ),
+              OctaRadioListTile(groupValue: _selectedChannelTemp, value: ChatChannelEnum.facebookMessenger, onSelect: _setChannelTemp, label: "Facebook Messenger"),
               const Divider(height: 1, thickness: 1),
 
               // Instagram
-              OctaRadioListTile(
-                groupValue: _selectedChannelTemp,
-                value: ChatChannelEnum.instagram,
-                onSelect: _setChannelTemp,
-                child: Row(children: [
-                  Image.asset(AppChannelBadges.instagramBadge, width: AppSizes.s06),
-                  const SizedBox(width: AppSizes.s02),
-                  OctaText.bodyLarge("Instagram"),
-                ]),
-              ),
+              OctaRadioListTile(groupValue: _selectedChannelTemp, value: ChatChannelEnum.instagram, onSelect: _setChannelTemp, label: "Instagram"),
             ],
           ),
         ),

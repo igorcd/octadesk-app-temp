@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
 import 'package:octadesk_app/features/chat/sections/chat_informations/chat_informations.dart';
 import 'package:octadesk_app/features/chat/sections/chat_inbox/chat_inbox.dart';
@@ -43,7 +44,7 @@ class ChatFeature extends StatelessWidget {
 
                 // Informações da conversa
                 if (screenSize >= ScreenSize.xxl) ...[
-                  const VerticalDivider(),
+                  const VerticalDivider(indent: 0, endIndent: 0),
                   SizedBox(
                     width: 250,
                     child: ChangeNotifierProvider.value(
@@ -85,11 +86,14 @@ class ChatFeature extends StatelessWidget {
                     width: 340,
                     child: conversationsList,
                   ),
-                  const VerticalDivider(),
+                  const VerticalDivider(indent: 1, endIndent: 1),
 
                   // Conteúdo principal
                   Expanded(
-                    child: content(),
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      child: content(),
+                    ),
                   ),
                   // Listagem de conversas
                 ],
@@ -107,17 +111,22 @@ class ChatFeature extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           child: Stack(
             children: [
+              // Lista de conversas
               const Positioned.fill(
                 child: conversationsList,
               ),
-              AnimatedPositioned(
-                top: conversationProvider.currentConversationOpened ? 0 : constraints.maxHeight,
-                left: 0,
-                right: 0,
-                height: constraints.maxHeight,
-                curve: Curves.ease,
-                duration: const Duration(milliseconds: 500),
-                child: content(),
+
+              // Detalhe da conversa
+              PortalTarget(
+                visible: true,
+                anchor: const Filled(),
+                portalFollower: AnimatedSlide(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                  offset: conversationProvider.currentConversationOpened ? const Offset(0, 0) : const Offset(0, 1),
+                  child: content(),
+                ),
+                child: const SizedBox.shrink(),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:octadesk_app/features/chat/dialogs/inbox_dialog.dart';
 import 'package:octadesk_app/features/chat/providers/chat_detail_provider.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/inbox_messages_counter_controller.dart';
@@ -76,6 +77,22 @@ class ChatStore extends ChangeNotifier {
     _initialize();
   }
 
+  void openInboxDialog(BuildContext context) async {
+    if (inboxMessagesCountStream != null && currentInbox != null) {
+      var newInbox = await showOctaBottomSheet(
+        context,
+        title: "Inbox",
+        child: InboxDialog(
+          currentInbox: currentInbox!,
+        ),
+      );
+
+      if (newInbox is RoomFilterEnum) {
+        changeInbox(newInbox);
+      }
+    }
+  }
+
   ///
   /// Mudar o inbox
   ///
@@ -87,6 +104,9 @@ class ChatStore extends ChangeNotifier {
     }
   }
 
+  ///
+  /// Paginar lista de conversas
+  ///
   void paginate() async {
     if (_roomsListController != null) {
       _conversationsListPaginating = true;

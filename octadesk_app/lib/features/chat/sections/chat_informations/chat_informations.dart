@@ -69,7 +69,7 @@ class ChatInformations extends StatelessWidget {
                   children: [
                     OctaTag(
                       onPressed: () => conversationDetailProvider.manageTags(context),
-                      placeholder: "adicionar",
+                      text: "adicionar",
                       icon: AppIcons.add,
                     ),
                   ],
@@ -91,7 +91,7 @@ class ChatInformations extends StatelessWidget {
                           .map(
                             (e) => OctaTag(
                               onPressed: () => conversationDetailProvider.deleteTag(e.id, context),
-                              placeholder: e.name,
+                              text: e.name,
                               active: true,
                             ),
                           )

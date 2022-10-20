@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/resources/index.dart';
 
-class ConversationHeaderTab extends StatelessWidget {
+class OctaTab extends StatelessWidget {
   final String? label;
   final bool selected;
   final Widget? child;
   final void Function() onTap;
-  const ConversationHeaderTab({this.label, this.child, required this.selected, required this.onTap, super.key}) : assert(label != null || child != null);
+  const OctaTab({this.label, this.child, required this.selected, required this.onTap, super.key}) : assert(label != null || child != null);
 
   @override
   Widget build(BuildContext context) {

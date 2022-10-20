@@ -60,9 +60,9 @@ class OctaBottomSheet extends StatelessWidget {
                   color: colorScheme.surface,
                   borderRadius: isMobile
                       ? const BorderRadius.vertical(
-                          top: Radius.circular(AppSizes.s03),
+                          top: Radius.circular(AppSizes.s08),
                         )
-                      : BorderRadius.circular(AppSizes.s03),
+                      : BorderRadius.circular(AppSizes.s08),
                   boxShadow: [
                     BoxShadow(
                       offset: isMobile ? const Offset(0, -10) : Offset.zero,
@@ -82,6 +82,7 @@ class OctaBottomSheet extends StatelessWidget {
                           //
                           // Trailing
                           Container(
+                            margin: const EdgeInsets.symmetric(horizontal: AppSizes.s02),
                             padding: const EdgeInsets.only(left: AppSizes.s02),
                             width: AppSizes.s12,
                             child: Center(
@@ -89,17 +90,24 @@ class OctaBottomSheet extends StatelessWidget {
                                 size: AppSizes.s10,
                                 icon: AppIcons.angleDown,
                                 onPressed: () => Navigator.of(context).pop(),
+                                color: colorScheme.onBackground,
                               ),
                             ),
                           ),
 
                           // Titulo
                           Expanded(
-                            child: Center(child: OctaText.titleLarge(title)),
+                            child: Center(
+                              child: Text(
+                                title,
+                                style: Theme.of(context).textTheme.titleLarge!.copyWith(color: colorScheme.onBackground),
+                              ),
+                            ),
                           ),
 
                           // Actions
                           Container(
+                            margin: const EdgeInsets.symmetric(horizontal: AppSizes.s02),
                             padding: const EdgeInsets.only(right: AppSizes.s02),
                             width: AppSizes.s12,
                             child: action != null
@@ -119,7 +127,6 @@ class OctaBottomSheet extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Divider(thickness: 1, height: 1),
                     Expanded(child: child),
                   ],
                 ),

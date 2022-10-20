@@ -15,31 +15,38 @@ class OctaSearchSliverButton extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       leading: null,
       automaticallyImplyLeading: false,
-      toolbarHeight: 65,
+      toolbarHeight: AppSizes.s16,
       primary: false,
       flexibleSpace: Padding(
-        padding: const EdgeInsets.only(right: AppSizes.s04_5, left: AppSizes.s04_5, top: AppSizes.s04),
+        padding: const EdgeInsets.only(right: AppSizes.s04, left: AppSizes.s04, top: AppSizes.s04),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s03_5),
-          height: AppSizes.s12,
+          clipBehavior: Clip.hardEdge,
+          height: AppSizes.s10,
           decoration: BoxDecoration(
             color: colorScheme.background,
             borderRadius: BorderRadius.circular(AppSizes.s02_5),
           ),
-          child: Row(children: [
-            Image.asset(
-              AppIcons.search,
-              width: AppSizes.s06,
-              color: colorScheme.onSecondary,
-            ),
-            const SizedBox(width: AppSizes.s02),
-            Text(
-              "Buscar conversa",
-              style: TextStyle(
-                color: colorScheme.onSecondary,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s02_5),
+                child: Row(children: [
+                  Image.asset(
+                    AppIcons.search,
+                    width: AppSizes.s06,
+                    color: colorScheme.onSecondary,
+                  ),
+                  const SizedBox(width: AppSizes.s02),
+                  Text(
+                    "Pesquisar",
+                    style: TextStyle(color: colorScheme.onSecondary, fontFamily: "Poppins", fontSize: AppSizes.s04, fontWeight: FontWeight.w500),
+                  ),
+                ]),
               ),
             ),
-          ]),
+          ),
         ),
       ),
     );

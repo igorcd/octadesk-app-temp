@@ -141,7 +141,7 @@ class _TagsDialogState extends State<TagsDialog> {
                           children: _selectedTags.map((e) {
                             return OctaTag(
                               onPressed: () => _selectTag(e),
-                              placeholder: e.name,
+                              text: e.name,
                               active: true,
                               icon: AppIcons.times,
                             );

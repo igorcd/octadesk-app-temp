@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -161,6 +163,7 @@ class AuthenticationProvider with ChangeNotifier {
     var navigator = GoRouter.of(context);
     // Verificar se existe usuário persistido
     try {
+      print("Verificando se tem usuário");
       bool hasUser = await _checkIfHasUserDataPersisted();
 
       if (!hasUser) {
@@ -169,12 +172,16 @@ class AuthenticationProvider with ChangeNotifier {
       }
 
       // Setar os dados das APIs e JWTs
+      print("Inicializando clientes HTTP");
       await _initializeOctaHttpClient();
+
+      print("Checar status do usuário e inicializar o chat");
       await _checkUserStatusAndInitializeChat();
 
       // Setar usuário do Crash Analytics
       navigator.goNamed(AppRouter.chatFeature);
     } catch (e) {
+      _clearUserData();
       // Enviar erro para o Firebase
       navigator.goNamed(AppRouter.onboardingView);
     }

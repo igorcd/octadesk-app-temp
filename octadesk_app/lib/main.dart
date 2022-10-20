@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:octadesk_app/providers/authentication_provider.dart';
 import 'package:octadesk_app/providers/theme_provider.dart';
 import 'package:octadesk_app/router/public_router.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
         // Light Theme
         theme: value.lightTheme,
         builder: (context, child) {
-          return AppToolbar(child: child!);
+          return AppToolbar(child: Portal(child: child!));
         },
         routerConfig: AppRouter.router,
       );

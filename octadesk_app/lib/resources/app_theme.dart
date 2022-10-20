@@ -6,10 +6,12 @@ class AppTheme {
   // Light ======
   static ThemeData light(MaterialColor primarySwatch) {
     return ThemeData(
-      fontFamily: "NotoSans",
+      fontFamily: "Poppins",
       dividerTheme: DividerThemeData(
         space: 1,
         thickness: 1,
+        endIndent: AppSizes.s04,
+        indent: AppSizes.s04,
         color: AppColors.info.shade200,
       ),
       sliderTheme: SliderThemeData(
@@ -52,7 +54,7 @@ class AppTheme {
         tertiary: AppColors.amber,
         tertiaryContainer: AppColors.amber.shade100,
       ),
-      textTheme: AppTextTheme.light(),
+      textTheme: AppTextTheme.light,
     );
   }
 
@@ -99,7 +101,7 @@ class AppTheme {
         tertiary: AppColors.amber,
         tertiaryContainer: AppColors.amber.shade800,
       ),
-      textTheme: AppTextTheme.dark(),
+      textTheme: AppTextTheme.dark,
     );
   }
 }

@@ -1,40 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:octadesk_app/components/octa_text.dart';
 import 'package:octadesk_app/resources/index.dart';
 
 class OctaRadioListTile<T> extends StatelessWidget {
   final T groupValue;
   final T value;
   final String label;
-  final Widget? child;
   final void Function(T value) onSelect;
   bool get selected => groupValue == value;
 
-  const OctaRadioListTile({this.label = "", this.child, required this.groupValue, required this.value, required this.onSelect, Key? key}) : super(key: key);
+  const OctaRadioListTile({required this.label, required this.groupValue, required this.value, required this.onSelect, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     return Material(
       color: Colors.transparent,
 
       // Evento de clique
       child: InkWell(
         onTap: () => onSelect(value),
+
+        // Container principal
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSizes.s05),
-          height: AppSizes.s16,
+          height: AppSizes.s14,
           child: Row(
             children: [
+              // Label
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(fontFamily: "Poppins", fontSize: AppSizes.s04_5, fontWeight: FontWeight.w500),
+                ),
+              ),
+
               // Circulo do Radio
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 width: AppSizes.s07,
                 height: AppSizes.s07,
                 decoration: BoxDecoration(
-                  boxShadow: const [AppShadows.s100],
                   borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s03_5)),
-                  color: selected ? AppColors.blue.shade400 : Colors.white,
-                  border: Border.all(color: selected ? AppColors.blue.shade400 : AppColors.info.shade200, width: 2),
+                  color: selected ? colorScheme.primary : colorScheme.surface,
+                  border: Border.all(color: selected ? colorScheme.primary : colorScheme.outline, width: 3),
                 ),
                 child: Center(
                   child: AnimatedScale(
@@ -52,10 +61,6 @@ class OctaRadioListTile<T> extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: AppSizes.s02_5),
-
-              // Label
-              child ?? OctaText.bodyLarge(label),
             ],
           ),
         ),

@@ -125,19 +125,7 @@ class _FilterDateDialogState extends State<FilterDateDialog> {
                 groupValue: _selectedDateRangeTypeTemp,
                 value: DateRangeEnum.custom,
                 onSelect: _selectCustomDate,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OctaText.bodyLarge(
-                      "Personalizado",
-                    ),
-                    if (_selectedDateTimeRangeTemp != null)
-                      OctaText(
-                        formatPeriod(_selectedDateTimeRangeTemp!),
-                      ),
-                  ],
-                ),
+                label: _selectedDateTimeRangeTemp != null ? formatPeriod(_selectedDateTimeRangeTemp!) : "Personalizado",
               ),
             ],
           ),

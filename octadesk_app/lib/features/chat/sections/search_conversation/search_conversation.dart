@@ -72,21 +72,21 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
                         filters: [
                           // Buscar por
                           OctaTag(
-                            placeholder: "Buscar por: ${searchConversationProvider.searchByLabel}",
+                            text: "Buscar por: ${searchConversationProvider.searchByLabel}",
                             active: true,
                             onPressed: () => searchConversationProvider.openSearchByDialog(context),
                             icon: AppIcons.angleDown,
                           ),
                           // Status
                           OctaTag(
-                            placeholder: searchConversationProvider.statusLabel,
+                            text: searchConversationProvider.statusLabel,
                             active: true,
                             onPressed: () => searchConversationProvider.openStatusDialog(context),
                             icon: AppIcons.angleDown,
                           ),
                           // Operação
                           OctaTag(
-                            placeholder: searchConversationProvider.operationLabel,
+                            text: searchConversationProvider.operationLabel,
                             onPressed: () => searchConversationProvider.openOperationModal(context),
                             active: searchConversationProvider.hasOperationFilter,
                             icon: AppIcons.angleDown,
@@ -94,7 +94,7 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
 
                           // Tags
                           OctaTag(
-                            placeholder: "Tags",
+                            text: "Tags",
                             onPressed: () => searchConversationProvider.openTagsDialog(context),
                             active: searchConversationProvider.hasTagsFilter,
                             icon: AppIcons.angleDown,
@@ -102,7 +102,7 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
 
                           // Período
                           OctaTag(
-                            placeholder: searchConversationProvider.periodLabel,
+                            text: searchConversationProvider.periodLabel,
                             onPressed: () => searchConversationProvider.openDateDialog(context),
                             active: searchConversationProvider.hasPeriodFilter,
                             icon: AppIcons.angleDown,
@@ -110,7 +110,7 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
 
                           // Canal
                           OctaTag(
-                            placeholder: searchConversationProvider.selectedChannelLabel,
+                            text: searchConversationProvider.selectedChannelLabel,
                             onPressed: () => searchConversationProvider.openChannelsDialog(context),
                             active: searchConversationProvider.hasChannelFilter,
                             icon: AppIcons.angleDown,

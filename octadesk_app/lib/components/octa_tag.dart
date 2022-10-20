@@ -3,11 +3,11 @@ import 'package:octadesk_app/resources/index.dart';
 
 class OctaTag extends StatelessWidget {
   final bool active;
-  final String placeholder;
+  final String text;
   final void Function() onPressed;
   final String? icon;
 
-  const OctaTag({this.active = false, required this.onPressed, required this.placeholder, this.icon, Key? key}) : super(key: key);
+  const OctaTag({this.active = false, required this.onPressed, required this.text, this.icon, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class OctaTag extends StatelessWidget {
                   //
                   // Texto
                   Text(
-                    placeholder,
+                    text,
                     style: TextStyle(
                       color: active ? tagTextColor : colorScheme.onBackground,
                       fontSize: AppSizes.s03_5,

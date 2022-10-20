@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
 import 'package:octadesk_app/views/main/includes/app_menu_horizontal.dart';
 import 'package:octadesk_app/views/main/includes/app_menu_vertical.dart';
@@ -14,18 +15,20 @@ class MainView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Flex(
-        direction: isMd ? Axis.vertical : Axis.horizontal,
-        children: [
-          // Menu Vertical
-          if (!isMd) AppMenuVertical(currentFeatureLocation),
+      body: Portal(
+        child: Flex(
+          direction: isMd ? Axis.vertical : Axis.horizontal,
+          children: [
+            // Menu Vertical
+            if (!isMd) AppMenuVertical(currentFeatureLocation),
 
-          Expanded(
-            child: currentFeature,
-          ),
+            Expanded(
+              child: currentFeature,
+            ),
 
-          if (isMd) AppMenuHorizontal(currentFeatureLocation)
-        ],
+            if (isMd) AppMenuHorizontal(currentFeatureLocation)
+          ],
+        ),
       ),
     );
   }

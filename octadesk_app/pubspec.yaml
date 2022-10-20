@@ -59,6 +59,7 @@ dependencies:
   path: ^1.8.2
   record: ^4.4.0
   permission_handler: ^10.0.2
+  flutter_portal: ^1.1.1
 
 
 dev_dependencies:

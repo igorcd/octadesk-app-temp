@@ -30,38 +30,8 @@ class PersonService {
     return List.from(resp.data).map((el) => ContactStatusDTO.fromMap(el)).toList();
   }
 
-  static Future<List<ContactListDTO>> getPersons({required int page, String search = ""}) async {
-    var index = page - 1;
-    var skip = index * 10;
-    var take = 10;
-
-    var filters = {
-      "Take": take,
-      "PropertySort": "Name",
-      "includeExcludedRecords": false,
-      "SortDirection": "asc",
-      "Skip": skip,
-    };
-
-    if (search.isNotEmpty) {
-      filters.addAll({
-        "ExternalQueries": [
-          {
-            "PropertyName": "Type",
-            "Operator": 2,
-            "ValueCompare": 2,
-          },
-          {
-            "PropertyName": "TextSearch",
-            "Operator": 4,
-            "ValueCompare": search,
-          }
-        ],
-        "ExternalQueriesOr": [],
-      });
-    }
-
-    var resp = await OctaClient.personsService.post('/filter', data: filters);
+  static Future<List<ContactListDTO>> getPersons(Map<String, dynamic> payload) async {
+    var resp = await OctaClient.personsService.post('/filter', data: payload);
     return List.from(resp.data).map((e) => ContactListDTO.fromMap(e)).toList();
   }
 

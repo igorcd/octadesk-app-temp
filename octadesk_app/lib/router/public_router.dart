@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:octadesk_app/features/chat/chat_feature.dart';
 import 'package:octadesk_app/features/chat/store/chat_store.dart';
+import 'package:octadesk_app/features/contacts/store/contacts_store.dart';
 import 'package:octadesk_app/features/settings/settings_feature.dart';
-import 'package:octadesk_app/features/users/users_feature.dart';
+import 'package:octadesk_app/features/contacts/contacts_feature.dart';
 import 'package:octadesk_app/views/authentication/authentication_view.dart';
 import 'package:octadesk_app/views/initialization/initialization_view.dart';
 import 'package:octadesk_app/views/main/main_view.dart';
@@ -114,7 +115,13 @@ class AppRouter {
           GoRoute(
             path: '/users',
             name: usersFeature,
-            pageBuilder: (context, state) => _featuresPageBuilder(key: state.pageKey, child: const UsersFeature()),
+            pageBuilder: (context, state) => _featuresPageBuilder(
+              key: state.pageKey,
+              child: ChangeNotifierProvider(
+                create: (context) => ContactsStore(),
+                child: const ContactsFeature(),
+              ),
+            ),
           ),
           GoRoute(
             path: '/settings',

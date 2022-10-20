@@ -1,4 +1,4 @@
-import 'package:octadesk_core/dtos/contact/contact_phone_dto.dart';
+import 'package:octadesk_core/dtos/index.dart';
 
 class ContactListDTO {
   final String id;
@@ -6,6 +6,8 @@ class ContactListDTO {
   final String name;
   final List<ContactPhoneDTO> phoneContacts;
   final String? thumbUrl;
+  final OrganizationDTO? organization;
+  final String contactStatus;
 
   final dynamic apps;
   final dynamic dateCreation;
@@ -16,7 +18,6 @@ class ContactListDTO {
   final dynamic loginTries;
   final dynamic myApps;
   final dynamic myTicketViews;
-  final dynamic organization;
   final dynamic organizations;
   final dynamic othersEmail;
   final dynamic participantPermission;
@@ -52,35 +53,36 @@ class ContactListDTO {
     required this.roleType,
     required this.type,
     required this.webPushSubscriptions,
+    required this.contactStatus,
   });
 
   factory ContactListDTO.fromMap(Map<String, dynamic> map) {
     return ContactListDTO(
-      email: map["email"],
-      id: map["id"],
-      isEnabled: map["isEnabled"],
-      name: map["name"],
-      phoneContacts: List.from(map["phoneContacts"]).map((e) => ContactPhoneDTO.fromMap(e)).toList(),
-      thumbUrl: map["thumbUrl"],
-      apps: map["apps"],
-      dateCreation: map["dateCreation"],
-      deviceTokens: map["deviceTokens"],
-      groups: map["groups"],
-      isLocked: map["isLocked"],
-      loginTries: map["loginTries"],
-      myApps: map["myApps"],
-      myTicketViews: map["myTicketViews"],
-      organization: map["organization"],
-      organizations: map["organizations"],
-      othersEmail: map["othersEmail"],
-      participantPermission: map["participantPermission"],
-      permissionType: map["permissionType"],
-      permissionView: map["permissionView"],
-      products: map["products"],
-      roleType: map["roleType"],
-      type: map["type"],
-      webPushSubscriptions: map["webPushSubscriptions"],
-    );
+        email: map["email"],
+        id: map["id"],
+        isEnabled: map["isEnabled"],
+        name: map["name"],
+        phoneContacts: List.from(map["phoneContacts"]).map((e) => ContactPhoneDTO.fromMap(e)).toList(),
+        thumbUrl: map["thumbUrl"],
+        apps: map["apps"],
+        dateCreation: map["dateCreation"],
+        deviceTokens: map["deviceTokens"],
+        groups: map["groups"],
+        isLocked: map["isLocked"],
+        loginTries: map["loginTries"],
+        myApps: map["myApps"],
+        myTicketViews: map["myTicketViews"],
+        organization: map["organization"] != null ? OrganizationDTO.fromMap(map["organization"]) : null,
+        organizations: map["organizations"],
+        othersEmail: map["othersEmail"],
+        participantPermission: map["participantPermission"],
+        permissionType: map["permissionType"],
+        permissionView: map["permissionView"],
+        products: map["products"],
+        roleType: map["roleType"],
+        type: map["type"],
+        webPushSubscriptions: map["webPushSubscriptions"],
+        contactStatus: map["contactStatus"] ?? "Lead");
   }
 
   Map<String, dynamic> toMap() {
@@ -99,7 +101,7 @@ class ContactListDTO {
       "loginTries": loginTries,
       "myApps": myApps,
       "myTicketViews": myTicketViews,
-      "organization": organization,
+      "organization": organization?.toMap(),
       "organizations": organizations,
       "othersEmail": othersEmail,
       "participantPermission": participantPermission,
@@ -109,6 +111,7 @@ class ContactListDTO {
       "roleType": roleType,
       "type": type,
       "webPushSubscriptions": webPushSubscriptions,
+      "contactStatus": contactStatus,
     };
   }
 }

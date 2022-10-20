@@ -37,9 +37,9 @@ class OctaButton extends StatelessWidget {
               text,
               style: TextStyle(
                 fontSize: AppSizes.s04,
-                fontFamily: "NotoSans",
+                fontFamily: "Poppins",
                 color: outline ? backgroundColor : Colors.white,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             );
     }
@@ -61,7 +61,7 @@ class OctaButton extends StatelessWidget {
           // Estilização
           decoration: BoxDecoration(
             color: outline ? Colors.transparent : backgroundColor,
-            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
+            borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s03)),
             border: outline ? Border.all(color: backgroundColor) : null,
           ),
 

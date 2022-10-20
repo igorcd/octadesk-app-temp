@@ -55,4 +55,5 @@ class AppIcons {
   static const String addUser = "lib/assets/icons/add-user.png";
   static const String music = "lib/assets/icons/music.png";
   static const String microphoneLg = "lib/assets/icons/microphone-lg.png";
+  static const String newConversation = "lib/assets/icons/new-conversation.png";
 }
