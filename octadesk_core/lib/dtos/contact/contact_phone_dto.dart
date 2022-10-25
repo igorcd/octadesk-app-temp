@@ -1,7 +1,8 @@
 class ContactPhoneDTO {
   final String countryCode;
   final String number;
-  final dynamic type;
+  final int type;
+
   final dynamic dateCreation;
   final dynamic id;
   final dynamic isEnabled;
@@ -34,7 +35,7 @@ class ContactPhoneDTO {
     };
   }
 
-  String toPhoneNumber() {
+  String get phoneNumber {
     return "+$countryCode$number";
   }
 }

@@ -5,13 +5,13 @@ import 'package:octadesk_services/http_clients/octa_client.dart';
 
 class PersonService {
   /// GET - Dados do usuário
-  static Future<ContactDTO> getPerson(String id) async {
+  static Future<ContactDetailDTO> getPerson(String id) async {
     var resp = await OctaClient.personsService.get('/', queryParameters: {"id": id});
-    return ContactDTO.fromMap(resp.data);
+    return ContactDetailDTO.fromMap(resp.data);
   }
 
   /// PUT - Alterar Status do usuáripo
-  static Future<ContactDTO> changePersonStatus({required String newStatus, required String id, required String idContactStatus}) async {
+  static Future<ContactDetailDTO> changePersonStatus({required String newStatus, required String id, required String idContactStatus}) async {
     await OctaClient.chat.put('/rooms/customer', data: {
       "customer": {
         "id": id,
@@ -30,12 +30,19 @@ class PersonService {
     return List.from(resp.data).map((el) => ContactStatusDTO.fromMap(el)).toList();
   }
 
+  /// GET - Detalhe do contato
+  static Future<ContactDetailDTO> getContactDetail(String contactId, {CancelToken? cancelToken}) async {
+    var resp = await OctaClient.personsService.get('/getPerson', queryParameters: {"id": contactId}, cancelToken: cancelToken);
+    return ContactDetailDTO.fromMap(resp.data["person"]);
+  }
+
+  /// Contact Status
   static Future<List<ContactListDTO>> getPersons(Map<String, dynamic> payload) async {
     var resp = await OctaClient.personsService.post('/filter', data: payload);
     return List.from(resp.data).map((e) => ContactListDTO.fromMap(e)).toList();
   }
 
-  // GET - Person na tela Iniciar nova conversa
+  /// GET - Person na tela Iniciar nova conversa
   static Future<List<ContactListDTO>> getPersonsToStartNewConversation({required int page, String search = "", CancelToken? cancelToken}) async {
     Map<dynamic, dynamic> dataToSend = {
       "filter": {
@@ -74,9 +81,14 @@ class PersonService {
     return List.from(resp.data).map((e) => ContactListDTO.fromMap(e)).toList();
   }
 
-  // GET - Organizações
+  /// GET - Organizações
   static Future<List<OrganizationDTO>> getOrganizations() async {
-    var resp = await OctaClient.personsService.get('/organizations/');
+    var basePayload = {
+      "includeExcludedRecords": true,
+      "textSearch": true,
+      "search": "",
+    };
+    var resp = await OctaClient.personsService.get('/organizations', queryParameters: basePayload);
     return List.from(resp.data).map((e) => OrganizationDTO.fromMap(e)).toList();
   }
 }

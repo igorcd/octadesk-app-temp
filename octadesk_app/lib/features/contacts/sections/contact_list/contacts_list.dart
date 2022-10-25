@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/octa_feature_header.dart';
 import 'package:octadesk_app/components/octa_feature_title.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_header_tab.dart';
-import 'package:octadesk_app/features/contacts/sections/contact_list/include/active_contacts.dart';
-import 'package:octadesk_app/features/contacts/store/contacts_store.dart';
+import 'package:octadesk_app/features/contacts/sections/contact_list/includes/active_contacts.dart';
 import 'package:octadesk_app/resources/index.dart';
-import 'package:provider/provider.dart';
 
 class ContactsList extends StatefulWidget {
   const ContactsList({super.key});

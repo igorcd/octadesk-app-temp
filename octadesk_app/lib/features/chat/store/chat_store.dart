@@ -136,6 +136,8 @@ class ChatStore extends ChangeNotifier {
 
         notifyListeners();
 
+        hideNavigationBar();
+
         currentConversation = ChatDetailProvider(
           roomKey: room.key,
           userAvatar: room.user.thumbUrl,
@@ -166,6 +168,7 @@ class ChatStore extends ChangeNotifier {
     notifyListeners();
 
     await Future.delayed(const Duration(milliseconds: 550));
+    showNavigationbar();
 
     // Finalizar as streams
     await currentConversation?.dispose();
@@ -203,6 +206,7 @@ class ChatStore extends ChangeNotifier {
   void dispose() {
     _roomsListController?.dispose();
     _inboxMessagesCountController?.dispose();
+    showNavigationbar();
     super.dispose();
   }
 }

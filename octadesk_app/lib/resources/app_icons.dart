@@ -34,6 +34,8 @@ class AppIcons {
   static const String video = "lib/assets/icons/video.png";
   static const String eye = "lib/assets/icons/eye.png";
   static const String crossEye = "lib/assets/icons/cross-eye.png";
+  static const String edit = "lib/assets/icons/edit.png";
+  static const String detach = "lib/assets/icons/detach.png";
 
   // Icones chat
   static const String copy = "lib/assets/icons/copy.png";

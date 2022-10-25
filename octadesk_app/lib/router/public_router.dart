@@ -107,11 +107,15 @@ class AppRouter {
             name: botFeature,
             pageBuilder: (context, state) => _featuresPageBuilder(key: state.pageKey, child: const Center(child: Text("BOT"))),
           ),
+
+          // Dashboards
           GoRoute(
             path: '/dashboards',
             name: dashboardsFeature,
             pageBuilder: (context, state) => _featuresPageBuilder(key: state.pageKey, child: const Center(child: Text("Dashboards"))),
           ),
+
+          // Users
           GoRoute(
             path: '/users',
             name: usersFeature,

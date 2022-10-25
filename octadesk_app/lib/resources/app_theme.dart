@@ -10,8 +10,8 @@ class AppTheme {
       dividerTheme: DividerThemeData(
         space: 1,
         thickness: 1,
-        endIndent: AppSizes.s04,
-        indent: AppSizes.s04,
+        endIndent: 0,
+        indent: 0,
         color: AppColors.info.shade200,
       ),
       sliderTheme: SliderThemeData(

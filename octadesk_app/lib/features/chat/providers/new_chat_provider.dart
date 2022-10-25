@@ -212,7 +212,7 @@ class NewChatProvider extends ChangeNotifier {
       var room = await ChatService.startNewConversation(
         attendancePhone: originPhone.number,
         integrator: originPhone.integrator,
-        clientPhone: contactPhone.toPhoneNumber(),
+        clientPhone: contactPhone.phoneNumber,
         user: contactPost,
       );
 

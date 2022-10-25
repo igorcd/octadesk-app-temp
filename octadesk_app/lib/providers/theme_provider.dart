@@ -9,11 +9,13 @@ enum DarkModeType {
 }
 
 class ThemeProvider extends ChangeNotifier {
+  /// Swatch primário
   AppColorSwatch _primarySwatch = AppColorSwatch.blue;
   MaterialColor get primarySwatch {
     return AppColors.getColor(_primarySwatch);
   }
 
+  /// Tipo do dark mode
   DarkModeType _darkModeType = DarkModeType.byOperatingSystem;
 
   /// Tema escuro

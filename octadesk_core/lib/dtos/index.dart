@@ -28,7 +28,7 @@ export './organization/organization_dto.dart';
 
 // Person
 export './contact/contact_status_dto.dart';
-export './contact/contact_dto.dart';
+export 'contact/contact_detail_dto.dart';
 export './contact/contact_post_dto.dart';
 export './contact/contact_phone_dto.dart';
 

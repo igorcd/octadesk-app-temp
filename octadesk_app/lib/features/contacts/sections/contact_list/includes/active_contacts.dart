@@ -72,8 +72,8 @@ class ActiveContacts extends StatelessWidget {
                             var contact = snapshot.data![index];
                             return ContactListItem(
                               contact,
-                              onPressed: () => provider.selectContact(snapshot.data![index].id),
-                              selected: false,
+                              onPressed: () => provider.selectContact(contact.id),
+                              selected: provider.selectedConversationId == contact.id,
                             );
                           },
                           childCount: snapshot.data!.length,

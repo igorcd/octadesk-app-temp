@@ -1,4 +1,4 @@
-import 'package:octadesk_core/dtos/contact/contact_dto.dart';
+import 'package:octadesk_core/dtos/contact/contact_detail_dto.dart';
 
 class ContactModel {
   final String id;
@@ -6,7 +6,6 @@ class ContactModel {
   final String email;
   final String? thumbUrl;
   final bool active;
-  final String? contactStatusId;
 
   ContactModel({
     required this.id,
@@ -14,14 +13,12 @@ class ContactModel {
     required this.email,
     required this.thumbUrl,
     required this.active,
-    required this.contactStatusId,
   });
 
-  factory ContactModel.fromDTO(ContactDTO dto) {
+  factory ContactModel.fromDTO(ContactDetailDTO dto) {
     return ContactModel(
       id: dto.id,
       active: dto.isEnabled,
-      contactStatusId: dto.idContactStatus,
       email: dto.email,
       name: dto.name,
       thumbUrl: dto.thumbUrl,

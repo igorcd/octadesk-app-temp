@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
+import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_app/views/main/includes/app_menu_horizontal.dart';
 import 'package:octadesk_app/views/main/includes/app_menu_vertical.dart';
 
@@ -15,20 +15,37 @@ class MainView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Portal(
-        child: Flex(
-          direction: isMd ? Axis.vertical : Axis.horizontal,
-          children: [
-            // Menu Vertical
-            if (!isMd) AppMenuVertical(currentFeatureLocation),
+      body: Flex(
+        direction: isMd ? Axis.vertical : Axis.horizontal,
+        children: [
+          // Menu Vertical
+          if (!isMd) AppMenuVertical(currentFeatureLocation),
 
-            Expanded(
-              child: currentFeature,
-            ),
+          Expanded(
+            child: currentFeature,
+          ),
 
-            if (isMd) AppMenuHorizontal(currentFeatureLocation)
-          ],
-        ),
+          if (isMd)
+            ValueListenableBuilder<bool>(
+              valueListenable: getNavigationBarVisibility(),
+              builder: (context, value, child) {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 100),
+                  switchInCurve: Curves.ease,
+                  switchOutCurve: Curves.ease,
+                  transitionBuilder: (child, animation) {
+                    return SizeTransition(
+                      axisAlignment: -1,
+                      sizeFactor: animation,
+                      axis: Axis.vertical,
+                      child: child,
+                    );
+                  },
+                  child: value ? AppMenuHorizontal(currentFeatureLocation) : const SizedBox.shrink(),
+                );
+              },
+            )
+        ],
       ),
     );
   }

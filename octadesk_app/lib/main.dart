@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_portal/flutter_portal.dart';
+import 'package:get_it/get_it.dart';
 import 'package:octadesk_app/providers/authentication_provider.dart';
 import 'package:octadesk_app/providers/theme_provider.dart';
 import 'package:octadesk_app/router/public_router.dart';
@@ -13,7 +13,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setEnvironment(environment: OctaEnvironmentEnum.prod);
+  setEnvironment(environment: OctaEnvironmentEnum.qa);
+
+  // Registrar serviço da visibilidade da barra inferior
+  GetIt.instance.registerLazySingleton<ValueNotifier<bool>>(() => ValueNotifier(true), instanceName: "navigationBarVisible");
   // initializeDateFormatting('pt_BR', null);
 
   if (Platform.isWindows) {
@@ -51,7 +54,7 @@ class MyApp extends StatelessWidget {
         // Light Theme
         theme: value.lightTheme,
         builder: (context, child) {
-          return AppToolbar(child: Portal(child: child!));
+          return AppToolbar(child: child!);
         },
         routerConfig: AppRouter.router,
       );

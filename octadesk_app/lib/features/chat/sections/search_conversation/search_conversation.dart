@@ -69,53 +69,53 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
                       OctaSearchSliver(
                         onTextChange: (value) => searchConversationProvider.search(value),
                         loading: searchConversationProvider.loading,
-                        filters: [
-                          // Buscar por
-                          OctaTag(
-                            text: "Buscar por: ${searchConversationProvider.searchByLabel}",
-                            active: true,
-                            onPressed: () => searchConversationProvider.openSearchByDialog(context),
-                            icon: AppIcons.angleDown,
-                          ),
-                          // Status
-                          OctaTag(
-                            text: searchConversationProvider.statusLabel,
-                            active: true,
-                            onPressed: () => searchConversationProvider.openStatusDialog(context),
-                            icon: AppIcons.angleDown,
-                          ),
-                          // Operação
-                          OctaTag(
-                            text: searchConversationProvider.operationLabel,
-                            onPressed: () => searchConversationProvider.openOperationModal(context),
-                            active: searchConversationProvider.hasOperationFilter,
-                            icon: AppIcons.angleDown,
-                          ),
+                        // filters: [
+                        //   // Buscar por
+                        //   OctaTag(
+                        //     text: "Buscar por: ${searchConversationProvider.searchByLabel}",
+                        //     active: true,
+                        //     onPressed: () => searchConversationProvider.openSearchByDialog(context),
+                        //     icon: AppIcons.angleDown,
+                        //   ),
+                        //   // Status
+                        //   OctaTag(
+                        //     text: searchConversationProvider.statusLabel,
+                        //     active: true,
+                        //     onPressed: () => searchConversationProvider.openStatusDialog(context),
+                        //     icon: AppIcons.angleDown,
+                        //   ),
+                        //   // Operação
+                        //   OctaTag(
+                        //     text: searchConversationProvider.operationLabel,
+                        //     onPressed: () => searchConversationProvider.openOperationModal(context),
+                        //     active: searchConversationProvider.hasOperationFilter,
+                        //     icon: AppIcons.angleDown,
+                        //   ),
 
-                          // Tags
-                          OctaTag(
-                            text: "Tags",
-                            onPressed: () => searchConversationProvider.openTagsDialog(context),
-                            active: searchConversationProvider.hasTagsFilter,
-                            icon: AppIcons.angleDown,
-                          ),
+                        //   // Tags
+                        //   OctaTag(
+                        //     text: "Tags",
+                        //     onPressed: () => searchConversationProvider.openTagsDialog(context),
+                        //     active: searchConversationProvider.hasTagsFilter,
+                        //     icon: AppIcons.angleDown,
+                        //   ),
 
-                          // Período
-                          OctaTag(
-                            text: searchConversationProvider.periodLabel,
-                            onPressed: () => searchConversationProvider.openDateDialog(context),
-                            active: searchConversationProvider.hasPeriodFilter,
-                            icon: AppIcons.angleDown,
-                          ),
+                        //   // Período
+                        //   OctaTag(
+                        //     text: searchConversationProvider.periodLabel,
+                        //     onPressed: () => searchConversationProvider.openDateDialog(context),
+                        //     active: searchConversationProvider.hasPeriodFilter,
+                        //     icon: AppIcons.angleDown,
+                        //   ),
 
-                          // Canal
-                          OctaTag(
-                            text: searchConversationProvider.selectedChannelLabel,
-                            onPressed: () => searchConversationProvider.openChannelsDialog(context),
-                            active: searchConversationProvider.hasChannelFilter,
-                            icon: AppIcons.angleDown,
-                          ),
-                        ],
+                        //   // Canal
+                        //   OctaTag(
+                        //     text: searchConversationProvider.selectedChannelLabel,
+                        //     onPressed: () => searchConversationProvider.openChannelsDialog(context),
+                        //     active: searchConversationProvider.hasChannelFilter,
+                        //     icon: AppIcons.angleDown,
+                        //   ),
+                        // ],
                       ),
 
                       // Erro

@@ -1,14 +1,14 @@
 class OrganizationDTO {
-  final Map<dynamic, dynamic>? customField;
+  final int? number;
+  final String? name;
+  final bool? isDefault;
   final String? description;
-  final dynamic domain;
   final List<dynamic>? domains;
+  final Map<dynamic, dynamic>? customField;
+  final dynamic domain;
   final String? id;
   final bool? isEnabled;
-  final String? name;
-  final int? number;
   final List<dynamic>? phoneContacts;
-  final bool? isDefault;
 
   OrganizationDTO({
     required this.name,

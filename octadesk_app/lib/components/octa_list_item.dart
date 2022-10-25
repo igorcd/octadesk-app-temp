@@ -22,13 +22,13 @@ class OctaListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: selected ? AppColors.info.shade100 : null,
-      height: AppSizes.s18,
+      height: AppSizes.s16,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onPressed,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s04),
             child: Row(
               children: [
                 if (leading != null)

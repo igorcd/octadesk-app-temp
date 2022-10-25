@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:octadesk_app/features/contacts/providers/contact_detail_provider.dart';
 import 'package:octadesk_app/query/users_query_builder.dart';
@@ -9,12 +10,16 @@ class ContactsStore extends ChangeNotifier {
   bool _paginating = false;
   bool get paginating => _paginating;
 
-  /// Stream de usuários
+  String _selectedConversationId = "";
+  String get selectedConversationId => _selectedConversationId;
+
+  /// Stream da lista de contatos
   BehaviorSubject<List<ContactListModel>?>? _contactsStreamController;
   Stream<List<ContactListModel>?>? get contactsStream => _contactsStreamController?.stream;
 
-  ContactDetailProvider? _selectedContact;
-  ContactDetailProvider? get selectedContact => _selectedContact;
+  /// Future do detalhe do contato
+  Future<ContactDetailProvider?>? _contactDetailFuture;
+  Future<ContactDetailProvider?>? get contactDetailFuture => _contactDetailFuture;
 
   ///
   /// Query de contatos
@@ -37,6 +42,27 @@ class ContactsStore extends ChangeNotifier {
     _contactsStreamController = BehaviorSubject();
     _contactsStreamController!.onListen = () => WidgetsBinding.instance.addPostFrameCallback((timeStamp) => refreshContacts());
     _contactsStreamController!.onCancel = () => _contactsStreamController!.close();
+  }
+
+  CancelToken? _detailCancelToken;
+  Future<ContactDetailProvider?> _loadContactDetail(String contactId) async {
+    try {
+      _detailCancelToken?.cancel();
+      _detailCancelToken = CancelToken();
+      var resp = await PersonService.getContactDetail(contactId, cancelToken: _detailCancelToken);
+      return ContactDetailProvider(resp);
+    }
+    // Cancelar
+    on DioError catch (e) {
+      if (e.type == DioErrorType.cancel) {
+        return null;
+      }
+      return Future.error(e);
+    }
+    // error
+    catch (e) {
+      return Future.error(e);
+    }
   }
 
   ContactsStore() {
@@ -65,9 +91,11 @@ class ContactsStore extends ChangeNotifier {
   /// Selecioanr contato
   ///
   void selectContact(String id) {
-    _selectedContact?.dispose();
+    _selectedConversationId = id;
+    _contactDetailFuture = null;
+    notifyListeners();
 
-    _selectedContact = ContactDetailProvider(contactId: id);
+    _contactDetailFuture = _loadContactDetail(id);
     notifyListeners();
   }
 }

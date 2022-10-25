@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/resources/app_constants.dart';
@@ -174,4 +175,18 @@ String formatPeriod(DateTimeRange range) {
 // Formatar duração
 String formatDurationHelper(Duration duration) {
   return "${duration.inMinutes.toString().padLeft(2, "0")}:${duration.inSeconds.toString().padLeft(2, "0")}";
+}
+
+/// Esconder barra de navegação
+void hideNavigationBar() {
+  GetIt.instance.get<ValueNotifier<bool>>(instanceName: "navigationBarVisible").value = false;
+}
+
+/// Mostrar barra de navegação
+void showNavigationbar() {
+  GetIt.instance.get<ValueNotifier<bool>>(instanceName: "navigationBarVisible").value = true;
+}
+
+ValueNotifier<bool> getNavigationBarVisibility() {
+  return GetIt.instance.get<ValueNotifier<bool>>(instanceName: "navigationBarVisible");
 }

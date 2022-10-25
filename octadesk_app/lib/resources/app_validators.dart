@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:octadesk_app/utils/country_seed.dart' as country_seed;
+import 'package:collection/collection.dart';
 
 class AppValidators {
   /// Verificar se é um CPF válido
@@ -64,5 +66,18 @@ class AppValidators {
     return (String value) {
       return valueToCompare.text != value ? "Os campos não coincidem" : null;
     };
+  }
+
+  static String? validatePhoneWithCountryCode(String phone) {
+    var regex = RegExp(r"^\+[1-9]{2,3} \([1-9]{2}\) [0-9]{5}-[0-9]{4}");
+    if (!regex.hasMatch(phone)) {
+      return "Insira um telefone válido";
+    }
+
+    var validCountryCode = country_seed.countriesSeed.firstWhereOrNull((element) => element.phoneCode == phone.split(" ")[0]) != null;
+    if (!validCountryCode) {
+      return "Insira um código de páis válido";
+    }
+    return null;
   }
 }

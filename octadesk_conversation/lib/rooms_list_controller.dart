@@ -178,7 +178,9 @@ class RoomsListController {
       var rooms = await _getRooms(page: 1, limit: 20);
       _roomsListStreamController.add(rooms);
     } catch (e) {
-      _roomsListStreamController.addError(e);
+      if (!_roomsListStreamController.isClosed) {
+        _roomsListStreamController.addError(e);
+      }
       return;
     }
   }

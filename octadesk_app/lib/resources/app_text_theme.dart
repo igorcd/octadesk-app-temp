@@ -28,17 +28,17 @@ class AppTextTheme {
       ),
 
       // Body
+      // Body
+      bodyLarge: TextStyle(
+        fontSize: AppSizes.s04,
+        color: AppColors.info.shade900,
+        fontWeight: FontWeight.w600,
+      ),
       bodyMedium: TextStyle(
         fontSize: AppSizes.s04,
         color: AppColors.info.shade800,
       ),
 
-      // Body
-      bodyLarge: TextStyle(
-        fontSize: AppSizes.s04,
-        color: AppColors.info.shade500,
-        fontWeight: FontWeight.w600,
-      ),
       bodySmall: TextStyle(
         fontSize: AppSizes.s03_5,
         color: AppColors.info.shade500,
@@ -61,6 +61,12 @@ class AppTextTheme {
       ),
 
       // Label
+      labelLarge: TextStyle(
+        fontSize: AppSizes.s03_5,
+        color: AppColors.info.shade900,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0,
+      ),
       labelMedium: TextStyle(
         fontSize: AppSizes.s03,
         color: AppColors.info.shade400,
@@ -93,7 +99,7 @@ class AppTextTheme {
 
       // Body
       bodyLarge: TextStyle(
-        color: AppColors.info.shade300,
+        color: AppColors.info.shade100,
       ),
       bodyMedium: const TextStyle(
         color: Colors.white,
@@ -114,6 +120,9 @@ class AppTextTheme {
       ),
 
       // Label
+      labelLarge: TextStyle(
+        color: AppColors.indigo.shade100,
+      ),
       labelMedium: TextStyle(
         color: AppColors.info.shade300,
       ),

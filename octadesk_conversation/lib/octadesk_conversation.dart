@@ -41,6 +41,10 @@ class OctadeskConversation {
   List<GroupDTO>? _groups;
   List<GroupDTO>? get groups => _groups;
 
+  // Tipos de contato
+  List<ContactStatusModel> _contactTypes = [];
+  List<ContactStatusModel> get contactTypes => _contactTypes;
+
   // Verificar se está inicializado
   bool get initialized => _socket != null && _agentId != null && _agent != null && _groups != null;
 
@@ -142,6 +146,7 @@ class OctadeskConversation {
         NumbersService.getWhatsAppNumbers(), // Números de Whatsapp
         IntegratorService.getIntegratorNumbers(), // Números de Whatsapp oficial,
         IntegratorService.getIntegrators(), // Integrators
+        PersonService.getContactStatus(),
         adjustNtpOffset(),
       ]);
 
@@ -161,6 +166,9 @@ class OctadeskConversation {
 
       // Setar os integrators
       _integrators = (resp[5] as List<IntegratorDTO>).map((e) => IntegratorModel.fromDTO(e)).toList();
+
+      // Tipos de contato
+      _contactTypes = (resp[6] as List<ContactStatusDTO>).map((e) => ContactStatusModel.fromDTO(e)).toList();
 
       // Setar Id do grupo atual do agente
       _agentGroupId = _groups!.firstWhereOrNull((e) {

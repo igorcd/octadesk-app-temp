@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:octadesk_app/components/responsive/responsive_widgets.dart';
 import 'package:octadesk_app/features/chat/sections/chat_informations/chat_informations.dart';
 import 'package:octadesk_app/features/chat/sections/chat_inbox/chat_inbox.dart';
@@ -91,7 +90,7 @@ class ChatFeature extends StatelessWidget {
                   // Conteúdo principal
                   Expanded(
                     child: AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       child: content(),
                     ),
                   ),
@@ -117,16 +116,14 @@ class ChatFeature extends StatelessWidget {
               ),
 
               // Detalhe da conversa
-              PortalTarget(
-                visible: true,
-                anchor: const Filled(),
-                portalFollower: AnimatedSlide(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.ease,
-                  offset: conversationProvider.currentConversationOpened ? const Offset(0, 0) : const Offset(0, 1),
-                  child: content(),
-                ),
-                child: const SizedBox.shrink(),
+              AnimatedPositioned(
+                height: constraints.maxHeight,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
+                top: conversationProvider.currentConversationOpened ? 0 : constraints.maxHeight,
+                right: 0,
+                left: 0,
+                child: content(),
               ),
             ],
           ),
