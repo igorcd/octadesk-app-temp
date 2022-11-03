@@ -14,6 +14,11 @@ class ChatFeature extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => ChatStore(),
+      child: Text("Teste"),
+    );
+
     var conversationProvider = Provider.of<ChatStore>(context);
     var screenSize = MediaQuery.of(context).size.width;
 

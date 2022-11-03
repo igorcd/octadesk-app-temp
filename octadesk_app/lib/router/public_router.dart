@@ -92,27 +92,9 @@ class AppRouter {
           GoRoute(
             path: '/main',
             name: chatFeature,
-            pageBuilder: (context, state) => _featuresPageBuilder(
-              key: state.pageKey,
-              child: ChangeNotifierProvider(
-                create: (context) => ChatStore(),
-                child: const ChatFeature(),
-              ),
-            ),
-          ),
-
-          // Bot
-          GoRoute(
-            path: '/bot',
-            name: botFeature,
-            pageBuilder: (context, state) => _featuresPageBuilder(key: state.pageKey, child: const Center(child: Text("BOT"))),
-          ),
-
-          // Dashboards
-          GoRoute(
-            path: '/dashboards',
-            name: dashboardsFeature,
-            pageBuilder: (context, state) => _featuresPageBuilder(key: state.pageKey, child: const Center(child: Text("Dashboards"))),
+            builder: (context, state) {
+              return const ChatFeature();
+            },
           ),
 
           // Users
@@ -127,6 +109,8 @@ class AppRouter {
               ),
             ),
           ),
+
+          // Configurações
           GoRoute(
             path: '/settings',
             name: settingsFeature,

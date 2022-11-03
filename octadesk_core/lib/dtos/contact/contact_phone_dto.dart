@@ -2,7 +2,7 @@ class ContactPhoneDTO {
   final String countryCode;
   final String number;
   final int type;
-
+  final bool isDefault;
   final dynamic dateCreation;
   final dynamic id;
   final dynamic isEnabled;
@@ -12,6 +12,7 @@ class ContactPhoneDTO {
     required this.number,
     required this.type,
     this.dateCreation,
+    this.isDefault = false,
     this.id,
     this.isEnabled,
   });
@@ -32,7 +33,19 @@ class ContactPhoneDTO {
       "type": type,
       "number": number,
       "countryCode": countryCode,
+      "default": isDefault,
     };
+  }
+
+  ContactPhoneDTO clone() {
+    return ContactPhoneDTO(
+      countryCode: countryCode,
+      number: number,
+      type: type,
+      dateCreation: dateCreation,
+      id: id,
+      isEnabled: isEnabled,
+    );
   }
 
   String get phoneNumber {

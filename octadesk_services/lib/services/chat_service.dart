@@ -175,6 +175,11 @@ class ChatService {
     return List.from(resp.data).map((e) => GroupDTO.fromMap(e)).toList();
   }
 
+  /// Atualizar contato
+  static Future<void> updateContact(ContactDetailDTO contact) async {
+    await OctaClient.chat.put("/rooms/customer", data: {"customer": contact.toMap()});
+  }
+
   /// Iniciar nova conversa
   static Future<RoomDetailDTO> startNewConversation({
     required String attendancePhone,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_pagination_indicator.dart';
-import 'package:octadesk_app/components/octa_search_sliver_button.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_list_skeleton.dart';
 import 'package:octadesk_app/features/contacts/sections/contact_list/components/contact_list_item.dart';
 import 'package:octadesk_app/features/contacts/store/contacts_store.dart';
@@ -63,7 +62,10 @@ class ActiveContacts extends StatelessWidget {
                   child: CustomScrollView(
                     slivers: [
                       // Busca
-                      const OctaSearchSliverButton(),
+                      OctaSearchSliver(
+                        loading: snapshot.connectionState == ConnectionState.waiting,
+                        onTextChange: provider.searchContact,
+                      ),
 
                       // Lista de contatos
                       SliverList(

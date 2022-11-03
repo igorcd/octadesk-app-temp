@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
+import 'package:octadesk_app/components/responsive/utils/screen_size.dart';
 import 'package:octadesk_app/features/contacts/providers/contact_detail_provider.dart';
 import 'package:octadesk_app/features/contacts/sections/contact_detail/contact_detail.dart';
 import 'package:octadesk_app/features/contacts/sections/contact_list/contacts_list.dart';
@@ -15,6 +16,7 @@ class ContactsFeature extends StatelessWidget {
   Widget build(BuildContext context) {
     ContactsStore contactsStore = Provider.of(context);
     const contactsList = ContactsList();
+    var screenSize = MediaQuery.of(context).size.width;
 
     Widget content() {
       return FutureBuilder<ContactDetailProvider?>(
@@ -69,26 +71,58 @@ class ContactsFeature extends StatelessWidget {
       );
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.horizontal(left: Radius.circular(AppSizes.s08)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(
-            width: 340,
-            child: contactsList,
-          ),
-          const VerticalDivider(indent: 1, endIndent: 1),
+    if (screenSize >= ScreenSize.md) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.horizontal(left: Radius.circular(AppSizes.s08)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(
+              width: 340,
+              child: contactsList,
+            ),
+            const VerticalDivider(indent: 1, endIndent: 1),
 
-          // Conteúdo principal
-          Expanded(
-            child: content(),
+            // Conteúdo principal
+            Expanded(
+              child: content(),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (p0, constraints) {
+        return Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: SafeArea(
+            bottom: false,
+            child: Stack(
+              children: [
+                const Positioned.fill(child: contactsList),
+
+                // Detalhe da conversa
+                AnimatedPositioned(
+                  height: constraints.maxHeight,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.ease,
+                  top: contactsStore.contactDetailFuture != null ? 0 : constraints.maxHeight,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: content(),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

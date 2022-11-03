@@ -3,7 +3,6 @@ import 'package:octadesk_app/components/octa_feature_header.dart';
 import 'package:octadesk_app/components/octa_feature_title.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_header_tab.dart';
 import 'package:octadesk_app/features/contacts/sections/contact_list/includes/active_contacts.dart';
-import 'package:octadesk_app/resources/index.dart';
 
 class ContactsList extends StatefulWidget {
   const ContactsList({super.key});
@@ -18,12 +17,12 @@ class _ContactsListState extends State<ContactsList> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 3, vsync: this);
+    _controller = TabController(length: 2, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = Theme.of(context).colorScheme;
+    // var colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       children: [
@@ -51,15 +50,15 @@ class _ContactsListState extends State<ContactsList> with TickerProviderStateMix
                 onTap: () => _controller.animateTo(1),
               ),
               const Spacer(),
-              ConversationHeaderTab(
-                selected: i == 2,
-                child: Image.asset(
-                  AppIcons.newConversation,
-                  color: colorScheme.onSurface,
-                  width: AppSizes.s06,
-                ),
-                onTap: () => _controller.animateTo(2),
-              )
+              // ConversationHeaderTab(
+              //   selected: i == 2,
+              //   child: Image.asset(
+              //     AppIcons.newConversation,
+              //     color: colorScheme.onSurface,
+              //     width: AppSizes.s06,
+              //   ),
+              //   onTap: () => _controller.animateTo(2),
+              // )
             ];
           },
         ),
@@ -71,7 +70,6 @@ class _ContactsListState extends State<ContactsList> with TickerProviderStateMix
             children: const [
               ActiveContacts(),
               Text("2"),
-              Text("3"),
             ],
           ),
         ),

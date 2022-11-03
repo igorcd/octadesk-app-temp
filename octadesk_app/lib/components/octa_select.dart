@@ -37,6 +37,8 @@ class OctaSelect<T> extends StatefulWidget {
 class _OctaSelectState<T> extends State<OctaSelect<T>> {
   @override
   Widget build(BuildContext context) {
+    var colorScheme = Theme.of(context).colorScheme;
+
     Widget renderContent() {
       return DropdownButtonFormField<T>(
         // Valiação
@@ -74,7 +76,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
             fontSize: AppSizes.s04,
           ),
         ),
-        dropdownColor: Colors.white,
+        dropdownColor: colorScheme.surface,
         onChanged: widget.onChanged,
         items: widget.values.isNotEmpty
             ? widget.values.map<DropdownMenuItem<T>>((e) {
@@ -88,7 +90,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
                   enabled: false,
                   child: Text(
                     widget.emptyPlaceholder,
-                    style: TextStyle(color: AppColors.info.shade300),
+                    style: TextStyle(color: colorScheme.onSurface),
                   ),
                 )
               ],
@@ -103,7 +105,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
             padding: const EdgeInsets.only(bottom: AppSizes.s01),
             child: Text(
               widget.label!,
-              style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
+              style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: colorScheme.onSurface),
             ),
           ),
         AnimatedContainer(
@@ -112,10 +114,10 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
           //
           // Estilo
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             border: Border.all(
               width: 2,
-              color: AppColors.info.shade200,
+              color: colorScheme.outline,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(AppSizes.s02_5)),
           ),

@@ -1,11 +1,10 @@
 import 'package:easy_mask/easy_mask.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
 
 class ContactTextInput extends StatefulWidget {
   final GlobalKey<FormFieldState>? inputKey;
-  final TextInputFormatter? mask;
+  final List<String>? mask;
   final String placeholder;
   final TextEditingController? controller;
   final Widget? prefix;
@@ -59,13 +58,7 @@ class _ContactTextInputState extends State<ContactTextInput> {
             // Input
             child: TextFormField(
               key: widget.inputKey,
-              inputFormatters: [
-                TextInputMask(mask: [
-                  '\\+99 (99) 9999-9999',
-                  '\\+99 (99) 99999-9999',
-                  '\\+999 (99) 99999-9999',
-                ])
-              ],
+              inputFormatters: widget.mask != null ? [TextInputMask(mask: widget.mask)] : null,
               focusNode: _inputFocusNode,
               controller: widget.controller,
               // controller: widget.controller,

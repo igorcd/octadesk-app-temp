@@ -82,13 +82,13 @@ class PersonService {
   }
 
   /// GET - Organizações
-  static Future<List<OrganizationDTO>> getOrganizations() async {
+  static Future<List<OrganizationDTO>> getOrganizations({String search = "", CancelToken? cancelToken}) async {
     var basePayload = {
       "includeExcludedRecords": true,
       "textSearch": true,
-      "search": "",
+      "search": search,
     };
-    var resp = await OctaClient.personsService.get('/organizations', queryParameters: basePayload);
+    var resp = await OctaClient.personsService.get('/organizations', queryParameters: basePayload, cancelToken: cancelToken);
     return List.from(resp.data).map((e) => OrganizationDTO.fromMap(e)).toList();
   }
 }

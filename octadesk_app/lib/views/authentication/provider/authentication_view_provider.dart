@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:octadesk_app/providers/authentication_provider.dart';
 import 'package:octadesk_app/router/public_router.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
-import 'package:octadesk_core/dtos/auth/auth_dto.dart';
 import 'package:octadesk_core/dtos/index.dart';
-import 'package:octadesk_core/exceptions/multiple_tenants_exception.dart';
 import 'package:octadesk_core/models/index.dart';
 import 'package:octadesk_services/enums/authentication_provider_enum.dart';
 
@@ -83,11 +82,27 @@ class AuthenticationViewProvider extends ChangeNotifier {
       }
     }
 
-    // Caso tenha múltiplas tenants
-    on MultipleTenantsException catch (e) {
-      _tenants = [...e.tenants];
-      _tenantSelectOpened = true;
-      notifyListeners();
+    // Caso de erro na requsição
+    on DioError catch (e) {
+      var errorCode = e.response?.statusCode ?? 500;
+
+      // Verificar se é mais de uma tenant
+      if (errorCode == 409 && e.response?.data != null) {
+        // Mapear tenant para serem selecionadas
+        var tenantsList = TenantListDTO.fromMap(e.response!.data);
+        var tenants = tenantsList.tenants.map((e) => TenantModel.fromDTO(e)).toList();
+        _tenants = tenants;
+        _tenantSelectOpened = true;
+        notifyListeners();
+        return;
+      }
+
+      if (errorCode == 403 || errorCode == 404) {
+        displayAlertHelper(_context, subtitle: "Seu usuário ou senha estão errados");
+        return;
+      }
+
+      displayAlertHelper(_context, subtitle: "Não foi possível realizar a requisição, tente novamente em breve");
     }
 
     // Erro genérico

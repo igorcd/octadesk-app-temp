@@ -13,7 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setEnvironment(environment: OctaEnvironmentEnum.qa);
+  setEnvironment(environment: OctaEnvironmentEnum.prod);
 
   // Registrar serviço da visibilidade da barra inferior
   GetIt.instance.registerLazySingleton<ValueNotifier<bool>>(() => ValueNotifier(true), instanceName: "navigationBarVisible");

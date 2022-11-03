@@ -1,7 +1,7 @@
 class OrganizationDTO {
   final int? number;
   final String? name;
-  final bool? isDefault;
+  bool? isDefault;
   final String? description;
   final List<dynamic>? domains;
   final Map<dynamic, dynamic>? customField;
@@ -22,6 +22,21 @@ class OrganizationDTO {
     required this.phoneContacts,
     required this.isDefault,
   });
+
+  OrganizationDTO clone() {
+    return OrganizationDTO(
+      name: name,
+      customField: customField,
+      description: description,
+      domain: domain,
+      domains: domains != null ? [...domains!] : null,
+      id: id,
+      isEnabled: isEnabled,
+      number: number,
+      phoneContacts: phoneContacts != null ? [...phoneContacts!] : null,
+      isDefault: isDefault,
+    );
+  }
 
   factory OrganizationDTO.fromMap(Map<String, dynamic> data) {
     return OrganizationDTO(

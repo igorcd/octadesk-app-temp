@@ -146,15 +146,30 @@ DateFormat dateTimeFormatterHelper() {
 
 /// Colocar máscara em um número de telefone
 String setPhoneMaskHelper(String phone) {
-  var phoneToFormat = phone.replaceAll("+", "");
-  if (phoneToFormat.length < 12 || phoneToFormat.length > 13) {
-    return phoneToFormat;
+  var phoneNumber = phone.replaceAll("+", "");
+  if (phoneNumber.length < 10 || phoneNumber.length > 13) {
+    return phone;
   }
-  var countryCode = phoneToFormat.substring(0, 2);
-  var ddd = phoneToFormat.substring(2, 4);
-  var firstPart = phoneToFormat.length == 12 ? phoneToFormat.substring(4, 8) : phoneToFormat.substring(4, 9);
-  var secondPart = phoneToFormat.length == 12 ? phoneToFormat.substring(8, 12) : phoneToFormat.substring(9, 13);
-  return "+$countryCode ($ddd) $firstPart-$secondPart";
+
+  // Verificar se tem cóidigo do páis
+  var isPhoneWithCountryCode = phoneNumber.length == 13 || phoneNumber.length == 12;
+  var countryCode = isPhoneWithCountryCode ? phoneNumber.substring(0, 2) : "";
+
+  // Número sem o código do país
+  var phoneNumbersWithoutCountryCode = isPhoneWithCountryCode ? phoneNumber.substring(2, phoneNumber.length) : phoneNumber;
+
+  // Verificar se é um número de oito dígitos
+  var isEightNumbersPhone = phoneNumbersWithoutCountryCode.length == 10;
+
+  var ddd = phoneNumbersWithoutCountryCode.substring(0, 2);
+  var firstPart = isEightNumbersPhone ? phoneNumbersWithoutCountryCode.substring(2, 6) : phoneNumbersWithoutCountryCode.substring(2, 7);
+  var secondPart = isEightNumbersPhone ? phoneNumbersWithoutCountryCode.substring(6, 10) : phoneNumbersWithoutCountryCode.substring(7, 11);
+
+  var formattedPhone = "($ddd) $firstPart-$secondPart";
+  if (countryCode.isNotEmpty) {
+    formattedPhone = "+$countryCode $formattedPhone";
+  }
+  return formattedPhone;
 }
 
 /// Remover máscara de telefone

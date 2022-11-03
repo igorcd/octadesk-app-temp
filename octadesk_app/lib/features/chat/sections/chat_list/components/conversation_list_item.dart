@@ -82,47 +82,40 @@ class ConversationListItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: AppSizes.s02, top: AppSizes.s02),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      room.agent != null
-                          //
-                          // Container de nome do agente
-                          ? Container(
-                              constraints: const BoxConstraints(maxWidth: 80),
-                              height: AppSizes.s03_5,
-                              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s01_5),
-                              decoration: BoxDecoration(color: colorScheme.outline, borderRadius: BorderRadius.circular(AppSizes.s10)),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    room.agent != null
+                        //
+                        // Container de nome do agente
+                        ? Container(
+                            constraints: const BoxConstraints(maxWidth: 80),
+                            height: AppSizes.s03_5,
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s01_5),
+                            decoration: BoxDecoration(color: colorScheme.outline, borderRadius: BorderRadius.circular(AppSizes.s10)),
 
-                              // Nome do agente
-                              child: Text(
-                                formatAgentName(room.agent?.name),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: colorScheme.onSurface,
-                                  fontSize: AppSizes.s02_5,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            // Nome do agente
+                            child: Text(
+                              formatAgentName(room.agent?.name),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: colorScheme.onSurface,
+                                fontSize: AppSizes.s02_5,
+                                fontWeight: FontWeight.w400,
                               ),
-                            )
-                          : const SizedBox(height: AppSizes.s03_5),
+                            ),
+                          )
+                        : const SizedBox(height: AppSizes.s03_5),
 
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: room.hasNewMessage ? const OctaNotificationIndicator() : const SizedBox.shrink(),
-                      ),
-
-                      // Tempo da última mensagem
-                      Text(
-                        formattedTime(),
-                        style: TextStyle(color: colorScheme.onSurface, fontSize: AppSizes.s02_5),
-                      )
-                    ],
-                  ),
+                    // Tempo da última mensagem
+                    const SizedBox(height: AppSizes.s01),
+                    Text(
+                      formattedTime(),
+                      style: TextStyle(color: colorScheme.onSurface, fontSize: AppSizes.s02_5),
+                    )
+                  ],
                 )
               ],
             ),

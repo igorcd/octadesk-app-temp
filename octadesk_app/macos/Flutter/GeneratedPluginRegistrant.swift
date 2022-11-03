@@ -7,8 +7,8 @@ import Foundation
 
 import audioplayers_darwin
 import bitsdojo_window_macos
-import connectivity_plus_macos
-import package_info_plus_macos
+import connectivity_plus
+import package_info_plus
 import path_provider_macos
 import record_macos
 import shared_preferences_macos

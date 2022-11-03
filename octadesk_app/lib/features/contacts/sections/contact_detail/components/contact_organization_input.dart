@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
-import 'package:octadesk_app/features/contacts/dialogs/organizations_dialog.dart';
 import 'package:octadesk_app/resources/index.dart';
-import 'package:octadesk_app/utils/helper_functions.dart';
 
 class ContactOrganizationInput extends StatelessWidget {
-  const ContactOrganizationInput({super.key});
+  final void Function()? onAdd;
+  final void Function()? onRemove;
+  final String value;
+
+  const ContactOrganizationInput({required this.value, this.onAdd, this.onRemove, super.key});
 
   @override
   Widget build(BuildContext context) {
-    void addOrganization() async {
-      var resp = await showOctaBottomSheet(
-        context,
-        title: "Organizações",
-        child: const OrganizationsDialog(),
-      );
-    }
-
     var colorScheme = Theme.of(context).colorScheme;
 
     return Row(
@@ -27,7 +21,7 @@ class ContactOrganizationInput extends StatelessWidget {
             children: [
               OctaText.labelLarge("Organização"),
               Text(
-                "Nome",
+                value,
                 style: TextStyle(
                   fontSize: AppSizes.s04,
                   color: colorScheme.onBackground,
@@ -42,8 +36,8 @@ class ContactOrganizationInput extends StatelessWidget {
           child: OctaIconButton(
             size: AppSizes.s08,
             iconSize: AppSizes.s07,
-            onPressed: () => addOrganization(),
-            icon: true ? AppIcons.attach : AppIcons.detach,
+            onPressed: onAdd ?? onRemove!,
+            icon: onAdd != null ? AppIcons.attach : AppIcons.detach,
           ),
         )
       ],

@@ -1,27 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:octadesk_core/exceptions/multiple_tenants_exception.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:octadesk_services/http_clients/nucleus_client.dart';
 import 'package:octadesk_services/enums/authentication_provider_enum.dart';
 
 class NucleusService {
   static Future<AuthResponseDTO> _handleAuth(Future<Response> request) async {
-    try {
-      var resp = await request;
-      return AuthResponseDTO.fromMap(resp.data);
-    } on DioError catch (e) {
-      var errorCode = e.response?.statusCode ?? 500;
-
-      // Verificar se é mais de uma tenant
-      if (errorCode == 409 && e.response?.data != null) {
-        // Mapear tenant para serem selecionadas
-        var tenantsList = TenantListDTO.fromMap(e.response!.data);
-        var tenants = tenantsList.tenants.map((e) => TenantModel.fromDTO(e)).toList();
-        throw MultipleTenantsException(tenants);
-      }
-
-      rethrow;
-    }
+    var resp = await request;
+    return AuthResponseDTO.fromMap(resp.data);
   }
 
   /// Realizar o login com credenciais

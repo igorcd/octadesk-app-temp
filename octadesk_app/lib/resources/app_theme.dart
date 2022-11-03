@@ -62,10 +62,20 @@ class AppTheme {
 
   static ThemeData dark(MaterialColor primarySwatch) {
     return ThemeData(
+      fontFamily: "Poppins",
       dividerTheme: DividerThemeData(
         space: 1,
         thickness: 1,
+        endIndent: 0,
+        indent: 0,
         color: AppColors.info.shade600,
+      ),
+      sliderTheme: SliderThemeData(
+        thumbColor: primarySwatch,
+        overlayShape: SliderComponentShape.noOverlay,
+        thumbShape: const RoundSliderThumbShape(
+          enabledThumbRadius: 8,
+        ),
       ),
       colorScheme: const ColorScheme.dark().copyWith(
         // Secondary

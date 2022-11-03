@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_chip.dart';
+import 'package:octadesk_app/components/octa_flag.dart';
 import 'package:octadesk_app/components/octa_select.dart';
+import 'package:octadesk_app/components/octa_text_form_field.dart';
 import 'package:octadesk_app/features/contacts/providers/contact_detail_provider.dart';
 import 'package:octadesk_app/features/contacts/sections/contact_detail/components/contact_select_input.dart';
-import 'package:octadesk_app/features/contacts/sections/contact_detail/components/contact_text_input.dart';
 import 'package:octadesk_app/resources/app_colors.dart';
 import 'package:octadesk_app/resources/app_icons.dart';
 import 'package:octadesk_app/resources/app_sizes.dart';
@@ -14,6 +15,7 @@ import 'package:collection/collection.dart';
 
 class ContactPhoneInput extends StatefulWidget {
   final GlobalKey<FormFieldState>? inputKey;
+  final GlobalKey<FormFieldState>? contryCodeKey;
   final ContactPhone phone;
   final void Function()? onAdd;
   final void Function()? onRemove;
@@ -21,6 +23,7 @@ class ContactPhoneInput extends StatefulWidget {
 
   const ContactPhoneInput({
     this.inputKey,
+    this.contryCodeKey,
     required this.phone,
     this.onAdd,
     required this.isMainPhone,
@@ -34,32 +37,38 @@ class ContactPhoneInput extends StatefulWidget {
 
 class _ContactPhoneInputState extends State<ContactPhoneInput> {
   String _flag = "";
+  bool _editActive = false;
+  String _error = "";
+  final FocusNode _inputFocusNode = FocusNode();
 
-  void _checkFlag(String phone) {
-    var phoneSections = phone.split(" ");
-    if (phoneSections.isEmpty) {
-      setState(() {
-        _flag = "";
-      });
-      return;
-    }
-    var countryCode = phoneSections[0];
-    var flag = countriesSeed.firstWhereOrNull((element) => element.phoneCode == countryCode)?.cod;
+  ///
+  /// Verificar bandeira
+  ///
+  void _checkFlag(String countryCode, {bool requestFocus = true}) {
+    var flag = countriesSeed.firstWhereOrNull((element) => element.phoneCode == "+$countryCode")?.cod;
 
     if (flag == null) {
       setState(() {
+        _error = "";
         _flag = "";
       });
       return;
     }
 
     setState(() {
+      _error = "";
       _flag = flag;
     });
+    if (requestFocus) {
+      _inputFocusNode.requestFocus();
+    }
   }
 
+  ///
+  /// Verificar se o contro
+  ///
   void _checkIfControllerIsClear() {
-    if (widget.phone.phoneController.text.isEmpty) {
+    if (widget.phone.contryCodeController.text.isEmpty) {
       setState(() {
         _flag = "";
       });
@@ -69,19 +78,75 @@ class _ContactPhoneInputState extends State<ContactPhoneInput> {
   @override
   void initState() {
     super.initState();
-    _checkFlag(widget.phone.phoneController.text);
-    widget.phone.phoneController.addListener(_checkIfControllerIsClear);
+    _checkFlag(widget.phone.contryCodeController.text, requestFocus: false);
+    widget.phone.contryCodeController.addListener(_checkIfControllerIsClear);
   }
 
   @override
   void dispose() {
-    widget.phone.phoneController.dispose();
+    widget.phone.contryCodeController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
+    var showContainer = _editActive || _error.isNotEmpty;
+    var focusColor = _error.isNotEmpty ? colorScheme.error : colorScheme.primary;
+
+    Widget phoneInput() {
+      return Focus(
+        onFocusChange: (value) {
+          setState(() {
+            _editActive = value;
+          });
+        },
+        child: AnimatedContainer(
+          margin: const EdgeInsets.only(top: 4),
+          duration: const Duration(milliseconds: 150),
+          padding: showContainer ? const EdgeInsets.all(AppSizes.s03) : EdgeInsets.zero,
+          decoration: BoxDecoration(
+            border: Border.all(width: showContainer ? 2 : 0, color: showContainer ? focusColor : Colors.transparent),
+            borderRadius: BorderRadius.circular(AppSizes.s02_5),
+          ),
+
+          // Input
+          child: Row(
+            children: [
+              SizedBox(width: 30, child: OctaFlag(flag: _flag)),
+              SizedBox(
+                width: 50,
+                child: OctaTextFormField(
+                  inputKey: widget.contryCodeKey,
+                  hintText: "Cod",
+                  keyboardType: TextInputType.number,
+                  prefixText: "+",
+                  controller: widget.phone.contryCodeController,
+                  onChange: _checkFlag,
+                  validators: const [AppValidators.notEmpty],
+                  onValidate: (value) {
+                    setState(() => _error = value);
+                  },
+                ),
+              ),
+              Expanded(
+                child: OctaTextFormField(
+                  inputKey: widget.inputKey,
+                  keyboardType: TextInputType.number,
+                  hintText: "Telefone",
+                  focusNode: _inputFocusNode,
+                  controller: widget.phone.phoneController,
+                  masks: _flag == 'BRA' ? ['(99) 99999-9999', '(99) 9999-9999', '99999999999999999'] : ['99999999999999999'],
+                  // validators: const [AppValidators.notEmpty],
+                  onValidate: (value) => setState(() => _error = value),
+                  onChange: (value) => setState(() => _error = ""),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
 
     // Conteúdo principal
     return Row(
@@ -130,31 +195,12 @@ class _ContactPhoneInputState extends State<ContactPhoneInput> {
               ),
 
               // Telefone
-              ContactTextInput(
-                inputKey: widget.inputKey,
-                // Bandeira
-                prefix: Container(
-                  margin: const EdgeInsets.only(right: 5),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: colorScheme.background),
-                  clipBehavior: Clip.hardEdge,
-                  width: 20,
-                  height: 14,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 150),
-                    child: _flag.isNotEmpty
-                        ? Image.asset(
-                            'lib/assets/flags/$_flag.png',
-                          )
-                        : null,
-                  ),
+              phoneInput(),
+              if (_error.isNotEmpty)
+                Text(
+                  _error,
+                  style: TextStyle(fontSize: AppSizes.s03, color: colorScheme.error),
                 ),
-
-                controller: widget.phone.phoneController,
-                mask: widget.phone.mask,
-                placeholder: "Insira o telefone",
-                onChange: _checkFlag,
-                validators: const [AppValidators.validatePhoneWithCountryCode],
-              ),
             ],
           ),
         ),

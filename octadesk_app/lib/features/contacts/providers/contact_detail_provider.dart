@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:octadesk_app/features/contacts/dialogs/organizations_dialog.dart';
 import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
-import 'package:octadesk_core/dtos/contact/contact_detail_dto.dart';
+import 'dart:math' as math;
+
+import 'package:octadesk_core/dtos/index.dart';
+import 'package:octadesk_services/octadesk_services.dart';
 
 enum PhoneTypeEnum { home, work, cell }
 
@@ -10,10 +13,10 @@ enum TicketsVisualizationMode { requested, all }
 
 class ContactPhone {
   PhoneTypeEnum type;
-  final MaskTextInputFormatter mask;
+  final TextEditingController contryCodeController;
   final TextEditingController phoneController;
 
-  ContactPhone({required this.type, required this.phoneController, required this.mask});
+  ContactPhone({required this.type, required this.phoneController, required this.contryCodeController});
 }
 
 class ContactDetailProvider extends ChangeNotifier {
@@ -26,36 +29,53 @@ class ContactDetailProvider extends ChangeNotifier {
   final GlobalKey<FormFieldState> _newContactPhoneKey = GlobalKey();
   GlobalKey<FormFieldState> get newContactPhoneKey => _newContactPhoneKey;
 
+  final GlobalKey<FormFieldState> _newContactContryKey = GlobalKey();
+  GlobalKey<FormFieldState> get newContactContryKey => _newContactContryKey;
+
   // Formulário
+
+  ///
+  /// Ativo
+  ///
+  late bool _contactActive;
+  bool get contactActive => _contactActive;
+  set contactActive(bool value) {
+    _contactActive = value;
+    notifyListeners();
+  }
 
   ///
   /// Nome
   ///
-  late final TextEditingController _nameController;
+  final TextEditingController _nameController = TextEditingController();
   TextEditingController get nameController => _nameController;
 
   ///
   /// Email
   ///
-  late final TextEditingController _emailController;
+  final TextEditingController _emailController = TextEditingController();
   TextEditingController get emailController => _emailController;
 
   ///
-  /// Telewfones
+  /// Telefones
   ///
-  late List<ContactPhone> _phones;
+  List<ContactPhone> _phones = [];
   List<ContactPhone> get phones => _phones;
 
   ///
   /// Organizações
   ///
-  late List<String> _organizations;
-  List<String> get organizations => _organizations;
+  List<OrganizationDTO> _organizations = [];
+  List<OrganizationDTO> get organizations => _organizations;
 
   ///
   /// Status do Funil de vendas
-  late String _salesFunnelStatus;
+  String _salesFunnelStatus = "";
   String get salesFunnelStatus => _salesFunnelStatus;
+  set salesFunnelStatus(String newValue) {
+    _salesFunnelStatus = newValue;
+    notifyListeners();
+  }
 
   ///
   /// Modo de visualização
@@ -67,40 +87,43 @@ class ContactDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  late ContactPhone _newContactPhone;
+  final ContactPhone _newContactPhone = ContactPhone(
+    type: PhoneTypeEnum.cell,
+    phoneController: TextEditingController(),
+    contryCodeController: TextEditingController(text: "55"),
+  );
   ContactPhone get newContactPhone => _newContactPhone;
 
-  /// Gerar máscara de Input
-  MaskTextInputFormatter _generatePhoneMast([String? phoneNumber]) {
-    return MaskTextInputFormatter(
-      mask: "+## (##) #####-####",
-      initialText: phoneNumber != null ? setPhoneMaskHelper(phoneNumber) : null,
-    );
-  }
+  bool _loading = false;
+  bool get loading => _loading;
+
+  bool _autoValidateForm = false;
+  bool get autovalidateForm => _autoValidateForm;
 
   ///
   /// Inicializar
   ///
   void _initialize() async {
+    _contactActive = contact.isEnabled;
+
     // Mapear nomes
-    _nameController = TextEditingController(text: contact.name);
+    _nameController.text = contact.name;
 
     // Mepar emails
-    _emailController = TextEditingController(text: contact.email);
+    _emailController.text = contact.email;
 
     // Mapear telefones
     _phones = contact.phoneContacts.map((e) {
+      var phone = setPhoneMaskHelper(e.number);
       return ContactPhone(
-        type: PhoneTypeEnum.values[e.type],
-        phoneController: TextEditingController(text: setPhoneMaskHelper(e.phoneNumber)),
-        mask: _generatePhoneMast(e.phoneNumber),
+        type: PhoneTypeEnum.values[e.type - 1],
+        phoneController: TextEditingController(text: phone),
+        contryCodeController: TextEditingController(text: e.countryCode.replaceAll("+", "")),
       );
     }).toList();
 
-    _newContactPhone = ContactPhone(type: PhoneTypeEnum.cell, phoneController: TextEditingController(), mask: _generatePhoneMast());
-
     // Mapear organizações
-    _organizations = contact.organizations.map((e) => e.name ?? "").toList();
+    _organizations = contact.organizations.map((e) => e.clone()).toList();
 
     // Mapear funil de vendsas
     _salesFunnelStatus = OctadeskConversation.instance.contactTypes
@@ -111,33 +134,134 @@ class ContactDetailProvider extends ChangeNotifier {
         .id;
 
     // Mapear visualização  de tickets
-    _ticketsVisualizationMode = TicketsVisualizationMode.values[contact.permissionView - 1];
+    _ticketsVisualizationMode = TicketsVisualizationMode.values[math.max(contact.permissionView - 1, 0)];
   }
 
-  /// Adicionar número
+  ///
+  /// dicionar número
+  ///
   void addPhoneNumber() async {
-    var isValid = newContactPhoneKey.currentState?.validate() ?? false;
+    var validContryCode = newContactContryKey.currentState?.validate() ?? false;
+    if (!validContryCode) {
+      return;
+    }
 
-    if (isValid) {
-      _phones.add(
-        ContactPhone(
+    var validPhone = newContactPhoneKey.currentState?.validate() ?? false;
+    if (!validPhone) {
+      return;
+    }
+
+    _phones.add(
+      ContactPhone(
           type: newContactPhone.type,
           phoneController: TextEditingController(text: newContactPhone.phoneController.text),
-          mask: MaskTextInputFormatter(mask: "+## (##) #####-####"),
-        ),
-      );
-      newContactPhone.type = PhoneTypeEnum.cell;
-      newContactPhone.phoneController.text = "";
-      newContactPhone.mask.clear();
+          contryCodeController: TextEditingController(text: newContactPhone.contryCodeController.text)),
+    );
+    newContactPhone.type = PhoneTypeEnum.cell;
+    newContactPhone.phoneController.text = "";
+    newContactPhone.contryCodeController.text = "55";
 
-      await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 300));
+    notifyListeners();
+  }
+
+  ///
+  /// Remover telefonre
+  ///
+  void removePhone(int index) {
+    _phones.removeAt(index);
+    notifyListeners();
+  }
+
+  ///
+  /// Adicionar organização
+  ///
+  void addOrganization(BuildContext context) async {
+    var resp = await showOctaBottomSheet(
+      context,
+      title: "Organizações",
+      child: const OrganizationsDialog(),
+    );
+    if (resp is OrganizationDTO) {
+      _organizations.add(resp);
       notifyListeners();
     }
   }
 
-  void removePhone(int index) {
-    _phones.removeAt(index);
+  ///
+  /// Remover organização
+  ///
+  void removeOrganization(int index) {
+    _organizations.removeAt(index);
     notifyListeners();
+  }
+
+  ///
+  /// Voltar ao status inicial
+  ///
+  void clear() {
+    _initialize();
+    notifyListeners();
+  }
+
+  ///
+  /// Submeter
+  ///
+  void submit(BuildContext context) async {
+    _autoValidateForm = true;
+    notifyListeners();
+
+    // Validar formulário
+    var isValid = _form.currentState?.validate() ?? false;
+    if (!isValid || _loading) {
+      return;
+    }
+
+    // Setar o loading
+    _loading = true;
+    notifyListeners();
+
+    var newContact = contact.clone();
+    // Nome
+    newContact.name = _nameController.text;
+
+    // Email
+    newContact.email = _emailController.text;
+
+    // Ativo
+    newContact.isEnabled = _contactActive;
+
+    // Telefones
+    newContact.phoneContacts = _phones.map((e) {
+      return ContactPhoneDTO(
+        countryCode: e.contryCodeController.text,
+        number: removePhoneMaskHelper(e.phoneController.text),
+        type: e.type.index + 1,
+        isDefault: _phones.indexOf(e) == 0,
+      );
+    }).toList();
+
+    // Organizações
+    newContact.organizations = _organizations.map((e) {
+      e.isDefault = _organizations.indexOf(e) == 0;
+      return e;
+    }).toList();
+
+    // Status do funil de venda
+    newContact.idContactStatus = _salesFunnelStatus;
+
+    // Status dos tickets
+    newContact.permissionView = _ticketsVisualizationMode.index + 1;
+
+    try {
+      await ChatService.updateContact(newContact);
+      displayAlertHelper(context, subtitle: "Contato atualizado com sucesso", title: "Sucesso!");
+    } catch (e) {
+      displayAlertHelper(context, subtitle: "Não foi possível atualizar o usuário");
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
   }
 
   ContactDetailProvider(this.contact) {

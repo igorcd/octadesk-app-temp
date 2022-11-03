@@ -38,17 +38,10 @@ class OctaAvatar extends StatelessWidget {
 
     /// Formatar iniciais
     String getInitialsHelper(String? name) {
-      if (name != null && name.trim().isNotEmpty) {
-        var words = name.trim().split(" ");
-        if (words.length > 1) {
-          return words[0][0].toUpperCase() + words[words.length - 1][0].toUpperCase();
-        } else if (words[0].length > 1) {
-          return words[0].substring(0, 2).toUpperCase();
-        } else {
-          return words[0].toUpperCase();
-        }
+      var formattedName = name?.trim().padRight(3, "").toLowerCase().substring(0, 3);
+      if (formattedName != null) {
+        return "${formattedName.substring(0, 1).toUpperCase()}${formattedName.substring(1, 3)}";
       }
-
       return "-";
     }
 

@@ -179,11 +179,11 @@ class AuthenticationProvider with ChangeNotifier {
       await _checkUserStatusAndInitializeChat();
 
       // Setar usuário do Crash Analytics
-      navigator.goNamed(AppRouter.chatFeature);
+      navigator.go("/main");
     } catch (e) {
       _clearUserData();
       // Enviar erro para o Firebase
-      navigator.goNamed(AppRouter.onboardingView);
+      navigator.go("/");
     }
   }
 

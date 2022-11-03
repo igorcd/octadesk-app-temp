@@ -13,7 +13,7 @@ class OctaSearchSliver extends StatelessWidget {
     return SliverAppBar(
       elevation: 0,
       floating: true,
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       leading: null,
       automaticallyImplyLeading: false,
       toolbarHeight: 72,

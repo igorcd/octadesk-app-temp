@@ -1,67 +1,67 @@
 import 'package:octadesk_core/dtos/index.dart';
 
 class ContactDetailDTO {
-  final String id;
-  final bool isEnabled;
-  final String name;
-  final String email;
-  final String thumbUrl;
-  final List<ContactPhoneDTO> phoneContacts;
-  final String organizationsName;
-  final List<OrganizationDTO> organizations;
-  final String idContactStatus;
-  final int permissionView;
+  String id;
+  bool isEnabled;
+  String name;
+  String email;
+  String thumbUrl;
+  List<ContactPhoneDTO> phoneContacts;
+  String organizationsName;
+  List<OrganizationDTO> organizations;
+  String idContactStatus;
+  int permissionView;
 
-  final dynamic number;
-  final dynamic dateCreation;
-  final dynamic type;
-  final dynamic roleType;
-  final dynamic permissionType;
-  final dynamic participantPermission;
-  final dynamic contactStatusEvents;
-  final dynamic hasPassword;
-  final dynamic othersEmail;
-  final dynamic documentCode;
-  final dynamic othersDocumentCode;
-  final dynamic documentCodeType;
-  final dynamic documentIdentificationCode;
-  final dynamic customerCode;
-  final dynamic phone;
-  final dynamic othersPhone;
-  final dynamic thumbUrlEncrypted;
-  final dynamic avatarName;
-  final dynamic isEmailValidated;
-  final dynamic isResetPassword;
-  final dynamic invitePasswordSent;
-  final dynamic idGroup;
-  final dynamic idsGroups;
-  final dynamic myApps;
-  final dynamic customField;
-  final dynamic products;
-  final dynamic productsMembersJoin;
-  final dynamic organization;
-  final dynamic groups;
-  final dynamic groupsMembersJoin;
-  final dynamic groupsIds;
-  final dynamic externalIds;
-  final dynamic facebookId;
-  final dynamic facebookUserName;
-  final dynamic homePage;
-  final dynamic lastLoginId;
-  final dynamic checkUniqueBy;
-  final dynamic subDomain;
-  final dynamic emailSignature;
-  final dynamic isSSOAuthorization;
-  final dynamic remoteLogoutUrl;
-  final dynamic metadataAttributes;
-  final dynamic favoriteResponseTab;
-  final dynamic phoneContactsDescribed;
-  final dynamic accessRestriction;
-  final dynamic accessNewList;
-  final dynamic ticketListOrderConfig;
-  final dynamic deviceTokens;
-  final dynamic apps;
-  final dynamic newOcta;
+  dynamic number;
+  dynamic dateCreation;
+  dynamic type;
+  dynamic roleType;
+  dynamic permissionType;
+  dynamic participantPermission;
+  dynamic contactStatusEvents;
+  dynamic hasPassword;
+  dynamic othersEmail;
+  dynamic documentCode;
+  dynamic othersDocumentCode;
+  dynamic documentCodeType;
+  dynamic documentIdentificationCode;
+  dynamic customerCode;
+  dynamic phone;
+  dynamic othersPhone;
+  dynamic thumbUrlEncrypted;
+  dynamic avatarName;
+  dynamic isEmailValidated;
+  dynamic isResetPassword;
+  dynamic invitePasswordSent;
+  dynamic idGroup;
+  dynamic idsGroups;
+  dynamic myApps;
+  dynamic customField;
+  dynamic products;
+  dynamic productsMembersJoin;
+  dynamic organization;
+  dynamic groups;
+  dynamic groupsMembersJoin;
+  dynamic groupsIds;
+  dynamic externalIds;
+  dynamic facebookId;
+  dynamic facebookUserName;
+  dynamic homePage;
+  dynamic lastLoginId;
+  dynamic checkUniqueBy;
+  dynamic subDomain;
+  dynamic emailSignature;
+  dynamic isSSOAuthorization;
+  dynamic remoteLogoutUrl;
+  dynamic metadataAttributes;
+  dynamic favoriteResponseTab;
+  dynamic phoneContactsDescribed;
+  dynamic accessRestriction;
+  dynamic accessNewList;
+  dynamic ticketListOrderConfig;
+  dynamic deviceTokens;
+  dynamic apps;
+  dynamic newOcta;
 
   ContactDetailDTO({
     required this.id,
@@ -125,6 +125,71 @@ class ContactDetailDTO {
     required this.newOcta,
     required this.idContactStatus,
   });
+
+  ContactDetailDTO clone() {
+    return ContactDetailDTO(
+      id: id,
+      isEnabled: isEnabled,
+      name: name,
+      email: email,
+      thumbUrl: thumbUrl,
+      phoneContacts: phoneContacts.map((e) => e.clone()).toList(),
+      number: number,
+      dateCreation: dateCreation,
+      type: type,
+      roleType: roleType,
+      permissionType: permissionType,
+      participantPermission: participantPermission,
+      contactStatusEvents: contactStatusEvents,
+      hasPassword: hasPassword,
+      othersEmail: othersEmail,
+      documentCode: documentCode,
+      othersDocumentCode: othersDocumentCode,
+      documentCodeType: documentCodeType,
+      documentIdentificationCode: documentIdentificationCode,
+      customerCode: customerCode,
+      phone: phone,
+      othersPhone: othersPhone,
+      thumbUrlEncrypted: thumbUrlEncrypted,
+      avatarName: avatarName,
+      isEmailValidated: isEmailValidated,
+      isResetPassword: isResetPassword,
+      invitePasswordSent: invitePasswordSent,
+      idGroup: idGroup,
+      idsGroups: idsGroups,
+      myApps: myApps,
+      customField: customField,
+      products: products,
+      productsMembersJoin: productsMembersJoin,
+      groups: groups,
+      groupsMembersJoin: groupsMembersJoin,
+      groupsIds: groupsIds,
+      organization: null,
+      organizations: organizations.map((e) => e.clone()).toList(),
+      organizationsName: organizationsName,
+      externalIds: externalIds,
+      facebookId: facebookId,
+      facebookUserName: facebookUserName,
+      homePage: homePage,
+      lastLoginId: lastLoginId,
+      checkUniqueBy: checkUniqueBy,
+      permissionView: permissionView,
+      subDomain: subDomain,
+      emailSignature: emailSignature,
+      isSSOAuthorization: isSSOAuthorization,
+      remoteLogoutUrl: remoteLogoutUrl,
+      metadataAttributes: metadataAttributes,
+      favoriteResponseTab: favoriteResponseTab,
+      phoneContactsDescribed: phoneContactsDescribed,
+      accessRestriction: accessRestriction,
+      accessNewList: accessNewList,
+      ticketListOrderConfig: ticketListOrderConfig,
+      deviceTokens: deviceTokens,
+      apps: apps,
+      newOcta: newOcta,
+      idContactStatus: idContactStatus,
+    );
+  }
 
   factory ContactDetailDTO.fromMap(Map<String, dynamic> data) {
     return ContactDetailDTO(
@@ -191,5 +256,69 @@ class ContactDetailDTO {
       apps: data["apps"],
       newOcta: data["newOcta"],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "isEnabled": isEnabled,
+      "name": name,
+      "email": email,
+      "thumbUrl": thumbUrl,
+      "phoneContacts": phoneContacts.map((e) => e.toMap()).toList(),
+      "organizationsName": organizationsName,
+      "organizations": organizations.map((e) => e.toMap()).toList(),
+      "permissionView": permissionView,
+      "number": number,
+      "dateCreation": dateCreation,
+      "type": type,
+      "roleType": roleType,
+      "permissionType": permissionType,
+      "participantPermission": participantPermission,
+      "contactStatusEvents": contactStatusEvents,
+      "hasPassword": hasPassword,
+      "othersEmail": othersEmail,
+      "documentCode": documentCode,
+      "othersDocumentCode": othersDocumentCode,
+      "documentCodeType": documentCodeType,
+      "documentIdentificationCode": documentIdentificationCode,
+      "customerCode": customerCode,
+      "phone": phone,
+      "othersPhone": othersPhone,
+      "thumbUrlEncrypted": thumbUrlEncrypted,
+      "avatarName": avatarName,
+      "isEmailValidated": isEmailValidated,
+      "isResetPassword": isResetPassword,
+      "invitePasswordSent": invitePasswordSent,
+      "idGroup": idGroup,
+      "idsGroups": idsGroups,
+      "myApps": myApps,
+      "customField": customField,
+      "products": products,
+      "productsMembersJoin": productsMembersJoin,
+      "organization": organization,
+      "groups": groups,
+      "groupsMembersJoin": groupsMembersJoin,
+      "groupsIds": groupsIds,
+      "externalIds": externalIds,
+      "facebookId": facebookId,
+      "facebookUserName": facebookUserName,
+      "homePage": homePage,
+      "lastLoginId": lastLoginId,
+      "checkUniqueBy": checkUniqueBy,
+      "subDomain": subDomain,
+      "emailSignature": emailSignature,
+      "isSSOAuthorization": isSSOAuthorization,
+      "remoteLogoutUrl": remoteLogoutUrl,
+      "metadataAttributes": metadataAttributes,
+      "favoriteResponseTab": favoriteResponseTab,
+      "phoneContactsDescribed": phoneContactsDescribed,
+      "accessRestriction": accessRestriction,
+      "accessNewList": accessNewList,
+      "ticketListOrderConfig": ticketListOrderConfig,
+      "deviceTokens": deviceTokens,
+      "apps": apps,
+      "newOcta": newOcta,
+    };
   }
 }

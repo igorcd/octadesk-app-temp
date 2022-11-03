@@ -8,6 +8,13 @@ class CountrySeedModel {
 
 List<CountrySeedModel> countriesSeed = [
   CountrySeedModel(
+    cod: "USA",
+    phoneCode: "+1",
+    name: {
+      'pt-BR': "Estados Unidos",
+    },
+  ),
+  CountrySeedModel(
     cod: "AFG",
     phoneCode: "+93",
     name: {
@@ -481,13 +488,6 @@ List<CountrySeedModel> countriesSeed = [
     phoneCode: "+268",
     name: {
       'pt-BR': "Essuatíni",
-    },
-  ),
-  CountrySeedModel(
-    cod: "USA",
-    phoneCode: "+1",
-    name: {
-      'pt-BR': "Estados Unidos",
     },
   ),
   CountrySeedModel(

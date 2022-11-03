@@ -14,28 +14,25 @@ class UsersQueryBuilder {
     var skip = index * limit;
 
     var filters = {
-      "Take": limit,
-      "PropertySort": "Name",
-      "includeExcludedRecords": false,
-      "SortDirection": "asc",
-      "Skip": skip,
+      "take": limit,
+      "propertySort": "Name",
+      "includeExcludedRecords": true,
+      "sortDirection": "asc",
+      "skip": skip,
+      "externalQueries": [
+        {
+          "PropertyName": "Type",
+          "Operator": 2,
+          "ValueCompare": 2,
+        },
+      ],
     };
 
     if (search.isNotEmpty) {
-      filters.addAll({
-        "ExternalQueries": [
-          {
-            "PropertyName": "Type",
-            "Operator": 2,
-            "ValueCompare": 2,
-          },
-          {
-            "PropertyName": "TextSearch",
-            "Operator": 4,
-            "ValueCompare": search,
-          }
-        ],
-        "ExternalQueriesOr": [],
+      (filters["externalQueries"] as List<dynamic>).add({
+        "PropertyName": "TextSearch",
+        "Operator": 4,
+        "ValueCompare": search,
       });
     }
 

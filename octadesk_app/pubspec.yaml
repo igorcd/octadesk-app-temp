@@ -34,40 +34,51 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  camera: ^0.10.0+3
+  camera: ^0.10.0+4
   camera_windows: ^0.2.1+2
   collection: ^1.16.0
-  go_router: ^5.0.1
-  provider: ^6.0.3
-  url_launcher: ^6.1.4
-  connectivity_plus: ^2.3.5
-  package_info_plus: ^1.4.2
+  go_router: ^5.1.1
+  provider: ^6.0.4
+  url_launcher: ^6.1.6
+  connectivity_plus: ^3.0.2
+  package_info_plus: ^3.0.1
   shared_preferences: ^2.0.15
   jwt_decoder: ^2.0.1
   transparent_image: ^2.0.0
   intl: ^0.17.0
   flutter_slidable: ^2.0.0
   scrollable_positioned_list: ^0.3.5
-  audioplayers: ^1.1.0
+  audioplayers: ^1.1.1
   path_provider: ^2.0.11
-  styled_text: ^5.1.0
+  styled_text: ^6.0.0
   rich_text_controller: ^1.4.0
   rxdart: ^0.27.5
   dio: ^4.0.6
-  bitsdojo_window: ^0.1.2
-  file_picker: ^5.2.0+1
+  bitsdojo_window: ^0.1.5
+  file_picker: ^5.2.2
   path: ^1.8.2
-  record: ^4.4.0
-  permission_handler: ^10.0.2
+  record: ^4.4.3
+  permission_handler: ^10.2.0
   get_it: ^7.2.0
-  mask_text_input_formatter: ^2.4.0
   easy_mask: ^2.0.1
-
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.1
+  flutter_launcher_icons: ^0.10.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/assets/app_icon/default.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_ios: true
+  windows:
+    generate: true
+    image_path: "lib/assets/app_icon/windows.png"
+    icon_size: 256 # min:48, max:256, default: 48
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -88,13 +99,4 @@ flutter:
         - asset: lib/assets/fonts/poppins/Poppins-SemiBold.ttf
           weight: 600
         - asset: lib/assets/fonts/poppins/Poppins-Bold.ttf
-          weight: 700
-    - family: NotoSans
-      fonts:
-        - asset: lib/assets/fonts/notosans/NotoSans-Regular.ttf
-        - asset: lib/assets/fonts/notosans/NotoSans-Medium.ttf
-          weight: 500
-        - asset: lib/assets/fonts/notosans/NotoSans-SemiBold.ttf
-          weight: 600
-        - asset: lib/assets/fonts/notosans/NotoSans-Bold.ttf
           weight: 700
