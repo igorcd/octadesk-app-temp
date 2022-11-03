@@ -92,9 +92,13 @@ class AppRouter {
           GoRoute(
             path: '/main',
             name: chatFeature,
-            builder: (context, state) {
-              return const ChatFeature();
-            },
+            pageBuilder: (context, state) => _featuresPageBuilder(
+              key: state.pageKey,
+              child: ChangeNotifierProvider(
+                create: (context) => ChatStore(),
+                child: const ChatFeature(),
+              ),
+            ),
           ),
 
           // Users
