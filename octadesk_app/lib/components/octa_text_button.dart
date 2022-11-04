@@ -7,7 +7,6 @@ class OctaTextButton extends StatelessWidget {
   final String text;
   final Color? color;
   final double fontSize;
-  final String fontFamily;
   final FontWeight fontWeight;
   final EdgeInsets padding;
 
@@ -16,7 +15,6 @@ class OctaTextButton extends StatelessWidget {
     required this.text,
     this.color,
     this.fontSize = AppSizes.s03,
-    this.fontFamily = "NotoSans",
     this.fontWeight = FontWeight.bold,
     this.padding = EdgeInsets.zero,
     Key? key,
@@ -27,7 +25,6 @@ class OctaTextButton extends StatelessWidget {
       onPressed: onPressed,
       text: text,
       color: AppColors.blue.shade400,
-      fontFamily: "Poppins",
       fontSize: AppSizes.s04_5,
       fontWeight: FontWeight.w600,
       padding: const EdgeInsets.all(AppSizes.s04),
@@ -56,7 +53,6 @@ class OctaTextButton extends StatelessWidget {
             style: TextStyle(
               color: color ?? AppColors.blue.shade600,
               fontWeight: fontWeight,
-              fontFamily: fontFamily,
               fontSize: fontSize,
             ),
           ),

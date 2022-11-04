@@ -8,13 +8,13 @@ class NewContactButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: AppSizes.s18,
+      height: AppSizes.s16,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onPressed,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s04),
             child: Row(
               children: [
                 Container(

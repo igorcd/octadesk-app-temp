@@ -56,17 +56,17 @@ class _ChatListState extends State<ChatList> with TickerProviderStateMixin {
             return [
               ConversationHeaderTab(
                 label: "Abertas",
-                selected: i == 0,
+                selected: i < 0.5,
                 onTap: () => _controller.animateTo(0),
               ),
               ConversationHeaderTab(
                 label: "Encerradas",
-                selected: i == 1,
+                selected: i > 0.5 && i < 1.5,
                 onTap: () => _controller.animateTo(1),
               ),
               const Spacer(),
               ConversationHeaderTab(
-                selected: i == 2,
+                selected: i > 1.5,
                 child: Image.asset(
                   AppIcons.newConversation,
                   color: colorScheme.onSurface,

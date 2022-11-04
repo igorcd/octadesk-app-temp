@@ -245,7 +245,6 @@ class ChatDetailProvider extends ChangeNotifier {
         }).join("|")})+\\b"): TextStyle(
           fontWeight: FontWeight.bold,
           color: AppColors.warning.shade800,
-          fontFamily: "NotoSans",
         ),
       },
       deleteOnBack: true,

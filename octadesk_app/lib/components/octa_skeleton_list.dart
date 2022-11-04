@@ -9,17 +9,12 @@ class OctaSkeletonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OctaPulseAnimation(
-      child: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-          indent: AppSizes.s04,
-          endIndent: AppSizes.s04,
-          height: 0,
-        ),
+      child: ListView.builder(
         itemCount: 10,
         itemBuilder: (context, index) {
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
-            height: AppSizes.s18,
+            height: AppSizes.s16,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -64,7 +64,6 @@ class _OctaInputState extends State<OctaInput> {
           // Estilo do placeholder
           hintStyle: TextStyle(
             fontWeight: FontWeight.w300,
-            fontFamily: 'NotoSans',
             color: colorScheme.onBackground,
           ),
           errorStyle: const TextStyle(height: 0),
@@ -82,7 +81,6 @@ class _OctaInputState extends State<OctaInput> {
         textInputAction: widget.nextNode != null ? TextInputAction.next : TextInputAction.done,
 
         style: TextStyle(
-          fontFamily: "NotoSans",
           fontWeight: FontWeight.normal,
           fontSize: is2xsScreenHelper ? AppSizes.s04 * 0.875 : AppSizes.s04,
           color: colorScheme.onSurface,
@@ -133,7 +131,6 @@ class _OctaInputState extends State<OctaInput> {
           Text(
             widget.label,
             style: TextStyle(
-              fontFamily: "NotoSans",
               fontSize: AppSizes.s03,
               color: colorScheme.onSurface,
             ),
@@ -170,7 +167,11 @@ class _OctaInputState extends State<OctaInput> {
           _error.isNotEmpty
               ? Text(
                   _error,
-                  style: TextStyle(fontSize: AppSizes.s03, fontWeight: FontWeight.w500, color: colorScheme.error, fontFamily: "NotoSans"),
+                  style: TextStyle(
+                    fontSize: AppSizes.s03,
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.error,
+                  ),
                 )
               : const SizedBox.shrink()
         ],

@@ -19,11 +19,18 @@ class ChatEvent extends StatelessWidget {
           textAlign: TextAlign.center,
           text: TextSpan(
             text: message,
-            style: TextStyle(fontFamily: "NotoSans", color: colorScheme.onBackground, fontSize: AppSizes.s03),
+            style: TextStyle(
+              color: colorScheme.onBackground,
+              fontSize: AppSizes.s03,
+            ),
             children: [
               TextSpan(
                 text: boldMessage,
-                style: TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.bold, color: colorScheme.onBackground, fontSize: AppSizes.s03),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onBackground,
+                  fontSize: AppSizes.s03,
+                ),
               )
             ],
           ),

@@ -28,7 +28,9 @@ class ChatMessageContent extends StatelessWidget {
     }
 
     return StyledText(
-      style: TextStyle(fontFamily: "NotoSans", color: textColor),
+      style: TextStyle(
+        color: textColor,
+      ),
       text: text,
       tags: {
         'p': StyledTextTag(style: const TextStyle(fontWeight: FontWeight.normal)),

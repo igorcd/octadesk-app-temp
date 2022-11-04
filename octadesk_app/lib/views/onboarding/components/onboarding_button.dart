@@ -25,7 +25,6 @@ class OnboardingButton extends StatelessWidget {
             text,
             style: const TextStyle(
               fontWeight: FontWeight.w600,
-              fontFamily: "NotoSans",
             ),
           ),
         ),

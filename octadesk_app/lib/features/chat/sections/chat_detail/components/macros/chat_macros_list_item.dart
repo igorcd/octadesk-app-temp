@@ -29,7 +29,6 @@ class ChatMacrosListItem extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontFamily: "NotoSans",
                     fontSize: AppSizes.s03,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -41,7 +40,6 @@ class ChatMacrosListItem extends StatelessWidget {
                   Text(
                     content!,
                     style: const TextStyle(
-                      fontFamily: "NotoSans",
                       fontSize: AppSizes.s03,
                     ),
                     overflow: TextOverflow.ellipsis,

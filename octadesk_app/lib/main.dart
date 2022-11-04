@@ -17,7 +17,6 @@ void main() async {
 
   // Registrar serviço da visibilidade da barra inferior
   GetIt.instance.registerLazySingleton<ValueNotifier<bool>>(() => ValueNotifier(true), instanceName: "navigationBarVisible");
-  // initializeDateFormatting('pt_BR', null);
 
   if (Platform.isWindows) {
     doWhenWindowReady(() {

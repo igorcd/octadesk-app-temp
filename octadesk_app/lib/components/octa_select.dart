@@ -65,7 +65,7 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
         style: TextStyle(
           color: AppColors.info.shade800,
           fontSize: AppSizes.s04,
-          fontFamily: "NotoSans",
+          fontFamily: "Poppins",
         ),
         isExpanded: true,
         hint: Text(
@@ -105,7 +105,10 @@ class _OctaSelectState<T> extends State<OctaSelect<T>> {
             padding: const EdgeInsets.only(bottom: AppSizes.s01),
             child: Text(
               widget.label!,
-              style: TextStyle(fontFamily: "NotoSans", fontSize: AppSizes.s03, color: colorScheme.onSurface),
+              style: TextStyle(
+                fontSize: AppSizes.s03,
+                color: colorScheme.onSurface,
+              ),
             ),
           ),
         AnimatedContainer(

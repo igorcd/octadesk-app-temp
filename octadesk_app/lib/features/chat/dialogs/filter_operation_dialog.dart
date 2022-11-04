@@ -101,7 +101,11 @@ class _FilterOperationDialogState extends State<FilterOperationDialog> {
         alignment: Alignment.center,
         child: Text(
           "Não foi encontrado nenhum resultado",
-          style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "NotoSans", fontSize: AppSizes.s03, color: AppColors.info.shade800),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: AppSizes.s03,
+            color: AppColors.info.shade800,
+          ),
         ),
       ),
     );

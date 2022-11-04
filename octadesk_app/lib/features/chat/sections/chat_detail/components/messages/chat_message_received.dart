@@ -113,7 +113,9 @@ class ChatMessageReceived extends StatelessWidget {
             padding: const EdgeInsets.only(top: AppSizes.s01_5),
             child: Text(
               time,
-              style: const TextStyle(fontSize: AppSizes.s03, fontFamily: "NotoSans"),
+              style: const TextStyle(
+                fontSize: AppSizes.s03,
+              ),
             ),
           )
       ],

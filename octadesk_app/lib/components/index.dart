@@ -11,7 +11,6 @@ export './octa_expansion_panel.dart';
 export './octa_icon_button.dart';
 export './octa_input.dart';
 export './octa_list_item.dart';
-export './octa_notification_indicator.dart';
 export './octa_pulse_animation.dart';
 export './octa_search_input.dart';
 export './octa_search_sliver.dart';

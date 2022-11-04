@@ -9,6 +9,7 @@ import 'package:octadesk_app/utils/helper_functions.dart';
 import 'package:octadesk_conversation/octadesk_conversation.dart';
 import 'package:octadesk_core/dtos/auth/user_dto.dart';
 import 'package:octadesk_core/dtos/tenant/tenant_status_dto.dart';
+import 'package:octadesk_core/enums/connection_status_enum.dart';
 import 'package:octadesk_core/models/index.dart';
 import 'package:octadesk_core/models/user/user_persisted_data_model.dart';
 import 'package:octadesk_app/resources/app_constants.dart';
@@ -200,5 +201,9 @@ class AuthenticationProvider with ChangeNotifier {
         text: "Sair",
       ),
     ]);
+  }
+
+  void changeUserStatus(ConnectionStatusEnum status) async {
+    await ChatService.changeConnectionStatus(OctadeskConversation.instance.agent!.id, status);
   }
 }

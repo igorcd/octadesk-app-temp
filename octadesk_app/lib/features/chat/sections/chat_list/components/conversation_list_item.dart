@@ -36,8 +36,8 @@ class ConversationListItem extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(AppSizes.s02),
-      height: AppSizes.s21,
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s02),
+      height: AppSizes.s17,
       child: Material(
         borderRadius: BorderRadius.circular(AppSizes.s03_5),
         clipBehavior: Clip.hardEdge,

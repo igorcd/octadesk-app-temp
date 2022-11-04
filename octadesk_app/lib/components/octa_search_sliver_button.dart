@@ -15,10 +15,10 @@ class OctaSearchSliverButton extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       leading: null,
       automaticallyImplyLeading: false,
-      toolbarHeight: AppSizes.s16,
+      toolbarHeight: 60,
       primary: false,
       flexibleSpace: Padding(
-        padding: const EdgeInsets.only(right: AppSizes.s04, left: AppSizes.s04, top: AppSizes.s04),
+        padding: const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04, top: AppSizes.s03),
         child: Container(
           clipBehavior: Clip.hardEdge,
           height: AppSizes.s10,

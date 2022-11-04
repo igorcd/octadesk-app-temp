@@ -87,6 +87,7 @@ class AppUserButton extends StatelessWidget {
       return PopupMenuItem(
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
+        onTap: () => authenticationProvider.changeUserStatus(status),
         child: Row(
           children: [
             Container(

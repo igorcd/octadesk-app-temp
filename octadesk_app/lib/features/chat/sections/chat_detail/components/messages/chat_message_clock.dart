@@ -43,7 +43,12 @@ class ChatMessageClock extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Horário
-          Text(time, style: const TextStyle(fontSize: AppSizes.s03, fontFamily: "NotoSans")),
+          Text(
+            time,
+            style: const TextStyle(
+              fontSize: AppSizes.s03,
+            ),
+          ),
           const SizedBox(width: 2),
           // Mensagem recebida
           AnimatedSwitcher(

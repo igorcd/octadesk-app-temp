@@ -82,7 +82,9 @@ class NewChatProvider extends ChangeNotifier {
       var users = await _getUsers();
       _usersStreamController!.add(users);
     } catch (e) {
-      _usersStreamController!.addError(e);
+      if (_usersStreamController != null && !_usersStreamController!.isClosed) {
+        _usersStreamController!.addError(e);
+      }
     }
   }
 

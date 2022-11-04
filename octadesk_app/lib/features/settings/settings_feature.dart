@@ -13,7 +13,6 @@ class SettingsFeature extends StatelessWidget {
 
     Widget colorSwatch(AppColorSwatch swatch, void Function(AppColorSwatch value) onSelect) {
       var color = AppColors.getColor(swatch);
-
       return Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -32,8 +31,8 @@ class SettingsFeature extends StatelessWidget {
               shape: ContinuousRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
                 side: BorderSide(
-                  color: Theme.of(context).colorScheme.primary.value == color.value ? AppColors.info.shade800 : Colors.transparent,
-                  width: 2,
+                  color: themeProvider.primarySwatch.shade500.value == color.shade500.value ? AppColors.info.shade800 : Colors.transparent,
+                  width: 4,
                 ),
               ),
             ),

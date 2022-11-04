@@ -98,7 +98,6 @@ class _OctaSearchInputState extends State<OctaSearchInput> {
               child: TextField(
                 controller: widget.controller ?? _searchController,
                 style: TextStyle(
-                  fontFamily: "NotoSans",
                   fontWeight: FontWeight.normal,
                   fontSize: AppSizes.s04,
                   color: AppColors.info.shade800,
@@ -107,7 +106,6 @@ class _OctaSearchInputState extends State<OctaSearchInput> {
                   // Estilo do placeholder
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.w300,
-                    fontFamily: 'NotoSans',
                     color: AppColors.info.shade300,
                   ),
 

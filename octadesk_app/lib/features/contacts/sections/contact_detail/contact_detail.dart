@@ -32,7 +32,7 @@ class ContactDetail extends StatelessWidget {
           autovalidateMode: value.autovalidateForm ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
           child: SingleChildScrollView(
             padding: screenSize < ScreenSize.sm
-                ? const EdgeInsets.symmetric(vertical: AppSizes.s02, horizontal: AppSizes.s04)
+                ? const EdgeInsets.symmetric(vertical: AppSizes.s04, horizontal: AppSizes.s04)
                 : const EdgeInsets.symmetric(vertical: AppSizes.s16, horizontal: AppSizes.s06),
             child: Center(
               child: ConstrainedBox(

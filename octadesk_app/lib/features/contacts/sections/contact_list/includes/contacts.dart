@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
 import 'package:octadesk_app/components/octa_pagination_indicator.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_list_skeleton.dart';
+import 'package:octadesk_app/features/contacts/providers/contact_list_provider.dart';
 import 'package:octadesk_app/features/contacts/sections/contact_list/components/contact_list_item.dart';
 import 'package:octadesk_app/features/contacts/store/contacts_store.dart';
-import 'package:octadesk_app/resources/index.dart';
 import 'package:octadesk_core/octadesk_core.dart';
 import 'package:provider/provider.dart';
 
-class ActiveContacts extends StatelessWidget {
-  const ActiveContacts({super.key});
+class Contacts extends StatelessWidget {
+  const Contacts({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ContactsStore provider = Provider.of(context);
+    ContactsStore contactStore = Provider.of(context);
+    ContactListProvider contactListProvider = Provider.of(context);
 
     return StreamBuilder<List<ContactListModel>?>(
-      stream: provider.contactsStream,
+      stream: contactListProvider.contactsStream,
       builder: (context, snapshot) {
         Widget child;
 
@@ -25,7 +26,7 @@ class ActiveContacts extends StatelessWidget {
           child = OctaErrorContainer(
             subtitle: "Não foi possível carregar os contatos, por favor, tente novamente em breve",
             error: snapshot.error.toString(),
-            onTryAgain: () => provider.refreshContacts(),
+            onTryAgain: () => contactListProvider.refreshContacts(),
           );
         }
 
@@ -34,24 +35,12 @@ class ActiveContacts extends StatelessWidget {
           child = const ConversationListSkeleton();
         }
 
-        // Nenhuma contato
-        else if (snapshot.data!.isEmpty) {
-          child = Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(AppSizes.s02),
-            child: OctaText.headlineLarge(
-              "Sem contatos por aqui ainda",
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
-
         // Conteúdo
         else {
           child = NotificationListener<ScrollEndNotification>(
             onNotification: (notification) {
               if (notification.metrics.pixels > 0 && notification.metrics.atEdge) {
-                provider.paginate();
+                contactListProvider.paginate();
               }
               return true;
             },
@@ -64,8 +53,10 @@ class ActiveContacts extends StatelessWidget {
                       // Busca
                       OctaSearchSliver(
                         loading: snapshot.connectionState == ConnectionState.waiting,
-                        onTextChange: provider.searchContact,
+                        onTextChange: contactListProvider.searchContact,
                       ),
+
+                      if (snapshot.data?.isEmpty == true) const OctaEmptySliver(text: "Nenhum contato encontado"),
 
                       // Lista de contatos
                       SliverList(
@@ -74,8 +65,8 @@ class ActiveContacts extends StatelessWidget {
                             var contact = snapshot.data![index];
                             return ContactListItem(
                               contact,
-                              onPressed: () => provider.selectContact(contact.id),
-                              selected: provider.selectedConversationId == contact.id,
+                              onPressed: () => contactStore.selectContact(contact.id),
+                              selected: contactStore.selectedContactId == contact.id,
                             );
                           },
                           childCount: snapshot.data!.length,
@@ -86,7 +77,7 @@ class ActiveContacts extends StatelessWidget {
                 ),
 
                 // Indicador de paginação
-                OctaPaginationIndication(loading: provider.paginating)
+                OctaPaginationIndication(loading: contactListProvider.paginating)
               ],
             ),
           );

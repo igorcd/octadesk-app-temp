@@ -143,7 +143,6 @@ class MacroPreview extends StatelessWidget {
 
           // Mensagem
           StyledText(
-            style: const TextStyle(fontFamily: "NotoSans"),
             text: transformAttributesInTags(macro.body.message),
             tags: generateTagButtons(),
           ),

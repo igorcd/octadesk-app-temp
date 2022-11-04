@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/octa_feature_header.dart';
 import 'package:octadesk_app/components/octa_feature_title.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_header_tab.dart';
-import 'package:octadesk_app/features/contacts/sections/contact_list/includes/active_contacts.dart';
+import 'package:octadesk_app/features/contacts/providers/contact_list_provider.dart';
+import 'package:octadesk_app/features/contacts/sections/contact_list/includes/contacts.dart';
+import 'package:provider/provider.dart';
 
 class ContactsList extends StatefulWidget {
   const ContactsList({super.key});
@@ -67,9 +69,15 @@ class _ContactsListState extends State<ContactsList> with TickerProviderStateMix
         Expanded(
           child: TabBarView(
             controller: _controller,
-            children: const [
-              ActiveContacts(),
-              Text("2"),
+            children: [
+              ChangeNotifierProvider(
+                create: (context) => ContactListProvider(true),
+                child: const Contacts(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => ContactListProvider(false),
+                child: const Contacts(),
+              ),
             ],
           ),
         ),

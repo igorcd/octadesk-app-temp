@@ -16,13 +16,13 @@ class OctaSearchSliver extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       leading: null,
       automaticallyImplyLeading: false,
-      toolbarHeight: 72,
+      toolbarHeight: 60,
       primary: false,
       flexibleSpace: Column(
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s04, vertical: AppSizes.s03),
+              padding: const EdgeInsets.only(left: AppSizes.s04, right: AppSizes.s04, top: AppSizes.s03),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppSizes.s02_5),
                 decoration: BoxDecoration(
@@ -38,15 +38,12 @@ class OctaSearchSliver extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSizes.s02),
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 7),
-                        child: TextField(
-                          onChanged: onTextChange,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Pesquisar",
-                            hintStyle: TextStyle(color: colorScheme.onSecondary, fontFamily: "Poppins", fontSize: AppSizes.s04, fontWeight: FontWeight.w500),
-                          ),
+                      child: TextField(
+                        onChanged: onTextChange,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Pesquisar",
+                          hintStyle: TextStyle(color: colorScheme.onSecondary, fontFamily: "Poppins", fontSize: AppSizes.s04, fontWeight: FontWeight.w500),
                         ),
                       ),
                     )

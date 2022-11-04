@@ -28,7 +28,10 @@ class OctaSliverHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: AppSizes.s06),
                   child: Text(
                     title,
-                    style: const TextStyle(fontFamily: "NotoSans", fontWeight: FontWeight.w700, fontSize: AppSizes.s03_5),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: AppSizes.s03_5,
+                    ),
                   ),
                 ),
               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:octadesk_app/components/index.dart';
-import 'package:octadesk_app/components/octa_separated_sliver_list.dart';
 import 'package:octadesk_app/features/chat/providers/search_conversation_provider.dart';
 import 'package:octadesk_app/features/chat/sections/chat_list/components/conversation_list_item.dart';
 import 'package:octadesk_app/resources/index.dart';
@@ -142,18 +141,19 @@ class _SearchConversationState extends State<SearchConversation> with TickerProv
 
                       // Lista de usuários
                       else
-                        OctaSeparatedSliverList(
-                          itemCount: snapshot.data!.length,
-                          separatorBuilder: (c, i) => const Divider(height: 0),
-                          itemBuilder: (context, index) {
-                            var room = snapshot.data![index];
-                            return ConversationListItem(
-                              room,
-                              onPressed: () {},
-                              selected: false,
-                            );
-                          },
-                        )
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              var room = snapshot.data![index];
+                              return ConversationListItem(
+                                room,
+                                onPressed: () {},
+                                selected: false,
+                              );
+                            },
+                            childCount: snapshot.data!.length,
+                          ),
+                        ),
                     ],
                   ),
                 );

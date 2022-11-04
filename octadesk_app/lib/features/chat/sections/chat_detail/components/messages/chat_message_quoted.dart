@@ -45,7 +45,9 @@ class ChatMessageQuoted extends StatelessWidget {
               // Conteúdo da mensagem
               Text(
                 message.comment.isNotEmpty ? message.comment : "📎 ${message.attachments.length} anexo${message.attachments.length > 1 ? 's' : ''}",
-                style: TextStyle(fontFamily: "NotoSans", color: AppColors.info.shade800),
+                style: TextStyle(
+                  color: AppColors.info.shade800,
+                ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),

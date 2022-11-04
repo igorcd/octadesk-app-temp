@@ -75,7 +75,9 @@ class ClosedConversationsProvider extends ChangeNotifier {
       var rooms = await _getConversations();
       _roomsStreamController.add(rooms);
     } catch (e) {
-      _roomsStreamController.addError(e);
+      if (!_roomsStreamController.isClosed) {
+        _roomsStreamController.addError(e);
+      }
     }
   }
 
